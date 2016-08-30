@@ -1,5 +1,5 @@
 # Welcome to ShopManager
-Welcome to SHopManager, a text based shop managing game where you run a fastfood resturant!
+Welcome to ShopManager, a text based shop managing game where you run a fastfood resturant!
 
 # Issues
 
