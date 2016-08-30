@@ -2,29 +2,31 @@
 
 class GameInit():
     #handles inital startup
+    @staticmethod
     def manager_name():
-        #handles the username
-        while True:    
-            username = input("What is your name? ")
-            username_ch = input("Just to check, your name is '"+username+"', right? ")
+        #handles the username   
+        username = input("What is your name? ")
+        username_ch = input("Just to check, your name is '"+username+"', right? ")
             
-            if (username_ch == "y") or (username_ch == "yes"):
-                break
+        if username_ch in ["yes", "y"]:
+            print("console: username was correct")
             
-            if (username_ch == "n") or (username_ch == "no"):
-                GameInit.manager_name()
-        
+        if username_ch in ["no", "n"]:
+            print("console: username was incorrect")
+            SGameInit.manager_name()
+
+    @staticmethod  
     def startup():
-        #
+        #runs all the startup stuff
         pre_init = input("Would you like to start a new game? ")
         pre_init = pre_init.lower()
         
-        if (pre_init == "y") or (pre_init == "yes"):
+        if pre_init in ["yes", "y"]:
             print("console: input is yes")
             GameInit.manager_name()
             GameMain.main()
             return
-        if (pre_init == "n") or (pre_init == "no"):
+        if pre_init in ["no", "n"]:
             print("console: input is no")
             return
         else:
@@ -33,6 +35,7 @@ class GameInit():
 
 class GameMain():
     #handles the main game
+    @staticmethod
     def main():
         while True:
             print("console: game started successfully")
@@ -40,10 +43,12 @@ class GameMain():
     
 class SaveLoad():
     #handles the save/load functions
+    @staticmethod
     def save():
         #handles game saving
         print("console: loaded save func.")
-        
+
+    @staticmethod
     def load():
         #handles game loading
         print("console: loaded load func.")
