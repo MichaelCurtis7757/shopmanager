@@ -9,10 +9,9 @@ class GameInit():
         username_ch = input("Just to check, your name is '"+username+"', right? ")
             
         if username_ch in ["yes", "y"]:
-            print("console: username was correct")
-            
+            return
+        
         if username_ch in ["no", "n"]:
-            print("console: username was incorrect")
             SGameInit.manager_name()
         else:
             print("Please enter a valid response!")
@@ -25,7 +24,6 @@ class GameInit():
         pre_init = pre_init.lower()
         
         if pre_init in ["yes", "y"]:
-            print("console: input is yes")
             GameInit.manager_name()
             GameMain.main()
             return
