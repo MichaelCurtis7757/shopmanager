@@ -14,6 +14,9 @@ class GameInit():
         if username_ch in ["no", "n"]:
             print("console: username was incorrect")
             SGameInit.manager_name()
+        else:
+            print("Please enter a valid response!")
+            GameInit.manager_name()
 
     @staticmethod  
     def startup():
@@ -27,10 +30,9 @@ class GameInit():
             GameMain.main()
             return
         if pre_init in ["no", "n"]:
-            print("console: input is no")
             return
         else:
-            print("console: error, restarting check")
+            print("Please enter a valid response!")
             GameInit.startup()          
 
 class GameMain():
