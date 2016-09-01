@@ -9,9 +9,9 @@ class GameInit():
         cash = 0
         
         #stock
-        fish = 0
+        fish = 50
         cooked_fish = 0
-        potato = 0
+        potato = 50
         cooked_potato = 0
     
     @staticmethod
@@ -20,7 +20,7 @@ class GameInit():
         global username
         username = input("What is your name? ")
         username_ch = input("Just to check, your name is '"+username+"', right? ")
-            
+        username_ch = username_ch.lower()
         if username_ch in ["yes", "y"]:
             return
         if username_ch in ["no", "n"]:
@@ -42,6 +42,7 @@ class GameInit():
             GameMain.main()
             return
         if pre_init in ["no", "n"]:
+            SaveLoad.load()
             return
         else:
             print("Please enter a valid response!")
@@ -52,14 +53,36 @@ class GameMain():
     @staticmethod
     def main():
         while True:
-            print("console: game started successfully")
+            print("Starting Game...")
+            GameMain.generic_day()
             break
+
+    def special_days():
+        #special day stuff
+        if day == 1:
+            print("-= Day 1: The Beginning =-")
+            print("Uncle Bob: Welcome to ShopManager! You must run the shop inherited from me, your Uncle Bob!")
+            return
+        
+        if day == 7:
+            print("-= Day 7: The First Week =-")
+            print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra $250 to get you on your way!")
+            #day 7 cash bonus
+            cash = cash + 250
+            return
 
     def generic_day():
         #start of day
-        if day == 1:
-            print("Welcome to your first day, let's hope it's a good one!")
-            
+        def fish_check():
+            print("Fred: Mornin' Boss, how many fish do you want to cook this morning? ")
+            ask_fish = input("Fred: Oh, you currently have "+str(fish)+": ")
+            if ask_fish > potato:
+                print("Fred: Boss, you can't cook more than you have!")
+                fish_check()
+                return
+            else:
+                return
+        
         #middle section of day
 
         #end of day
@@ -80,6 +103,7 @@ class SaveLoad():
     @staticmethod
     def save():
         #handles game saving
+        print("Saving Game...")
         file = open("data.txt", "w")
         file.write(username)
         file.write("\n")
@@ -96,6 +120,30 @@ class SaveLoad():
     @staticmethod
     def load():
         #handles game loading
-        print("console: loaded load func.")
+        print("Loading Game...")
 
+        file = open("data.txt", "r")
+        #username
+        load_username = file.readline().replace("\n", "")
+        username = load_username
+
+        #day
+        load_day = file.readline().replace("\n", "")
+        day = load_day
+
+        #cash
+        load_cash = file.readline().replace("\n", "")
+        cash = load_cash
+
+        #fish
+        load_fish = file.readline().replace("\n", "")
+        fish = load_fish
+        
+        #potato
+        load_potato = file.readline().replace("\n", "")
+        potato = load_potato
+
+        #temp code below
+        print(load_data)
+        
 GameInit.startup()
