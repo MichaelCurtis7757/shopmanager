@@ -59,7 +59,23 @@ class GameInit():
             return
         else:
             print("Game: Please enter a valid response!")
-            GameInit.startup()          
+            GameInit.startup()
+
+    def end():
+        print("Fred: Congratulations Boss, you finished the day!")
+        print("Fred: Sadly, all unsold food has to be thrown away.")
+        daytime = 0
+        global day
+        day = day + 1
+        ask_sav = input("Game: Would you like to save your game? ")
+        ask_sav = ask_sav.lower()
+        if ask_sav in ["yes", "y"]:
+            SaveLoad.save()
+            return
+        elif ask_sav in ["no", "n"]:
+            return
+        else:
+            print("Game: Please enter a valid response!")    
 
 class GameMain():
     #handles the main game
@@ -68,7 +84,6 @@ class GameMain():
         while True:
             print("Game: Starting Game...\n")
             GameMain.generic_day()
-            break
 
     def generic_day():
         #special days
@@ -80,29 +95,14 @@ class GameMain():
         if day == 7:
             print("-= Day 7: The First Week =-")
             print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra $250 to get you on your way!")
+            global cash
             cash = cash + 250
+            print("Game: You now have $"+cash+"!")
             time.sleep(1.5)
         
         elif not (day == 1) or (day == 7):
             print("-= Day "+str(day)+" =-")
             time.sleep(1.5)
-        
-        #end of day
-        def end():
-            print("Fred: Congratulations Boss, you finished the day!")
-            print("Fred: Sadly, all unsold food has to be thrown away.")
-            daytime = 0
-            global day
-            day = day + 1
-            ask_sav = input("Game: Would you like to save your game? ")
-            ask_sav = ask_sav.lower()
-            if ask_sav in ["yes", "y"]:
-                SaveLoad.save()
-                return
-            elif ask_sav in ["no", "n"]:
-                return
-            else:
-                print("Game: Please enter a valid response!")
 
         #start of day
         def fish_check():
@@ -141,45 +141,38 @@ class GameMain():
                 print("Game: 7:00pm")
             if daytime == 5:
                 print("Game: 8:00pm")
+            if daytime == 6:
+                print("Game: 9:00pm")
 
             time.sleep(1.5)
 
             global level
-            rand_no = level * randint(1, 2)
+            rand_no = level * randint(1, 3)
             customers = randint(0, rand_no)
 
             global cooked_fish
             sold_fish = customers
+            if sold_fish > cooked_fish:
+                print("Fred: Welp, we're out of fish!")
+                GameInit.end()
+                return
+                
             cooked_fish = cooked_fish - sold_fish
             
             if customers == 0:
-                print(str(customers)+" have come in. Gosh darn'it!")
+                print("Fred: "+str(customers)+" have come in. Gosh darn'it!")
+            
             else:
-                print(str(customers)+" have come in. They ordered "+str(sold_fish)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
+                print("Fred: "+str(customers)+" have come in. They ordered "+str(sold_fish)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
 
             global total_customers
             total_customers = total_customers + customers
+            
+            if daytime == 6:           
+                #end of day
+                GameInit.end()
+                return
             daytime = daytime + 1
-            if daytime == 5:
-                end()
-                return
-        
-        #end of day
-        def end():
-            print("Fred: Congratulations Boss, you finished the day!")
-            print("Fred: Sadly, all unsold food has to be thrown away.")
-            daytime = 0
-            global day
-            day = day + 1
-            ask_sav = input("Game: Would you like to save your game? ")
-            ask_sav = ask_sav.lower()
-            if ask_sav in ["yes", "y"]:
-                SaveLoad.save()
-                return
-            elif ask_sav in ["no", "n"]:
-                return
-            else:
-                print("Game: Please enter a valid response!")
         
 class SaveLoad():
     #handles the save/load functions
