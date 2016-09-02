@@ -7,9 +7,11 @@ class GameInit():
         #general
         global day
         global cash
+        global level
         
         day = 1
-        cash = 0
+        cash = 500
+        level = 1
         
         #stock
         global fish
@@ -128,6 +130,8 @@ class SaveLoad():
         file.write("\n")
         file.write(str(day))
         file.write("\n")
+        file.write(str(level))
+        file.write("\n")
         file.write(str(cash))
         file.write("\n")
         file.write(str(fish))
@@ -149,6 +153,10 @@ class SaveLoad():
         #day
         load_day = file.readline().replace("\n", "")
         day = load_day
+
+        #level
+        load_level = file.readline().replace("\n", "")
+        level = load_level
 
         #cash
         load_cash = file.readline().replace("\n", "")
