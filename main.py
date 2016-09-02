@@ -4,6 +4,7 @@ from random import randint
 
 class GameInit():
     #handles inital startup
+    @staticmethod
     def variables():
         #general
         global day
@@ -70,6 +71,7 @@ class GameInit():
             print("Game: Please enter a valid response!")
             GameInit.startup()
 
+    @staticmethod
     def end():
         print("Fred: Congratulations Boss, you finished the day!")
         print("Fred: You sold "+str(total_customers)+" cooked fish and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall.")
@@ -95,6 +97,7 @@ class GameMain():
             print("\n")
             GameMain.generic_day()
 
+    @staticmethod
     def generic_day():
         #special days
         if day == 1:
