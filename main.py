@@ -1,5 +1,6 @@
 #Shop Manager
 import time
+from random import randint
 
 class GameInit():
     #handles inital startup
@@ -8,14 +9,18 @@ class GameInit():
         global day
         global cash
         global level
+        global total_customers
         
         day = 1
         cash = 500
         level = 1
+        total_customers = 0
         
         #stock
         global fish
         global potato
+        global cooked_fish
+        global cooked_potato
         
         fish = 50
         cooked_fish = 0
@@ -82,9 +87,27 @@ class GameMain():
             print("-= Day "+str(day)+" =-")
             time.sleep(1.5)
         
+        #end of day
+        def end():
+            print("Fred: Congratulations Boss, you finished the day!")
+            print("Fred: Sadly, all unsold food has to be thrown away.")
+            daytime = 0
+            global day
+            day = day + 1
+            ask_sav = input("Game: Would you like to save your game? ")
+            ask_sav = ask_sav.lower()
+            if ask_sav in ["yes", "y"]:
+                SaveLoad.save()
+                return
+            elif ask_sav in ["no", "n"]:
+                return
+            else:
+                print("Game: Please enter a valid response!")
+
         #start of day
         def fish_check():
             global fish
+            global cooked_fish
             print("Fred: Mornin' Boss, how many fish do you want to cook this morning? ")
             ask_fish = int(input("Fred: Oh, you currently have "+str(fish)+": "))
             if ask_fish > potato:
@@ -101,13 +124,53 @@ class GameMain():
         fish_check()
         
         #middle section of day
+        print("Fred: Well boss, we'd better open up for the day.")
+        daytime = 0
 
+        while True:
+            #time prints
+            if daytime == 0:
+                print("Game: 3:00pm")
+            if daytime == 1:
+                print("Game: 4:00pm")
+            if daytime == 2:
+                print("Game: 5:00pm")
+            if daytime == 3:
+                print("Game: 6:00pm")
+            if daytime == 4:
+                print("Game: 7:00pm")
+            if daytime == 5:
+                print("Game: 8:00pm")
+
+            time.sleep(1.5)
+
+            global level
+            rand_no = level * randint(1, 2)
+            customers = randint(0, rand_no)
+
+            global cooked_fish
+            sold_fish = customers
+            cooked_fish = cooked_fish - sold_fish
+            
+            if customers == 0:
+                print(str(customers)+" have come in. Gosh darn'it!")
+            else:
+                print(str(customers)+" have come in. They ordered "+str(sold_fish)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
+
+            global total_customers
+            total_customers = total_customers + customers
+            daytime = daytime + 1
+            if daytime == 5:
+                end()
+                return
+        
         #end of day
-        print("Fred: Congratulations Boss, you finished the day!")
-        print("Fred: Sadly, all unsold food has to be thrown away.")
-        global day
-        day = day + 1
         def end():
+            print("Fred: Congratulations Boss, you finished the day!")
+            print("Fred: Sadly, all unsold food has to be thrown away.")
+            daytime = 0
+            global day
+            day = day + 1
             ask_sav = input("Game: Would you like to save your game? ")
             ask_sav = ask_sav.lower()
             if ask_sav in ["yes", "y"]:
@@ -117,7 +180,6 @@ class GameMain():
                 return
             else:
                 print("Game: Please enter a valid response!")
-        end()
         
 class SaveLoad():
     #handles the save/load functions
