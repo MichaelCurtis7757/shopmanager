@@ -10,11 +10,13 @@ class GameInit():
         global cash
         global level
         global total_customers
+        global total_profit
         
         day = 1
-        cash = 500
+        cash = 50
         level = 1
         total_customers = 0
+        total_profit = 0
         
         #stock
         global fish
@@ -26,6 +28,13 @@ class GameInit():
         cooked_fish = 0
         potato = 50
         cooked_potato = 0
+
+        #prices
+        global fish_cost
+        global cooked_fish_cost
+        
+        fish_cost = 1
+        cooked_fish_cost = 2
     
     @staticmethod
     def manager_name():
@@ -63,6 +72,7 @@ class GameInit():
 
     def end():
         print("Fred: Congratulations Boss, you finished the day!")
+        print("Fred: You sold "+str(total_customers)+" cooked fish and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall.")
         print("Fred: Sadly, all unsold food has to be thrown away.")
         daytime = 0
         global day
@@ -82,7 +92,7 @@ class GameMain():
     @staticmethod
     def main():
         while True:
-            print("Game: Starting Game...\n")
+            print("\n")
             GameMain.generic_day()
 
     def generic_day():
@@ -97,7 +107,7 @@ class GameMain():
             print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra $250 to get you on your way!")
             global cash
             cash = cash + 250
-            print("Game: You now have $"+cash+"!")
+            print("Game: You now have $"+str(cash)+"!")
             time.sleep(1.5)
         
         elif not (day == 1) or (day == 7):
@@ -146,30 +156,40 @@ class GameMain():
 
             time.sleep(1.5)
 
+            #customers entering
             global level
             rand_no = level * randint(1, 3)
             customers = randint(0, rand_no)
 
+            #fish check
             global cooked_fish
-            sold_fish = customers
-            if sold_fish > cooked_fish:
+            if customers > cooked_fish:
                 print("Fred: Welp, we're out of fish!")
                 GameInit.end()
                 return
-                
-            cooked_fish = cooked_fish - sold_fish
+
+            global cooked_fish_cost
+            cooked_fish = cooked_fish - customers
+            profit = customers * cooked_fish_cost
+
             
             if customers == 0:
                 print("Fred: "+str(customers)+" have come in. Gosh darn'it!")
             
             else:
-                print("Fred: "+str(customers)+" have come in. They ordered "+str(sold_fish)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
+                print("Fred: "+str(customers)+" have come in. They ordered "+str(customers)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
+                print("Fred: From this, you've made $"+str(profit)+".")
 
+            #managing totals
             global total_customers
             total_customers = total_customers + customers
+            global total_profit
+            total_profit = total_profit + profit
             
             if daytime == 6:           
                 #end of day
+                global cash
+                cash = cash + total_profit
                 GameInit.end()
                 return
             daytime = daytime + 1
