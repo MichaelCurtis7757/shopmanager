@@ -46,7 +46,7 @@ class GameInit():
         #handles the username
         global username
         username = input("Uncle Bob: What is your name, I always forget... ")
-        username_ch = input("Uncle Bob: Just to check, your name is "+username+"', right? ")
+        username_ch = input("Uncle Bob: Just to check, your name is "+username+", right? ")
         username_ch = username_ch.lower()
         if username_ch in ["yes", "y"]:
             return
@@ -148,7 +148,6 @@ class GameMain():
     @staticmethod
     def main():
         while True:
-            print("\n")
             GameMain.generic_day()
 
     @staticmethod
@@ -161,9 +160,9 @@ class GameMain():
         
         if day == 7:
             print("-= Day 7: The First Week =-")
-            print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra $250 to get you on your way!")
+            print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra $50 to get you on your way!")
             global cash
-            cash = cash + 250
+            cash = cash + 50
             print("Game: You now have $"+str(cash)+"!")
             time.sleep(1.5)
         
@@ -227,11 +226,12 @@ class GameMain():
             total_customers = total_customers + customers
             global total_profit
             total_profit = total_profit + profit
+
+            global cash
+            cash = cash + profit
             
             if daytime == 6:           
                 #end of day
-                global cash
-                cash = cash + total_profit
                 GameInit.end()
                 return
             daytime = daytime + 1
@@ -241,8 +241,9 @@ class SaveLoad():
     @staticmethod
     def save():
         #handles game saving
+        save_name = input("Game: What would you like the save file to be called? ")
         print("Game: Saving Game...")
-        file = open("data.txt", "w")
+        file = open(save_name+".txt", "w")
         file.write(username)
         file.write("\n")
         file.write(str(day))
@@ -261,9 +262,10 @@ class SaveLoad():
     def load():
         #handles game loading
         print("Game: Loading Game...")
+        save_name = input("Game: What is the name of the save file? ")
         GameInit.variables()
 
-        file = open("data.txt", "r")
+        file = open(save_name+".txt", "r")
         #username
         load_username = file.readline().replace("\n", "")
         global username
