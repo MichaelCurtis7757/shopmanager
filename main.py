@@ -261,32 +261,40 @@ class SaveLoad():
     def load():
         #handles game loading
         print("Game: Loading Game...")
+        GameInit.variables()
 
         file = open("data.txt", "r")
         #username
         load_username = file.readline().replace("\n", "")
+        global username
         username = load_username
 
         #day
         load_day = file.readline().replace("\n", "")
+        global day
         day = load_day
 
         #level
         load_level = file.readline().replace("\n", "")
+        global level
         level = load_level
 
         #cash
         load_cash = file.readline().replace("\n", "")
+        global cash
         cash = load_cash
 
         #fish
         load_fish = file.readline().replace("\n", "")
+        global fish
         fish = load_fish
         
         #potato
         load_potato = file.readline().replace("\n", "")
+        global potato
         potato = load_potato
 
         print("Game: Game Loaded!")
+        GameMain.main()
         
 GameInit.startup()
