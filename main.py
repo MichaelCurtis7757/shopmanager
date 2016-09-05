@@ -272,27 +272,27 @@ class SaveLoad():
         #day
         load_day = file.readline().replace("\n", "")
         global day
-        day = load_day
+        day = int(load_day)
 
         #level
         load_level = file.readline().replace("\n", "")
         global level
-        level = load_level
+        level = int(load_level)
 
         #cash
         load_cash = file.readline().replace("\n", "")
         global cash
-        cash = load_cash
+        cash = int(load_cash)
 
         #fish
         load_fish = file.readline().replace("\n", "")
         global fish
-        fish = load_fish
+        fish = int(load_fish)
         
         #potato
         load_potato = file.readline().replace("\n", "")
         global potato
-        potato = load_potato
+        potato = int(load_potato)
 
         print("Game: Game Loaded!")
         GameMain.main()
