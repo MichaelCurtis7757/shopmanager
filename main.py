@@ -33,9 +33,13 @@ class GameInit():
         #prices
         global fish_cost
         global cooked_fish_cost
+        global potato_cost
+        global cooked_potato_cost
         
         fish_cost = 1
         cooked_fish_cost = 2
+        potato_cost = 1.5
+        cooked_potato_cost = 2.5
     
     @staticmethod
     def manager_name():
@@ -87,7 +91,57 @@ class GameInit():
         elif ask_sav in ["no", "n"]:
             return
         else:
-            print("Game: Please enter a valid response!")    
+            print("Game: Please enter a valid response!")
+
+    @staticmethod
+    def buy_stock():
+        global fish
+        global fish_cost
+        global cash
+
+        ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning? You have $"+ str(cash) + ". ")
+        if ask_stock.lower() in ["yes", "y"]:
+            ask_buy = input("Fred: Okay boss, would you like to buy some 'Fish' or 'Potatoes'? ")
+            if ask_buy.lower() in ["fish", "f"]:
+                ask_amount = int(input("Fred: How many Fish would you like to order? ($" + str(fish_cost) + " a fish) "))
+                if ask_amount > cash:
+                    print("Fred: Sorry, we don't have the money to order that much!")
+                    buy_stock()
+                    return
+                else:
+                    cash = cash - (ask_amount * fish_cost)                
+                    fish = fish + ask_amount
+                    print("Fred: The order has arrived thanks to Congo Prime and it's instant delivery!")
+                    return
+            if ask_buy.lower() in ["potato", "p"]:
+                #future update stuff
+                return
+        if ask_stock.lower() in ["no", "n"]:
+            print("Fred: We can always order more tomorrow if we need.")
+            return
+            
+    @staticmethod
+    def cook_stock():
+        #variables
+        global fish
+        global cooked_fish
+
+        #fish
+        print("Fred: Sounds good! How many fish do you want to cook this morning? ")
+        ask_fish = int(input("Fred: Oh, you currently have "+str(fish)+": "))
+        if ask_fish > potato:
+            print("Fred: Boss, you can't cook more than you have!")
+            fish_check()
+            return
+        else:
+            print("Fred: I'll cook the fish now Boss!")
+            time.sleep(1.5)
+            fish = fish - ask_fish
+            cooked_fish = ask_fish
+            print("Fred: Al'ight Boss, "+str(cooked_fish)+" were cooked!")
+
+        #potato
+            
 
 class GameMain():
     #handles the main game
@@ -118,23 +172,8 @@ class GameMain():
             time.sleep(1.5)
 
         #start of day
-        def fish_check():
-            global fish
-            global cooked_fish
-            print("Fred: Mornin' Boss, how many fish do you want to cook this morning? ")
-            ask_fish = int(input("Fred: Oh, you currently have "+str(fish)+": "))
-            if ask_fish > potato:
-                print("Fred: Boss, you can't cook more than you have!")
-                fish_check()
-                return
-            else:
-                print("Fred: I'll cook the fish now Boss!")
-                time.sleep(1.5)
-                fish = fish - ask_fish
-                cooked_fish = ask_fish
-                print("Fred: Al'ight Boss, "+str(cooked_fish)+" were cooked!")
-            
-        fish_check()
+        GameInit.buy_stock()
+        GameInit.cook_stock()
         
         #middle section of day
         print("Fred: Well boss, we'd better open up for the day.")
