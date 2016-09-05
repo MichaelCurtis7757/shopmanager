@@ -25,9 +25,9 @@ class GameInit():
         global cooked_fish
         global cooked_potato
         
-        fish = 50
+        fish = 20
         cooked_fish = 0
-        potato = 50
+        potato = 20
         cooked_potato = 0
 
         #prices
@@ -46,7 +46,7 @@ class GameInit():
         #handles the username
         global username
         username = input("Uncle Bob: What is your name, I always forget... ")
-        username_ch = input("Uncle Bob: Just to check, your name is '"+username+"', right? ")
+        username_ch = input("Uncle Bob: Just to check, your name is "+username+"', right? ")
         username_ch = username_ch.lower()
         if username_ch in ["yes", "y"]:
             return
@@ -99,7 +99,7 @@ class GameInit():
         global fish_cost
         global cash
 
-        ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning? You have $"+ str(cash) + ". ")
+        ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning? You have $"+ str(cash) + " and " + str(fish) + " fish. ")
         if ask_stock.lower() in ["yes", "y"]:
             ask_buy = input("Fred: Okay boss, would you like to buy some 'Fish' or 'Potatoes'? ")
             if ask_buy.lower() in ["fish", "f"]:
@@ -113,7 +113,7 @@ class GameInit():
                     fish = fish + ask_amount
                     print("Fred: The order has arrived thanks to Congo Prime and it's instant delivery!")
                     return
-            if ask_buy.lower() in ["potato", "p"]:
+            if ask_buy.lower() in ["potato", "potatoes", "p"]:
                 #future update stuff
                 return
         if ask_stock.lower() in ["no", "n"]:
