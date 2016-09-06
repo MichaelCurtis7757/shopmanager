@@ -34,9 +34,10 @@ class GameInit():
         cooked_potato_cost = 2
 
         #exp values
-        global fish_exp
+        global fish_exp, potato_exp
 
         fish_exp = 1
+        potato_exp = 2
     
     @staticmethod
     def manager_name():
@@ -100,6 +101,7 @@ class GameInit():
         ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning? You have $"+ str(cash) + " and " + str(fish) + " fish. ")
         if ask_stock.lower() in ["yes", "y"]:
             ask_buy = input("Fred: Okay boss, would you like to buy some 'Fish' or 'Potatoes'? ")
+            #fish
             if ask_buy.lower() in ["fish", "f"]:
                 ask_amount = int(input("Fred: How many Fish would you like to order? ($" + str(fish_cost) + " a fish) "))
                 if ask_amount > cash:
@@ -111,9 +113,22 @@ class GameInit():
                     fish = fish + ask_amount
                     print("Fred: The order has arrived thanks to Congo Prime and it's instant delivery!")
                     return
+            #potato
             if ask_buy.lower() in ["potato", "potatoes", "p"]:
-                #future update stuff
-                return
+                if not level < 3:
+                    print("Sorry! You need to be level 3 to unlock this!")
+                    buy_stock()
+                else:
+                    ask_amount = int(input("Fred: How many Potatoes would you like to order? ($" + str(potato_cost) + " a fish) "))
+                    if ask_amount > cash:
+                        print("Fred: Sorry, we don't have the money to order that much!")
+                        buy_stock()
+                        return
+                    else:
+                        cash = cash - (ask_amount * potato_cost)                
+                        potato = potato + ask_amount
+                        print("Fred: The order has arrived thanks to Congo Prime and it's instant delivery!")
+                        return
         if ask_stock.lower() in ["no", "n"]:
             print("Fred: We can always order more tomorrow if we need.")
             return
@@ -127,18 +142,34 @@ class GameInit():
         #fish
         print("Fred: Sounds good! How many fish do you want to cook this morning? ")
         ask_fish = int(input("Fred: Oh, you currently have "+str(fish)+": "))
-        if ask_fish > potato:
+        if ask_fish > fish:
             print("Fred: Boss, you can't cook more than you have!")
-            fish_check()
+            cook_stock()
             return
         else:
             print("Fred: I'll cook the fish now Boss!")
             time.sleep(1.5)
             fish = fish - ask_fish
             cooked_fish = ask_fish
-            print("Fred: Al'ight Boss, "+str(cooked_fish)+" were cooked!")
+            print("Fred: Al'ight Boss, "+str(cooked_fish)+" fish were cooked!")
 
         #potato
+        if not level < 3:
+            return
+        if level => 3:
+            print("Fred: Sounds great! How many fish do you want to cook this morning? ")
+            ask_potato = int(input("Fred: Oh, you currently have "+str(potato)+": "))
+            if ask_potato > potato:
+                print("Fred: Boss, you can't cook more than you have!")
+                cook_stock()
+                return
+            else:
+                print("Fred: I'll cook the fish now Boss!")
+                time.sleep(1.5)
+                potato = potato - ask_potato
+                cooked_potato = ask_potato
+                print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
+
 
 class GameMain():
     #handles the main game
@@ -163,6 +194,15 @@ class GameMain():
             cash = cash + 50
             print("Game: You now have $"+str(cash)+"!")
             time.sleep(1.5)
+
+        if day == 14:
+            print("-= Day 14: The Second Week =-")
+            print("Uncle Bob: Congratulations "+username+", you made it through a second week. Impressive! Here's an extra $100 to get you on your way!")
+            global cash
+            cash = cash + 100
+            print("Game: You now have $"+str(cash)+"!")
+            time.sleep(1.5)
+
         
         elif not (day == 1) or (day == 7):
             print("-= Day "+str(day)+" =-")
@@ -192,21 +232,26 @@ class GameMain():
                 print("Game: 8:00pm")
             if daytime == 6:
                 print("Game: 9:00pm")
-
-            time.sleep(1.5)
+            if daytime == 7:
+                print("Game: 10:00pm")
+            time.sleep(2)
 
             #customers entering
             global level
             rand_no = level * randint(1, 3)
             customers = randint(0, rand_no)
             hour_exp = customers * fish_exp
+            potato
 
-            #fish check
+            #stock check
+            fish_sellable = True
             global cooked_fish
+            
             if customers > cooked_fish:
                 print("Fred: Welp, we're out of fish!")
-                GameInit.end()
+                fish_sellable = False
                 return
+            if cu
 
             global cooked_fish_cost
             cooked_fish = cooked_fish - customers
@@ -236,17 +281,17 @@ class GameMain():
             global req_exp
             global level
         
-            if exp == req_exp:
+            if exp >= req_exp:
                 level = level + 1
                 exp = exp - req_exp
                 req_exp = req_exp * 2
                 print("Uncle Bob: Congratulations! You levelled up to "+str(level)+"!")
             
-                if daytime == 6:           
-                    #end of day
-                    GameInit.end()
-                    return
-                
+            if daytime >= 7:           
+                 #end of day
+                GameInit.end()
+                return
+            
             daytime = daytime + 1
             
 class SaveLoad():
