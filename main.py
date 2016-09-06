@@ -7,13 +7,7 @@ class GameInit():
     @staticmethod
     def variables():
         #general
-        global day
-        global cash
-        global level
-        global exp
-        global req_exp
-        global total_customers
-        global total_profit
+        global day, cash, level, exp, req_exp, total_customers, total_profit
         
         day = 1
         cash = 50
@@ -24,10 +18,7 @@ class GameInit():
         total_profit = 0
         
         #stock
-        global fish
-        global potato
-        global cooked_fish
-        global cooked_potato
+        global fish, potato, cooked_fish, cooked_potato
         
         fish = 20
         cooked_fish = 0
@@ -35,10 +26,7 @@ class GameInit():
         cooked_potato = 0
 
         #prices
-        global fish_cost
-        global cooked_fish_cost
-        global potato_cost
-        global cooked_potato_cost
+        global fish_cost, cooked_fish_cost, potato_cost, cooked_potato_cost
         
         fish_cost = 1
         cooked_fish_cost = 2
