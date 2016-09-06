@@ -1,5 +1,5 @@
 # Welcome to ShopManager
-Welcome to ShopManager, a text based shop managing game where you run a fastfood resturant!
+Welcome to ShopManager, a text based shop managing game where you run a fish and chip shop. You can save/load, buy stock, level up and have fun, I hope.
 
 # Issues
 
@@ -8,5 +8,7 @@ Welcome to ShopManager, a text based shop managing game where you run a fastfood
 # Trello
 https://trello.com/b/88zUcJdb/
 
-# Changelog
-N/A
+# Current Release
+v1.0: 06/09/16
+
+#Previous Releases
