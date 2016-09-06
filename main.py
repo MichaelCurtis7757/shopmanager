@@ -161,18 +161,22 @@ class GameInit():
         if not level < 3:
             return
         if level >= 3:
-            print("Fred: Sounds great! How many fish do you want to cook this morning? ")
-            ask_potato = int(input("Fred: Oh, you currently have "+str(potato)+": "))
-            if ask_potato > potato:
-                print("Fred: Boss, you can't cook more than you have!")
-                cook_stock()
-                return
-            else:
-                print("Fred: I'll cook the fish now Boss!")
-                time.sleep(1.5)
-                potato = potato - ask_potato
-                cooked_potato = ask_potato
-                print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
+            ask_pots = input("Would you like to cook chips today? ")
+            if ask_pots.lower() in ["yes", "y"]:
+                print("Fred: Sounds great! How many fish do you want to cook this morning? ")
+                ask_potato = int(input("Fred: Oh, you currently have "+str(potato)+": "))
+                if ask_potato > potato:
+                    print("Fred: Boss, you can't cook more than you have!")
+                    cook_stock()
+                    return
+                else:
+                    print("Fred: I'll cook the fish now Boss!")
+                    time.sleep(1.5)
+                    potato = potato - ask_potato
+                    cooked_potato = ask_potato
+                    print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
+            if ask_buy.lower() in ["no", "n"]:
+                print("Fred: Sounds good boss!")
 
 
 class GameMain():
@@ -208,7 +212,7 @@ class GameMain():
             time.sleep(1.5)
 
         
-        elif not (day == 1) or (day == 7):
+        elif not (day == 1) or (day == 7) or (day == 14):
             print("-= Day "+str(day)+" =-")
             time.sleep(1.5)
 
@@ -264,10 +268,9 @@ class GameMain():
                 if not level >= 3:
                     GameInit.end()
                     return
-            if level >= 3:
-                if potato_customers > cooked_potato:
-                    print("Fred: Welp, we're out of chips!")
-                    potato_sellable = False
+            if (level >= 3) and (potato_customers > cooked_potato):
+                print("Fred: Welp, we're out of chips!")
+                potato_sellable = False
             if (fish_sellable == False) and (potato_sellable == False):
                 GameInit.end()
 
@@ -293,10 +296,12 @@ class GameMain():
                 else:
                     customers = fish_customers
                     hour_exp = fish_hour_exp
-                print("Fred: "+str(customers)+" customers have come in. They ordered "+str(fish_customers)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
-                if level >= 3:
+                print("Fred: "+str(customers)+" customers have come in. They ordered "+str(fish_customers)+" cooked fish and we now have "+str(cooked_fish)+" left!")
+                if potato_sellable == False:
+                    print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
+                elif level >= 3:
                     print("Fred: They also also bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
-                print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
+                    print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
 
             #managing totals
             global total_customers
@@ -321,10 +326,13 @@ class GameMain():
                 print("Uncle Bob: Congratulations! You levelled up to "+str(level)+"!")
                 print("Uncle Bob: With this, your reputation has increased.")
             
-            if daytime >= 7:           
-                #end of day
-                GameInit.end()
-                return
+            if daytime >= 7:
+                if (fish_sellable == False) and (potato_sellable == False):
+                    return
+                else:
+                    #end of day
+                    GameInit.end()
+                    return
             
             daytime = daytime + 1
             
@@ -335,7 +343,7 @@ class SaveLoad():
         #handles game saving
         save_name = input("Game: What would you like the save file to be called? ")
         print("Game: Saving Game...")
-        file = open(save_name+".txt", "w")
+        file = open(save_name+".shs", "w")
         file.write(username)
         file.write("\n")
         file.write(str(day))
@@ -361,7 +369,7 @@ class SaveLoad():
         save_name = input("Game: What is the name of the save file? ")
         GameInit.variables()
 
-        file = open(save_name+".txt", "r")
+        file = open(save_name+".shs", "r")
         #username
         load_username = file.readline().replace("\n", "")
         global username
