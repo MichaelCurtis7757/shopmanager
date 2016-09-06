@@ -10,12 +10,16 @@ class GameInit():
         global day
         global cash
         global level
+        global exp
+        global req_exp
         global total_customers
         global total_profit
         
         day = 1
         cash = 50
         level = 1
+        exp = 0
+        req_exp = 10
         total_customers = 0
         total_profit = 0
         
@@ -38,8 +42,13 @@ class GameInit():
         
         fish_cost = 1
         cooked_fish_cost = 2
-        potato_cost = 1.5
-        cooked_potato_cost = 2.5
+        potato_cost = 2
+        cooked_potato_cost = 2
+
+        #exp values
+        global fish_exp
+
+        fish_exp = 1
     
     @staticmethod
     def manager_name():
@@ -78,8 +87,9 @@ class GameInit():
     @staticmethod
     def end():
         print("Fred: Congratulations Boss, you finished the day!")
-        print("Fred: You sold "+str(total_customers)+" cooked fish and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall.")
-        print("Fred: Sadly, all unsold food has to be thrown away.")
+        print("Fred: You sold "+str(total_customers)+" cooked fish and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
+        print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
+        print("Fred: Sadly, all unsold food had to be thrown away.")
         daytime = 0
         global day
         day = day + 1
@@ -141,13 +151,13 @@ class GameInit():
             print("Fred: Al'ight Boss, "+str(cooked_fish)+" were cooked!")
 
         #potato
-            
 
 class GameMain():
     #handles the main game
     @staticmethod
     def main():
         while True:
+            print("")
             GameMain.generic_day()
 
     @staticmethod
@@ -201,6 +211,7 @@ class GameMain():
             global level
             rand_no = level * randint(1, 3)
             customers = randint(0, rand_no)
+            hour_exp = customers * fish_exp
 
             #fish check
             global cooked_fish
@@ -215,11 +226,11 @@ class GameMain():
 
             
             if customers == 0:
-                print("Fred: "+str(customers)+" have come in. Gosh darn'it!")
+                print("Fred: "+str(customers)+" customers have come in. Gosh darn'it!")
             
             else:
-                print("Fred: "+str(customers)+" have come in. They ordered "+str(customers)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
-                print("Fred: From this, you've made $"+str(profit)+".")
+                print("Fred: "+str(customers)+" customers have come in. They ordered "+str(customers)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
+                print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
 
             #managing totals
             global total_customers
@@ -229,13 +240,27 @@ class GameMain():
 
             global cash
             cash = cash + profit
-            
-            if daytime == 6:           
-                #end of day
-                GameInit.end()
-                return
-            daytime = daytime + 1
+            global exp
+            exp = exp + hour_exp
+
+            #run level check
+            global exp
+            global req_exp
+            global level
         
+            if exp == req_exp:
+                level = level + 1
+                exp = exp - req_exp
+                req_exp = req_exp * 2
+                print("Uncle Bob: Congratulations! You levelled up to "+str(level)+"!")
+            
+                if daytime == 6:           
+                    #end of day
+                    GameInit.end()
+                    return
+                
+            daytime = daytime + 1
+            
 class SaveLoad():
     #handles the save/load functions
     @staticmethod
@@ -255,6 +280,10 @@ class SaveLoad():
         file.write(str(fish))
         file.write("\n")
         file.write(str(potato))
+        file.write("\n")
+        file.write(str(exp))
+        file.write("\n")
+        file.write(str(req_exp))
         file.write("\n")
         print("Game: Game Saved!")
 
@@ -295,6 +324,16 @@ class SaveLoad():
         load_potato = file.readline().replace("\n", "")
         global potato
         potato = int(load_potato)
+
+        #exp
+        load_exp = file.readline().replace("\n", "")
+        global exp
+        exp = int(load_exp)
+
+        #req_exp
+        load_req_exp = file.readline().replace("\n", "")
+        global req_exp
+        req_exp = int(load_req_exp)
 
         print("Game: Game Loaded!")
         GameMain.main()
