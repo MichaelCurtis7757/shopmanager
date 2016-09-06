@@ -76,7 +76,7 @@ class GameInit():
     @staticmethod
     def end():
         print("Fred: Congratulations Boss, you finished the day!")
-        print("Fred: You sold "+str(total_customers)+" cooked fish and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
+        print("Fred: You sold "+str(total_customers)+" stock and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
         print("Fred: Sadly, all unsold food had to be thrown away.")
         daytime = 0
@@ -97,10 +97,12 @@ class GameInit():
         global fish
         global fish_cost
         global cash
+        global potato
+        global potato_cost
 
-        ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning? You have $"+ str(cash) + " and " + str(fish) + " fish. ")
+        ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning (You have $"+ str(cash)+")? ")
         if ask_stock.lower() in ["yes", "y"]:
-            ask_buy = input("Fred: Okay boss, would you like to buy some 'Fish' or 'Potatoes'? ")
+            ask_buy = input("Fred: Okay boss, would you like to buy some fish (Stock: "+str(fish)+") Potatoes (Stock: "+str(potato)+")? ")
             #fish
             if ask_buy.lower() in ["fish", "f"]:
                 ask_amount = int(input("Fred: How many Fish would you like to order? ($" + str(fish_cost) + " a fish) "))
@@ -138,6 +140,8 @@ class GameInit():
         #variables
         global fish
         global cooked_fish
+        global potato
+        global cooked_potato
 
         #fish
         print("Fred: Sounds good! How many fish do you want to cook this morning? ")
@@ -156,7 +160,7 @@ class GameInit():
         #potato
         if not level < 3:
             return
-        if level => 3:
+        if level >= 3:
             print("Fred: Sounds great! How many fish do you want to cook this morning? ")
             ask_potato = int(input("Fred: Oh, you currently have "+str(potato)+": "))
             if ask_potato > potato:
@@ -238,31 +242,60 @@ class GameMain():
 
             #customers entering
             global level
-            rand_no = level * randint(1, 3)
-            customers = randint(0, rand_no)
-            hour_exp = customers * fish_exp
-            potato
+            fish_rand_no = level * randint(1, 3)
+            fish_customers = randint(0, fish_rand_no)
+            fish_hour_exp = fish_customers * fish_exp
+
+            if level >= 3:
+                potato_rand_no = level * randint(1, 3)
+                potato_customers = randint(0, potato_rand_no)
+                potato_hour_exp = potato_customers * fish_exp
+                
 
             #stock check
             fish_sellable = True
+            potato_sellable = True
             global cooked_fish
+            global cooked_potato
             
-            if customers > cooked_fish:
+            if fish_customers > cooked_fish:
                 print("Fred: Welp, we're out of fish!")
                 fish_sellable = False
-                return
-            if cu
+                if not level >= 3:
+                    GameInit.end()
+                    return
+            if level >= 3:
+                if potato_customers > cooked_potato:
+                    print("Fred: Welp, we're out of chips!")
+                    potato_sellable = False
+            if (fish_sellable == False) and (potato_sellable == False):
+                GameInit.end()
 
-            global cooked_fish_cost
-            cooked_fish = cooked_fish - customers
-            profit = customers * cooked_fish_cost
+            global cooked_fish_cost, cooked_potato_cost
+            cooked_fish = cooked_fish - fish_customers
+            profit = 0
+            profit = (fish_customers * cooked_fish_cost)
 
-            
-            if customers == 0:
-                print("Fred: "+str(customers)+" customers have come in. Gosh darn'it!")
-            
+            if level >= 3:
+                cooked_potato = cooked_potato - potato_customers
+                profit = profit + (potato_customers * cooked_potato_cost)
+                if potato_customers == 0:
+                    print("Fred: "+str(potato_customers)+" customers bought any fish.")
+                    
+            if fish_customers == 0:
+                print("Fred: "+str(fish_customers)+" customers bought any fish.")
+                customers = fish_customers
+                hour_exp = fish_hour_exp
             else:
-                print("Fred: "+str(customers)+" customers have come in. They ordered "+str(customers)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
+                if level >= 3:
+                    customers = fish_customers + potato_customers
+                    hour_exp = fish_hour_exp + potato_hour_exp
+                else:
+                    customers = fish_customers
+                    hour_exp = fish_hour_exp
+                print("Fred: "+str(customers)+" customers have come in. They ordered "+str(fish_customers)+" cooked fish and we now have "+str(cooked_fish)+" cooked fish left!")
+                if level >= 3:
+                    print("Fred: They also also bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
                 print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
 
             #managing totals
@@ -286,9 +319,10 @@ class GameMain():
                 exp = exp - req_exp
                 req_exp = req_exp * 2
                 print("Uncle Bob: Congratulations! You levelled up to "+str(level)+"!")
+                print("Uncle Bob: With this, your reputation has increased.")
             
             if daytime >= 7:           
-                 #end of day
+                #end of day
                 GameInit.end()
                 return
             
