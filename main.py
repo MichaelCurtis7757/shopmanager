@@ -99,11 +99,7 @@ class GameInit():
 
     @staticmethod
     def buy_stock():
-        global fish
-        global fish_cost
-        global cash
-        global potato
-        global potato_cost
+        global fish, fish_cost, potato, potato_cost, cash
 
         ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning (You have $"+ str(cash)+")? ")
         if ask_stock.lower() in ["yes", "y"]:
@@ -143,10 +139,7 @@ class GameInit():
     @staticmethod
     def cook_stock():
         #variables
-        global fish
-        global cooked_fish
-        global potato
-        global cooked_potato
+        global fish, cooked_fish, potato, cooked_potato
 
         #fish
         print("Fred: Sounds good! How many fish do you want to cook this morning? ")
@@ -163,8 +156,6 @@ class GameInit():
             print("Fred: Al'ight Boss, "+str(cooked_fish)+" fish were cooked!")
 
         #potato
-        if not level < 3:
-            return
         if level >= 3:
             ask_pots = input("Would you like to cook chips today? ")
             if ask_pots.lower() in ["yes", "y"]:
@@ -181,13 +172,14 @@ class GameInit():
                     cooked_potato = ask_potato
                     print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
             if ask_buy.lower() in ["no", "n"]:
-                print("Fred: Sounds good boss!")
+                print("Fred: Okay boss.")
+        else:
+            return
 
     @staticmethod
     def special_days():
         #special days
-        global cash
-        global day
+        global cash, day
         if day == 1:
             print("-= Day 1: The Beginning =-")
             print("Uncle Bob: Welcome to ShopManager! You must run the shop inherited from me, your Uncle Bob!")
@@ -222,6 +214,9 @@ class GameMain():
 
     @staticmethod
     def generic_day():
+        #global imports
+        global level, cooked_fish, cooked_potato, cooked_fish_cost, cooked_potato_cost, total_customers, total_profit, cash, exp, req_exp
+        
         #start of day
         GameInit.special_days()
         GameInit.buy_stock()
@@ -237,7 +232,6 @@ class GameMain():
             time.sleep(2)
 
             #customers entering
-            global level
             fish_rand_no = level * randint(1, 3)
             fish_customers = randint(0, fish_rand_no)
             fish_hour_exp = fish_customers * fish_exp
@@ -251,8 +245,6 @@ class GameMain():
             #stock check
             fish_sellable = True
             potato_sellable = True
-            global cooked_fish
-            global cooked_potato
             
             if fish_customers > cooked_fish:
                 print("Fred: Welp, we're out of fish!")
@@ -260,13 +252,14 @@ class GameMain():
                 if not level >= 3:
                     GameInit.end()
                     return
+                
             if (level >= 3) and (potato_customers > cooked_potato):
                 print("Fred: Welp, we're out of chips!")
                 potato_sellable = False
+                
             if (fish_sellable == False) and (potato_sellable == False):
                 GameInit.end()
-
-            global cooked_fish_cost, cooked_potato_cost
+            
             cooked_fish = cooked_fish - fish_customers
             profit = 0
             profit = (fish_customers * cooked_fish_cost)
@@ -291,26 +284,20 @@ class GameMain():
                 print("Fred: "+str(customers)+" customers have come in. They ordered "+str(fish_customers)+" cooked fish and we now have "+str(cooked_fish)+" left!")
                 if potato_sellable == False:
                     print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
+                if (potato_sellable == True) and (level <= 3):
+                    print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
                 elif level >= 3:
                     print("Fred: They also also bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
                     print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
 
             #managing totals
-            global total_customers
             total_customers = total_customers + customers
-            global total_profit
             total_profit = total_profit + profit
 
-            global cash
             cash = cash + profit
-            global exp
             exp = exp + hour_exp
 
             #run level check
-            global exp
-            global req_exp
-            global level
-        
             if exp >= req_exp:
                 level = level + 1
                 exp = exp - req_exp
@@ -357,51 +344,36 @@ class SaveLoad():
     @staticmethod
     def load():
         #handles game loading
-        print("Game: Loading Game...")
         save_name = input("Game: What is the name of the save file? ")
+        print("Game: Loading Game...")
         GameInit.variables()
 
+        global username, day, level, cash, fish, potato, exp, req_exp
+        
         file = open(save_name+".shs", "r")
         #username
-        load_username = file.readline().replace("\n", "")
-        global username
-        username = load_username
+        username = file.readline().replace("\n", "")
 
         #day
-        load_day = file.readline().replace("\n", "")
-        global day
-        day = int(load_day)
+        day = int(file.readline().replace("\n", ""))
 
         #level
-        load_level = file.readline().replace("\n", "")
-        global level
-        level = int(load_level)
+        level = int(file.readline().replace("\n", ""))
 
         #cash
-        load_cash = file.readline().replace("\n", "")
-        global cash
-        cash = int(load_cash)
+        cash = int(file.readline().replace("\n", ""))
 
         #fish
-        load_fish = file.readline().replace("\n", "")
-        global fish
-        fish = int(load_fish)
+        fish = int(file.readline().replace("\n", ""))
         
         #potato
-        load_potato = file.readline().replace("\n", "")
-        global potato
-        potato = int(load_potato)
+        potato = int(file.readline().replace("\n", ""))
 
         #exp
-        load_exp = file.readline().replace("\n", "")
-        global exp
-        exp = int(load_exp)
+        exp = int(file.readline().replace("\n", ""))
 
         #req_exp
-        load_req_exp = file.readline().replace("\n", "")
-        global req_exp
-        req_exp = int(load_req_exp)
-
+        req_exp = int(file.readline().replace("\n", ""))
         print("Game: Game Loaded!")
         GameMain.main()
         
