@@ -38,6 +38,11 @@ class GameInit():
 
         fish_exp = 1
         potato_exp = 2
+
+    @staticmethod
+    def tutorial():
+        #tutorial func. teachering the user
+        print("Uncle Bob: Welcome to the tutorial!")
     
     @staticmethod
     def manager_name():
@@ -102,7 +107,7 @@ class GameInit():
 
         ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning (You have $"+ str(cash)+")? ")
         if ask_stock.lower() in ["yes", "y"]:
-            ask_buy = input("Fred: Okay boss, would you like to buy some fish (Stock: "+str(fish)+") Potatoes (Stock: "+str(potato)+")? ")
+            ask_buy = input("Fred: Okay boss, would you like to buy some fish (Stock: "+str(fish)+") or potatoes (Stock: "+str(potato)+")? ")
             #fish
             if ask_buy.lower() in ["fish", "f"]:
                 ask_amount = int(input("Fred: How many Fish would you like to order? ($" + str(fish_cost) + " a fish) "))
@@ -121,7 +126,7 @@ class GameInit():
                     print("Sorry! You need to be level 3 to unlock this!")
                     buy_stock()
                 else:
-                    ask_amount = int(input("Fred: How many Potatoes would you like to order? ($" + str(potato_cost) + " a fish) "))
+                    ask_amount = int(input("Fred: How many Potatoes would you like to order? ($" + str(potato_cost) + " a potato) "))
                     if ask_amount > cash:
                         print("Fred: Sorry, we don't have the money to order that much!")
                         buy_stock()
@@ -151,7 +156,7 @@ class GameInit():
             cook_stock()
             return
         else:
-            print("Fred: I'll cook the fish now Boss!")
+            print("Fred: I'll cook the fish now Boss!")    
             time.sleep(1.5)
             fish = fish - ask_fish
             cooked_fish = ask_fish
@@ -178,6 +183,34 @@ class GameInit():
             if ask_buy.lower() in ["no", "n"]:
                 print("Fred: Sounds good boss!")
 
+    @staticmethod
+    def special_days():
+        #special days
+        global cash
+        global day
+        if day == 1:
+            print("-= Day 1: The Beginning =-")
+            print("Uncle Bob: Welcome to ShopManager! You must run the shop inherited from me, your Uncle Bob!")
+            time.sleep(1.5)
+        
+        if day == 7:
+            print("-= Day 7: The First Week =-")
+            print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra $50 to get you on your way!")
+            cash = cash + 50
+            print("Game: You now have $"+str(cash)+"!")
+            time.sleep(1.5)
+
+        if day == 14:
+            print("-= Day 14: The Second Week =-")
+            print("Uncle Bob: Congratulations "+username+", you made it through a second week. Impressive! Here's an extra $100 to get you on your way!")
+            cash = cash + 100
+            print("Game: You now have $"+str(cash)+"!")
+            time.sleep(1.5)
+
+        
+        elif not (day == 1) or (day == 7) or (day == 14):
+            print("-= Day "+str(day)+" =-")
+            time.sleep(1.5)
 
 class GameMain():
     #handles the main game
@@ -189,34 +222,8 @@ class GameMain():
 
     @staticmethod
     def generic_day():
-        #special days
-        if day == 1:
-            print("-= Day 1: The Beginning =-")
-            print("Uncle Bob: Welcome to ShopManager! You must run the shop inherited from me, your Uncle Bob!")
-            time.sleep(1.5)
-        
-        if day == 7:
-            print("-= Day 7: The First Week =-")
-            print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra $50 to get you on your way!")
-            global cash
-            cash = cash + 50
-            print("Game: You now have $"+str(cash)+"!")
-            time.sleep(1.5)
-
-        if day == 14:
-            print("-= Day 14: The Second Week =-")
-            print("Uncle Bob: Congratulations "+username+", you made it through a second week. Impressive! Here's an extra $100 to get you on your way!")
-            global cash
-            cash = cash + 100
-            print("Game: You now have $"+str(cash)+"!")
-            time.sleep(1.5)
-
-        
-        elif not (day == 1) or (day == 7) or (day == 14):
-            print("-= Day "+str(day)+" =-")
-            time.sleep(1.5)
-
         #start of day
+        GameInit.special_days()
         GameInit.buy_stock()
         GameInit.cook_stock()
         
@@ -226,22 +233,7 @@ class GameMain():
 
         while True:
             #time prints
-            if daytime == 0:
-                print("Game: 3:00pm")
-            if daytime == 1:
-                print("Game: 4:00pm")
-            if daytime == 2:
-                print("Game: 5:00pm")
-            if daytime == 3:
-                print("Game: 6:00pm")
-            if daytime == 4:
-                print("Game: 7:00pm")
-            if daytime == 5:
-                print("Game: 8:00pm")
-            if daytime == 6:
-                print("Game: 9:00pm")
-            if daytime == 7:
-                print("Game: 10:00pm")
+            print("Game: "+str((daytime + 3))+":00pm")
             time.sleep(2)
 
             #customers entering
