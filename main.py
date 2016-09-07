@@ -49,15 +49,14 @@ class GameInit():
         #handles the username
         global username
         username = input("Uncle Bob: What is your name, I always forget... ")
-        username_ch = input("Uncle Bob: Just to check, your name is "+username+", right? ")
-        username_ch = username_ch.lower()
-        if username_ch in ["yes", "y"]:
+        username_ch = input("Uncle Bob: Just to check, your name is "+username+" right? ")
+        if username_ch.lower() in ["yes", "y"]:
             return
-        if username_ch in ["no", "n"]:
+        if username_ch.lower() in ["no", "n"]:
             GameInit.manager_name()
             return
         else:
-            print("Game: Please enter a valid response!")
+            print("Game: Please enter a valid reply.")
             GameInit.manager_name()
 
     @staticmethod  
@@ -72,12 +71,18 @@ class GameInit():
             GameMain.main()
             return
         if pre_init in ["no", "n"]:
-            SaveLoad.load()
-            return
+            ask_load = input("Game: Would you like to load a previous game? ")
+            if ask_load in ["yes", "y"]:
+                SaveLoad.load()
+                return
+            if ask_load in ["no", "n"]:
+                return
+            else:
+                print("Game: Please enter a valid reply.")
+                GameInit.startup()
         else:
-            print("Game: Please enter a valid response!")
+            print("Game: Please enter a valid reply.")
             GameInit.startup()
-
     @staticmethod
     def end():
         print("Fred: Congratulations Boss, you finished the day!")
@@ -118,7 +123,7 @@ class GameInit():
                     return
             #potato
             if ask_buy.lower() in ["potato", "potatoes", "p"]:
-                if not level < 3:
+                if level < 3:
                     print("Sorry! You need to be level 3 to unlock this!")
                     buy_stock()
                 else:
@@ -132,10 +137,17 @@ class GameInit():
                         potato = potato + ask_amount
                         print("Fred: The order has arrived thanks to Congo Prime and it's instant delivery!")
                         return
+            else:
+                print("Game: Please enter a valid reply.")
+                GameInit.buy_stock()
+                
         if ask_stock.lower() in ["no", "n"]:
             print("Fred: We can always order more tomorrow if we need.")
             return
-            
+        
+        else:
+            print("Game: Please enter a valid reply.")
+            GameInit.buy_stock()
     @staticmethod
     def cook_stock():
         #variables
@@ -173,6 +185,9 @@ class GameInit():
                     print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
             if ask_buy.lower() in ["no", "n"]:
                 print("Fred: Okay boss.")
+            else:
+                print("Game: Please enter a valid reply.")
+                GameInit.cook_stock()
         else:
             return
 
@@ -203,6 +218,8 @@ class GameInit():
         elif not (day == 1) or (day == 7) or (day == 14):
             print("-= Day "+str(day)+" =-")
             time.sleep(1.5)
+        else:
+            return
 
 class GameMain():
     #handles the main game
@@ -312,8 +329,8 @@ class GameMain():
                     #end of day
                     GameInit.end()
                     return
-            
-            daytime = daytime + 1
+            else:
+                daytime = daytime + 1
             
 class SaveLoad():
     #handles the save/load functions
