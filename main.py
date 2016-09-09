@@ -83,6 +83,7 @@ class GameInit():
         else:
             print("Game: Please enter a valid reply.")
             GameInit.startup()
+            
     @staticmethod
     def end():
         print("Fred: Congratulations Boss, you finished the day!")
@@ -169,6 +170,7 @@ class GameInit():
             print("Fred: Al'ight Boss, "+str(cooked_fish)+" fish were cooked!")
             return
 
+    @staticmethod
     def cook_potato():
         #potato
         ask_pots = input("Fred: Would you like to cook chips today? ")
