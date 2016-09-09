@@ -88,10 +88,11 @@ class GameInit():
             
     @staticmethod
     def end():
+        global cooked_fish, cooked_potato
         print("Fred: Congratulations Boss, you finished the day!")
         print("Fred: You sold "+str(total_customers)+" stock and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
-        if (cooked_fish > 0) or (cooked_potatoes > 0):
+        if (cooked_fish > 0) or (cooked_potato > 0):
             print("Fred: Sadly, all unsold food had to be thrown away.")
         daytime = 0
         global day
@@ -177,7 +178,7 @@ class GameInit():
     @staticmethod
     def cook_potato():
         #variables
-        global potato, cooked_potato, level
+        global potato, cooked_potato, level, potato_sellable
         #potato
         ask_pots = input("Fred: Would you like to cook chips today? ")
         if ask_pots.lower() in ["yes", "y"]:
@@ -195,6 +196,7 @@ class GameInit():
                 print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
                 return
         if ask_pots.lower() in ["no", "n"]:
+            potato_sellable = False
             print("Fred: Okay boss.")
 
     @staticmethod
@@ -221,7 +223,7 @@ class GameInit():
             time.sleep(1.5)
 
         
-        elif not (day == 1) or (day == 7) or (day == 14):
+        elif day not in [1, 7, 14]:
             print("-= Day "+str(day)+" =-")
             time.sleep(1.5)
         else:
@@ -239,7 +241,7 @@ class GameMain():
     def generic_day():
         #global imports
         global level, cooked_fish, cooked_potato, cooked_fish_cost, cooked_potato_cost, total_customers, total_profit, cash, exp, req_exp, fish_sellable, potato_sellable
-        
+                
         #start of day
         GameInit.special_days()
         GameInit.buy_stock()
@@ -251,8 +253,14 @@ class GameMain():
         print("Fred: Well "+username+", we'd better open up for the day.")
         profit = 0
         daytime = 0
+        potato_customers = 0
 
         while True:
+            #checking if the the daytime is past 9pm
+            if daytime >= 7:
+                GameInit.end()
+                return
+                
             #printing the current time of day
             print("Game: "+str((daytime + 3))+":00pm")
             time.sleep(2)
@@ -283,16 +291,17 @@ class GameMain():
                 GameInit.end()
 
             #printing the sold fish and chips
-            cooked_fish = cooked_fish - fish_customers
-            profit = (fish_customers * cooked_fish_cost)
-            hour_exp = fish_hour_exp
+            if fish_sellable == True:
+                cooked_fish = cooked_fish - fish_customers
+                profit = (fish_customers * cooked_fish_cost)
+                hour_exp = fish_hour_exp
             
-            if fish_customers == 0:
-                print("Fred: No customers bought any fish.")
-            if fish_customers > 0:
-                print("Fred: "+str(fish_customers)+" customers visted and ordered "+str(fish_customers)+" fish and we now have "+str(cooked_fish)+" left.")
+                if fish_customers == 0:
+                    print("Fred: No customers bought any fish.")
+                if fish_customers > 0:
+                    print("Fred: "+str(fish_customers)+" customers visted and ordered "+str(fish_customers)+" fish and we now have "+str(cooked_fish)+" fish left.")
             
-            if level >= 3:
+            if level >= 3 and potato_sellable == True:
                 cooked_potato = cooked_potato - potato_customers
                 profit = profit + (potato_customers * cooked_potato_cost)
                 hour_exp = fish_hour_exp + potato_hour_exp
@@ -300,7 +309,7 @@ class GameMain():
                 if potato_customers == 0:
                     print("Fred: No customers bought any chips.")
                 if potato_customers > 0:
-                    print("Fred: "+str(potato_customers)+" bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
+                    print("Fred: "+str(potato_customers)+" customers bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
 
             print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
              
@@ -323,9 +332,7 @@ class GameMain():
             if daytime >= 7:
                 if (fish_sellable == False) and (potato_sellable == False):
                     return
-                else:
-                    GameInit.end()
-                    return
+                GameInit.end()
             else:
                 daytime = daytime + 1
             
