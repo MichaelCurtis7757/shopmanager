@@ -43,8 +43,20 @@ class GameInit():
 
     @staticmethod
     def tutorial():
-        #tutorial func. teachering the user
+        #tutorial func. teaching the user
         print("Uncle Bob: Welcome to the tutorial!")
+
+    @staticmethod
+    def achievements():
+        #manages the games achievements
+        def check_achievements():
+            print("Annie: Welcome to the achievements!")
+                  
+    @staticmethod
+    def collection():
+        #manages the collectables system
+        def check_collection():
+            print("Joe: Welcome to my joke collection!")
     
     @staticmethod
     def manager_name():
