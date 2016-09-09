@@ -88,7 +88,8 @@ class GameInit():
         print("Fred: Congratulations Boss, you finished the day!")
         print("Fred: You sold "+str(total_customers)+" stock and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
-        print("Fred: Sadly, all unsold food had to be thrown away.")
+        if (cooked_fish > 0) or (cooked_potatoes > 0):
+            print("Fred: Sadly, all unsold food had to be thrown away.")
         daytime = 0
         global day
         day = day + 1
@@ -104,7 +105,7 @@ class GameInit():
 
     @staticmethod
     def buy_stock():
-        global fish, fish_cost, potato, potato_cost, cash
+        global fish, fish_cost, potato, potato_cost, cash, level
 
         ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning (You have $"+ str(cash)+")? ")
         if ask_stock.lower() in ["yes", "y"]:
@@ -126,7 +127,7 @@ class GameInit():
                 if level < 3:
                     print("Sorry! You need to be level 3 to unlock this!")
                     buy_stock()
-                else:
+                elif level >= 3:
                     ask_amount = int(input("Fred: How many Potatoes would you like to order? ($" + str(potato_cost) + " a potato) "))
                     if ask_amount > cash:
                         print("Fred: Sorry, we don't have the money to order that much!")
@@ -149,16 +150,16 @@ class GameInit():
             print("Game: Please enter a valid reply.")
             GameInit.buy_stock()
     @staticmethod
-    def cook_stock():
+    def cook_fish():
         #variables
-        global fish, cooked_fish, potato, cooked_potato
+        global fish, cooked_fish, potato, cooked_potato, level
 
         #fish
         print("Fred: Sounds good! How many fish do you want to cook this morning? ")
         ask_fish = int(input("Fred: Oh, you currently have "+str(fish)+": "))
         if ask_fish > fish:
             print("Fred: Boss, you can't cook more than you have!")
-            cook_stock()
+            GameInit.cook_stock()
             return
         else:
             print("Fred: I'll cook the fish now Boss!")    
@@ -166,30 +167,27 @@ class GameInit():
             fish = fish - ask_fish
             cooked_fish = ask_fish
             print("Fred: Al'ight Boss, "+str(cooked_fish)+" fish were cooked!")
-
-        #potato
-        if level >= 3:
-            ask_pots = input("Would you like to cook chips today? ")
-            if ask_pots.lower() in ["yes", "y"]:
-                print("Fred: Sounds great! How many fish do you want to cook this morning? ")
-                ask_potato = int(input("Fred: Oh, you currently have "+str(potato)+": "))
-                if ask_potato > potato:
-                    print("Fred: Boss, you can't cook more than you have!")
-                    cook_stock()
-                    return
-                else:
-                    print("Fred: I'll cook the fish now Boss!")
-                    time.sleep(1.5)
-                    potato = potato - ask_potato
-                    cooked_potato = ask_potato
-                    print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
-            if ask_buy.lower() in ["no", "n"]:
-                print("Fred: Okay boss.")
-            else:
-                print("Game: Please enter a valid reply.")
-                GameInit.cook_stock()
-        else:
             return
+
+    def cook_potato():
+        #potato
+        ask_pots = input("Fred: Would you like to cook chips today? ")
+        if ask_pots.lower() in ["yes", "y"]:
+            print("Fred: Sounds great! How many potato do you want to cook this morning? ")
+            ask_potato = int(input("Fred: Oh, you currently have "+str(potato)+": "))
+            if ask_potato > potato:
+                print("Fred: Boss, you can't cook more than you have!")
+                cook_stock()
+                return
+            else:
+                print("Fred: I'll cook the potatoes now Boss!")
+                time.sleep(1.5)
+                potato = potato - ask_potato
+                cooked_potato = ask_potato
+                print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
+                return
+        if ask_pots.lower() in ["no", "n"]:
+            print("Fred: Okay boss.")
 
     @staticmethod
     def special_days():
@@ -237,7 +235,9 @@ class GameMain():
         #start of day
         GameInit.special_days()
         GameInit.buy_stock()
-        GameInit.cook_stock()
+        GameInit.cook_fish()
+        if level >= 3:
+            GameInit.cook_potato()
         
         #middle section of day
         print("Fred: Well boss, we'd better open up for the day.")
