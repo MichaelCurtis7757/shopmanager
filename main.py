@@ -69,7 +69,7 @@ class GameInit():
         #handles the shop
         global shop
         shop = input("Uncle Bob: What would you like to shop to be renamed to? ")
-        shop_ch = input("Uncle Bob: You want it called "+shop+"?")
+        shop_ch = input("Uncle Bob: You want it called "+shop+"? ")
         if shop_ch.lower() in ["yes", "y"]:
             return
         if shop_ch.lower() in ["no", "n"]:
@@ -223,10 +223,10 @@ class GameInit():
     @staticmethod
     def special_days():
         #special days
-        global cash, day
+        global cash, day, shop
         if day == 1:
             print("-= Day 1: The Beginning =-")
-            print("Uncle Bob: Welcome to ShopManager "+username+"! You must run the shop inherited from me, your Uncle Bob!")
+            print("Uncle Bob: Welcome to ShopManager "+username+"! You must run "+shop+" inherited from me, your Uncle Bob!")
             time.sleep(1.5)
         
         if day == 7:
@@ -454,7 +454,7 @@ class SaveLoad():
         req_exp = int(file.readline().replace("\n", ""))
 
         #shop
-        shop = file.readline().replace("\n", ""))
+        shop = file.readline().replace("\n", "")
 
         print("Game: Game Loaded!")
         GameMain.main()
