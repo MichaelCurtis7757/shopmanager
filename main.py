@@ -7,8 +7,9 @@ class GameInit():
     @staticmethod
     def variables():
         #general
-        global day, rand_day, cash, level, exp, req_exp, total_customers, total_profit
-        
+        global day, rand_day, cash, level, exp, req_exp, total_customers, total_profit, shop
+
+        shop = "The Shop"
         day = 1
         rand_day = 0
         cash = 50
@@ -43,10 +44,10 @@ class GameInit():
         potato_exp = 2
 
         #fail/rand states
-        global radn1, fail1
+        global rand1, fail1
 
-        rand1 == False
-        fail1 == False
+        rand1 = False
+        fail1 = False
     
     @staticmethod
     def manager_name():
@@ -63,6 +64,22 @@ class GameInit():
             print("Game: Please enter a valid reply.")
             GameInit.manager_name()
 
+    @staticmethod
+    def shop_name():
+        #handles the shop
+        global shop
+        shop = input("Uncle Bob: What would you like to shop to be renamed to? ")
+        shop_ch = input("Uncle Bob: You want it called "+shop+"?")
+        if shop_ch.lower() in ["yes", "y"]:
+            return
+        if shop_ch.lower() in ["no", "n"]:
+            GameInit.shop_name()
+            return
+        else:
+            print("Game: Please enter a valid reply.")
+            GameInit.shop_name()
+
+
     @staticmethod  
     def startup():
         #runs all the startup stuff
@@ -72,6 +89,7 @@ class GameInit():
         if pre_init in ["yes", "y"]:
             GameInit.variables()
             GameInit.manager_name()
+            GameInit.shop_name()
             GameMain.main()
             return
         if pre_init in ["no", "n"]:
@@ -247,7 +265,7 @@ class GameInit():
     @staticmethod
     def game_over():
         #manages the game over state
-        global username
+        global username, fail1
         if username == "Hudson":
             print("Uncle Bob: It's gamer over man, game over!")
         if cash > 0:
@@ -342,7 +360,7 @@ class GameMain():
             print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
              
             #managing the totals for profit and customers
-            total_customers = total_customers = (fish_customers + potato_customers)
+            total_customers = total_customers + (fish_customers + potato_customers)
             total_profit = total_profit + profit
 
             cash = cash + profit
@@ -372,6 +390,7 @@ class SaveLoad():
     @staticmethod
     def save():
         #handles game saving
+        global fail1
         save_name = input("Game: What would you like the save file to be called? ")
         print("Game: Saving Game...")
         file = open(save_name+".shs", "w")
@@ -391,8 +410,10 @@ class SaveLoad():
         file.write("\n")
         file.write(str(req_exp))
         file.write("\n")
+        file.write(shop)
+        file.write("\n")
         if fail1 == True:
-            file.write("Failed: Out of Cash"))
+            file.write("Failed: Out of Cash")
             file.write("\n")
             
         print("Game: Game Saved!")
@@ -431,6 +452,10 @@ class SaveLoad():
 
         #req_exp
         req_exp = int(file.readline().replace("\n", ""))
+
+        #shop
+        shop = file.readline().replace("\n", ""))
+
         print("Game: Game Loaded!")
         GameMain.main()
         
