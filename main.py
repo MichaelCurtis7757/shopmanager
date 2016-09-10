@@ -1,5 +1,5 @@
 #Shop Manager
-import time
+import time, sys
 from random import randint
 
 class GameInit():
@@ -7,9 +7,10 @@ class GameInit():
     @staticmethod
     def variables():
         #general
-        global day, cash, level, exp, req_exp, total_customers, total_profit
+        global day, rand_day, cash, level, exp, req_exp, total_customers, total_profit
         
         day = 1
+        rand_day = 0
         cash = 50
         level = 1
         exp = 0
@@ -33,7 +34,7 @@ class GameInit():
         fish_cost = 1
         cooked_fish_cost = 2
         potato_cost = 2
-        cooked_potato_cost = 2
+        cooked_potato_cost = 3
 
         #exp values
         global fish_exp, potato_exp
@@ -41,22 +42,11 @@ class GameInit():
         fish_exp = 1
         potato_exp = 2
 
-    @staticmethod
-    def tutorial():
-        #tutorial func. teaching the user
-        print("Uncle Bob: Welcome to the tutorial!")
+        #fail/rand states
+        global radn1, fail1
 
-    @staticmethod
-    def achievements():
-        #manages the games achievements
-        def check_achievements():
-            print("Annie: Welcome to the achievements!")
-                  
-    @staticmethod
-    def collection():
-        #manages the collectables system
-        def check_collection():
-            print("Joe: Welcome to my joke collection!")
+        rand1 == False
+        fail1 == False
     
     @staticmethod
     def manager_name():
@@ -167,6 +157,7 @@ class GameInit():
         else:
             print("Game: Please enter a valid reply.")
             GameInit.buy_stock()
+            
     @staticmethod
     def cook_fish():
         #variables
@@ -235,10 +226,34 @@ class GameInit():
             time.sleep(1.5)
 
         
-        elif day not in [1, 7, 14]:
+        elif day not in [1, 7, 14, rand_day]:
             print("-= Day "+str(day)+" =-")
             time.sleep(1.5)
         else:
+            return
+
+    @staticmethod
+    def random_days():
+        global day, rand_day, rand1
+        #picks a random day and runs a special feature
+        rand_day = randint(2, 6)
+        if (rand_day == day) and (rand1 == False):
+            print("-= Day "+str(rand_day)+": The Leak =-")
+            print("Uncle Bob: It rained hard last night and a leak was found in the shop. You we're charged $10 to fix it!")
+            cash = cash - 10
+            print("Uncle Bob: You now have $"+str(cash)+" left!")
+            rand1 == True
+
+    @staticmethod
+    def game_over():
+        #manages the game over state
+        global username
+        if username == "Hudson":
+            print("Uncle Bob: It's gamer over man, game over!")
+        if cash > 0:
+            print("Uncle Bob: You ran out of money, and the shop had to close. Try to mange your money better in the future.")
+            fail1 == True
+            SaveLoad.save()
             return
 
 class GameMain():
@@ -255,6 +270,7 @@ class GameMain():
         global level, cooked_fish, cooked_potato, cooked_fish_cost, cooked_potato_cost, total_customers, total_profit, cash, exp, req_exp, fish_sellable, potato_sellable
                 
         #start of day
+        GameInit.random_days()
         GameInit.special_days()
         GameInit.buy_stock()
         GameInit.cook_fish()
@@ -345,6 +361,9 @@ class GameMain():
                 if (fish_sellable == False) and (potato_sellable == False):
                     return
                 GameInit.end()
+                GameInit.game_over()
+                if fail1 == True:
+                    sys.exit() 
             else:
                 daytime = daytime + 1
             
@@ -372,7 +391,12 @@ class SaveLoad():
         file.write("\n")
         file.write(str(req_exp))
         file.write("\n")
+        if fail1 == True:
+            file.write("Failed: Out of Cash"))
+            file.write("\n")
+            
         print("Game: Game Saved!")
+
 
     @staticmethod
     def load():
