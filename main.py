@@ -179,7 +179,7 @@ class GameInit():
     @staticmethod
     def cook_fish():
         #variables
-        global fish, cooked_fish, level
+        global username, fish, cooked_fish, level, cooked_fish_cost
 
         #fish
         print("Fred: Perfect! How many fish do you want to cook this morning? ")
@@ -187,19 +187,25 @@ class GameInit():
         if ask_fish > fish:
             print("Fred: Boss, you can't cook more than you have!")
             GameInit.cook_stock()
-            return
         else:
             print("Fred: I'll cook the fish now Boss!")    
             time.sleep(1.5)
             fish = fish - ask_fish
             cooked_fish = ask_fish
             print("Fred: Al'ight Boss, "+str(cooked_fish)+" fish were cooked!")
+        
+        ask_chg = input("Fred: Would you like to change the price today? (Current: $"+str(cooked_fish_cost)+") ")
+        if ask_chg in ["yes", "y"]:
+            cooked_fish_cost = float(input("Fred: What would you like it to be? "))
+            return
+        if ask_chg in ["no", "n"]:
+            print("Fred: Okay "+username)
             return
 
     @staticmethod
     def cook_potato():
         #variables
-        global potato, cooked_potato, level, potato_sellable
+        global potato, cooked_potato, level, potato_sellable, username, cooked_potato_cost
         #potato
         ask_pots = input("Fred: Would you like to cook chips today? ")
         if ask_pots.lower() in ["yes", "y"]:
@@ -207,18 +213,25 @@ class GameInit():
             ask_potato = int(input("Fred: By the way, you currently have "+str(potato)+": "))
             if ask_potato > potato:
                 print("Fred: Boss, you can't cook more than you have!")
-                cook_stock()
-                return
+                cook_stock()    
             else:
                 print("Fred: I'll cook the potatoes now Boss!")
                 time.sleep(1.5)
                 potato = potato - ask_potato
                 cooked_potato = ask_potato
                 print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
-                return
+            
         if ask_pots.lower() in ["no", "n"]:
             potato_sellable = False
             print("Fred: Okay boss.")
+
+        ask_chg = input("Fred: Would you like to change the price today? (Current: $"+str(cooked_potato_cost)+") ")
+        if ask_chg in ["yes", "y"]:
+            cooked_potato_cost = float(input("Fred: What would you like it to be? "))
+            return
+        if ask_chg in ["no", "n"]:
+            print("Fred: Okay "+username)
+            return
 
     @staticmethod
     def special_days():
@@ -252,7 +265,7 @@ class GameInit():
 
     @staticmethod
     def random_days():
-        global day, rand_day, rand1
+        global day, rand_day, rand1, cash
         #picks a random day and runs a special feature
         rand_day = randint(2, 6)
         if (rand_day == day) and (rand1 == False):
@@ -312,12 +325,25 @@ class GameMain():
             time.sleep(2)
 
             #calculaing the amount of customers and exp
-            fish_rand_no = level * randint(1, 3)
+            
+            if cooked_fish_cost < 1:
+                fish_rand_no = level * randint(1, 6)
+            if (cooked_fish_cost >= 1) or (cooked_fish_cost <= 3):
+                fish_rand_no = level * randint(1, 3)
+            if cooked_fish_cost > 4:
+                fish_rand_no = level * randint(1, 1)
+            
             fish_customers = randint(0, fish_rand_no)
             fish_hour_exp = fish_customers * fish_exp
 
             if level >= 3:
-                potato_rand_no = level * randint(1, 3)
+                if cooked_potato_cost < 2:
+                    potato_rand_no = level * randint(1, 6)
+                if (cooked_potato_cost >= 2) or (cooked_potato_cost <= 5):
+                    potato_rand_no = level * randint(1, 3)
+                if cooked_fpotato_cost > 6:
+                    potato_rand_no = level * randint(1, 1)
+                    
                 potato_customers = randint(0, potato_rand_no)
                 potato_hour_exp = potato_customers * fish_exp
                 
