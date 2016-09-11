@@ -108,7 +108,9 @@ class GameInit():
             
     @staticmethod
     def end():
-        global cooked_fish, cooked_potato
+        global cooked_fish, cooked_potato, fish_sellable, potato_sellable
+        fish_sellable = True
+        potato_sellable = True
         print("Fred: Congratulations Boss, you finished the day!")
         print("Fred: You sold "+str(total_customers)+" stock and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
@@ -465,7 +467,7 @@ class SaveLoad():
         level = int(file.readline().replace("\n", ""))
 
         #cash
-        cash = int(file.readline().replace("\n", ""))
+        cash = float(file.readline().replace("\n", ""))
 
         #fish
         fish = int(file.readline().replace("\n", ""))
