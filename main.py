@@ -328,7 +328,7 @@ class GameMain():
             
             if cooked_fish_cost < 1:
                 fish_rand_no = level * randint(1, 6)
-            if (cooked_fish_cost >= 1) or (cooked_fish_cost <= 3):
+            if 1 <= cooked_potato_cost <= 3:
                 fish_rand_no = level * randint(1, 3)
             if cooked_fish_cost > 4:
                 fish_rand_no = level * randint(1, 1)
@@ -339,7 +339,7 @@ class GameMain():
             if level >= 3:
                 if cooked_potato_cost < 2:
                     potato_rand_no = level * randint(1, 6)
-                if (cooked_potato_cost >= 2) or (cooked_potato_cost <= 5):
+                if 2 <= cooked_potato_cost <= 5:
                     potato_rand_no = level * randint(1, 3)
                 if cooked_fpotato_cost > 6:
                     potato_rand_no = level * randint(1, 1)
