@@ -112,7 +112,7 @@ class GameInit():
         fish_sellable = True
         potato_sellable = True
         print("Fred: Congratulations Boss, you finished the day!")
-        print("Fred: You sold "+str(total_customers)+" stock and made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
+        print("Fred: You made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
         if (cooked_fish > 0) or (cooked_potato > 0):
             print("Fred: Sadly, all unsold food had to be thrown away.")
@@ -141,7 +141,7 @@ class GameInit():
                 ask_amount = int(input("Fred: How many Fish would you like to order? ($" + str(fish_cost) + " a fish) "))
                 if ask_amount > cash:
                     print("Fred: Sorry, we don't have the money to order that much!")
-                    buy_stock()
+                    GameInit.buy_stock()
                     return
                 else:
                     cash = cash - (ask_amount * fish_cost)                
@@ -272,7 +272,7 @@ class GameInit():
         rand_day = randint(2, 6)
         if (rand_day == day) and (rand1 == False):
             print("-= Day "+str(rand_day)+": The Leak =-")
-            print("Uncle Bob: It rained hard last night and a leak was found in the shop. You we're charged $10 to fix it!")
+            print("Uncle Bob: It rained hard last night and a leak was found in the shop. You were charged $10 to fix it!")
             cash = cash - 10
             print("Uncle Bob: You now have $"+str(cash)+" left!")
             rand1 == True
@@ -327,24 +327,33 @@ class GameMain():
             time.sleep(2)
 
             #calculaing the amount of customers and exp
+            fish_rand_no = level * randint(1, 3)
             
             if cooked_fish_cost < 1:
                 fish_rand_no = level * randint(1, 6)
             if 1 <= cooked_potato_cost <= 3:
                 fish_rand_no = level * randint(1, 3)
-            if cooked_fish_cost > 4:
+            if 4 < cooked_fish_cost < 10:
                 fish_rand_no = level * randint(1, 1)
-            
+            if cooked_fish_cost > 10:
+                fish_rand_no = 0
+                print("Uncle Bob: Those are some expensive fish!")
+                
             fish_customers = randint(0, fish_rand_no)
             fish_hour_exp = fish_customers * fish_exp
 
             if level >= 3:
+                potato_rand_no = level * randint(1, 3)
+                
                 if cooked_potato_cost < 2:
                     potato_rand_no = level * randint(1, 6)
                 if 2 <= cooked_potato_cost <= 5:
                     potato_rand_no = level * randint(1, 3)
-                if cooked_fpotato_cost > 6:
-                    potato_rand_no = level * randint(1, 1)
+                if 6 < cooked_fish_cost < 10:
+                    fish_rand_no = level * randint(1, 1)
+                if cooked_fish_cost > 10:
+                    fish_rand_no = 0
+                    print("Uncle Bob: Those are some expensive chips!")
                     
                 potato_customers = randint(0, potato_rand_no)
                 potato_hour_exp = potato_customers * fish_exp
