@@ -98,6 +98,7 @@ class GameInit():
                 SaveLoad.load()
                 return
             if ask_load in ["no", "n"]:
+                SaveLoad.game_quit()
                 return
             else:
                 print("Game: Please enter a valid reply.")
@@ -123,8 +124,17 @@ class GameInit():
         ask_sav = ask_sav.lower()
         if ask_sav in ["yes", "y"]:
             SaveLoad.save()
-            return
         elif ask_sav in ["no", "n"]:
+            print("")
+        else:
+            print("Game: Please enter a valid response!")
+            
+        ask_qui = input("Game: Would you like to quit your game? ")
+        ask_qui = ask_qui.lower()
+        if ask_qui in ["yes", "y"]:
+            SaveLoad.game_quit()
+            return
+        elif ask_qui in ["no", "n"]:
             return
         else:
             print("Game: Please enter a valid response!")
@@ -495,5 +505,15 @@ class SaveLoad():
 
         print("Game: Game Loaded!")
         GameMain.main()
+
+    def game_quit():
+        ask_quit = input("Game: Are you sure? ")
+        if ask_quit in ["yes", "y"]:
+            print("\n \n \n")
+            GameInit.variables()
+            GameInit.startup()
+        if ask_quit in ["no", "n"]:
+            return
+        
         
 GameInit.startup()
