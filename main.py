@@ -47,6 +47,7 @@ class GameInit():
 
         fish_exp = 1
         potato_exp = 2
+        sausage_exp = 3
 
         #fail/rand states
         global rand1, fail1
@@ -533,28 +534,34 @@ class SaveLoad():
         file = open(save_name+".shs", "w")
         file.write(username)
         file.write("\n")
+        file.write(shop)
+        file.write("\n")
+        file.write(str(fish))
+        file.write("\n")
+        file.write(str(potato))
+        file.write("\n")
+        file.write(str(sausage))
+        file.write("\n")
+        file.write(str(cooked_fish_cost))
+        file.write("\n")
+        file.write(str(cooked_potato_cost))
+        file.write("\n")
+        file.write(str(cooked_sausage_cost))
+        file.write("\n")
         file.write(str(day))
         file.write("\n")
         file.write(str(level))
         file.write("\n")
         file.write(str(cash))
         file.write("\n")
-        file.write(str(fish))
-        file.write("\n")
-        file.write(str(potato))
-        file.write("\n")
         file.write(str(exp))
         file.write("\n")
         file.write(str(req_exp))
         file.write("\n")
-        file.write(shop)
-        file.write("\n")
-        file.write(str(sausage))
-        file.write("\n")
         if fail1 == True:
             file.write("Failed: Out of Cash")
             file.write("\n")
-            
+
         print("Game: Game Saved!")
 
 
@@ -571,6 +578,27 @@ class SaveLoad():
         #username
         username = file.readline().replace("\n", "")
 
+        #shop
+        shop = file.readline().replace("\n", "")
+        
+        #fish
+        fish = int(file.readline().replace("\n", ""))
+        
+        #potato
+        potato = int(file.readline().replace("\n", ""))
+
+        #sausage
+        sausage = int(file.readline().replace("\n", ""))
+
+        #cooked fish cost
+        fish = int(file.readline().replace("\n", ""))
+        
+        #cooked potato cost
+        potato = int(file.readline().replace("\n", ""))
+
+        #cooked sausage cost
+        sausage = int(file.readline().replace("\n", ""))
+
         #day
         day = int(file.readline().replace("\n", ""))
 
@@ -580,24 +608,11 @@ class SaveLoad():
         #cash
         cash = float(file.readline().replace("\n", ""))
 
-        #fish
-        fish = int(file.readline().replace("\n", ""))
-        
-        #potato
-        potato = int(file.readline().replace("\n", ""))
-
         #exp
         exp = int(file.readline().replace("\n", ""))
 
         #req_exp
         req_exp = int(file.readline().replace("\n", ""))
-        
-        #shop
-        shop = file.readline().replace("\n", "")
-
-        #sausage
-        sausage = int(file.readline().replace("\n", ""))
-
         print("Game: Game Loaded!")
         GameMain.main()
 
