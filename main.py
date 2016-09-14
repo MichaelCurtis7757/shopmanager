@@ -61,6 +61,8 @@ class GameInit():
         #handles the username
         global username
         username = input("Uncle Bob: What is your name, I always forget... ")
+        if username == "":
+            username = "Michael"
         username_ch = input("Uncle Bob: Just to check, your name is "+username+" right? ")
         if username_ch.lower() in ["yes", "y"]:
             return
@@ -76,6 +78,8 @@ class GameInit():
         #handles the shop
         global shop
         shop = input("Uncle Bob: What would you like to shop to be renamed to? ")
+        if shop == "":
+            shop = "The Handy Plaice"
         shop_ch = input("Uncle Bob: You want it called "+shop+"? ")
         if shop_ch.lower() in ["yes", "y"]:
             return
@@ -91,6 +95,8 @@ class GameInit():
         #handles the shop
         global currency
         currency = input("Uncle Bob: What would like the currency to be? (EG. '£') (Max length 4) ")
+        if currency == "":
+            currency = "£"
         currency_ch = input("Uncle Bob: You want it called "+currency+"? ")
         if len(currency_ch) > 4:
             print("Game: Please enter a shorter value (Max: 4 characters)")
@@ -175,7 +181,8 @@ class GameInit():
 
         ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning (You have "+currency+ str(cash)+")? ")
         if ask_stock.lower() in ["yes", "y"]:
-            ask_buy = input("Fred: What do you want to buy? Current: Fish Stock: "+str(fish)+", Potato Stock: "+str(potato)+" and Sasuage Stock "+str(sausage)+" ")
+            print("Fred: Your Stocks; Fish Stock: "+str(fish)+", Potato Stock: "+str(potato)+" and Sasuage Stock "+str(sausage)+" ")
+            ask_buy = input("Fred: What do you want to buy?")
             #fish
             if ask_buy.lower() in ["fish", "f"]:
                 ask_amount = int(input("Fred: How many Fish would you like to order? ("+currency + str(fish_cost) + " a fish) "))
