@@ -7,8 +7,9 @@ class GameInit():
     @staticmethod
     def variables():
         #general
-        global day, rand_day, cash, level, exp, req_exp, shop, game_version, currency
+        global username, day, rand_day, cash, level, exp, req_exp, shop, game_version, currency
 
+        username = "bug_tester"
         shop = "The Shop"
         day = 1
         rand_day = 0
@@ -16,7 +17,7 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.2-alpha"
+        game_version = "v1.3-alpha"
         currency = "$"
         
         #stock
@@ -86,15 +87,15 @@ class GameInit():
             GameInit.shop_name()
 
     @staticmethod
-    def currency_choice():
+    def currency_name():
         #handles the shop
         global currency
         currency = input("Uncle Bob: What would like the currency to be? (EG. '£') (Max length 4) ")
+        currency_ch = input("Uncle Bob: You want it called "+currency+"? ")
         if len(currency_ch) > 4:
             print("Game: Please enter a shorter value (Max: 4 characters)")
             GameInit.currency_name()
             return
-        currency_ch = input("Uncle Bob: You want it called "+currency+"? ")
         if currency_ch.lower() in ["yes", "y"]:
             return
         if currency_ch.lower() in ["no", "n"]:
@@ -129,6 +130,9 @@ class GameInit():
             else:
                 print("Game: Please enter a valid reply.")
                 GameInit.startup()
+        if pre_init.lower() == "bug":
+            GameInit.variables()
+            GameMain.main()
         else:
             print("Game: Please enter a valid reply.")
             GameInit.startup()
@@ -245,7 +249,7 @@ class GameInit():
         global username, fish, cooked_fish, level, cooked_fish_cost, currency
 
         #fish
-        print("Fred: Perfect! How many fish woudl you like to cook this morning? ")
+        print("Fred: Perfect! How many fish would you like to cook this morning? ")
         ask_fish = int(input("Fred: Lastly "+username+", you only have "+str(fish)+": "))
         if ask_fish > fish:
             print("Fred: Boss, you can't cook more than you have!")
@@ -411,6 +415,7 @@ class GameMain():
                   
         tprofit = 0
         daytime = 0
+        texp = 0
         potato_customers = 0
         sausage_customers = 0
         potato_profit = 0
@@ -423,8 +428,8 @@ class GameMain():
                 return
 
             #reseting variables
-            profit = 0
-            exp = 0
+            tprofit = 0
+            hour_exp = 0
                 
             #printing the current time of day
             print("Game: "+str((daytime + 3))+":00pm")
@@ -501,7 +506,7 @@ class GameMain():
             if fish_sellable == True:
                 cooked_fish = cooked_fish - fish_customers
                 fish_profit = fish_customers * cooked_fish_cost
-                hour_exp = fish_hour_exp
+                hour_exp = hour_exp + fish_hour_exp
                 tprofit = tprofit + fish_profit
             
                 if fish_customers == 0:
@@ -532,9 +537,9 @@ class GameMain():
                     print("Fred: "+str(sausage_customers)+" customers bought "+str(sausage_customers)+" sausages and we now have "+str(cooked_sausage)+" sausages left!")
 
             #calculating the profits, exp and cash for the day
-            cash = cash + profit
+            cash = cash + tprofit
             exp = exp + hour_exp
-            print("Fred: From this, you've made "+currency+str(profit)+" and gained "+str(hour_exp)+" EXP.")
+            print("Fred: From this, you've made "+currency+str(tprofit)+" and gained "+str(hour_exp)+" EXP.")
 
             #checking if the user meets the requirements for a level up
             if exp >= req_exp:
