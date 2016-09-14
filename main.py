@@ -89,7 +89,11 @@ class GameInit():
     def currency_choice():
         #handles the shop
         global currency
-        currency = input("Uncle Bob: What would like the currency to be? (EG. '£') ")
+        currency = input("Uncle Bob: What would like the currency to be? (EG. '£') (Max length 4) ")
+        if len(currency_ch) > 4:
+            print("Game: Please enter a shorter value (Max: 4 characters)")
+            GameInit.currency_name()
+            return
         currency_ch = input("Uncle Bob: You want it called "+currency+"? ")
         if currency_ch.lower() in ["yes", "y"]:
             return
@@ -99,6 +103,7 @@ class GameInit():
         else:
             print("Game: Please enter a valid reply.")
             GameInit.currency_name()
+            return
 
     @staticmethod  
     def startup():
@@ -610,6 +615,9 @@ class SaveLoad():
             print("Game: Rebooting...")
             print("\n\n\n")
             GameInit.startup()
+            return
+        else:
+            return
         
         #username
         username = file.readline().replace("\n", "")
