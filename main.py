@@ -33,7 +33,7 @@ class GameInit():
         sausage_sellable = True
 
         #prices
-        global fish_cost, cooked_fish_cost, potato_cost, cooked_potato_cost
+        global fish_cost, cooked_fish_cost, potato_cost, cooked_potato_cost, sausage_cost, cooked_sausage_cost
         
         fish_cost = 1
         cooked_fish_cost = 2
@@ -119,7 +119,7 @@ class GameInit():
         fish_sellable = True
         potato_sellable = True
         print("Fred: Congratulations Boss, you finished the day!")
-        print("Fred: You made $"+str(total_profit)+". You now have made $"+str(cash)+" overall")
+        print("Fred: You made $"+str(tprofit)+". You now have made $"+str(cash)+" overall")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
         if (cooked_fish > 0) or (cooked_potato > 0):
             print("Fred: Sadly, all unsold food had to be thrown away.")
@@ -186,6 +186,7 @@ class GameInit():
             else:
                 print("Game: Please enter a valid reply.")
                 GameInit.buy_stock()
+                return
                 
             #sausage
             if ask_buy.lower() in ["sausage", "sausages", "s"]:
@@ -207,6 +208,7 @@ class GameInit():
             else:
                 print("Game: Please enter a valid reply.")
                 GameInit.buy_stock()
+                return
                 
         if ask_stock.lower() in ["no", "n"]:
             print("Fred: We can always order more tomorrow if we need.")
@@ -215,6 +217,7 @@ class GameInit():
         else:
             print("Game: Please enter a valid reply.")
             GameInit.buy_stock()
+            return
             
     @staticmethod
     def cook_fish():
@@ -222,7 +225,7 @@ class GameInit():
         global username, fish, cooked_fish, level, cooked_fish_cost
 
         #fish
-        print("Fred: Perfect! How many fish do you want to cook this morning? ")
+        print("Fred: Perfect! How many fish woudl you like to cook this morning? ")
         ask_fish = int(input("Fred: Lastly "+username+", you only have "+str(fish)+": "))
         if ask_fish > fish:
             print("Fred: Boss, you can't cook more than you have!")
@@ -352,6 +355,8 @@ class GameInit():
         global username, fail1
         if username == "Hudson":
             print("Uncle Bob: It's gamer over man, game over!")
+        if username == "Rick Harrison":
+            print("Uncle Bob: Your Rick harrison and that's not longer your paw-- fish and chip shop.")
         if cash > 0:
             print("Uncle Bob: You ran out of money, and the shop had to close. Try to mange your money better in the future.")
             fail1 == True
@@ -383,7 +388,8 @@ class GameMain():
         
         #middle section of day
         print("Fred: Well "+username+", we'd better open up for the day.")
-        profit = 0
+                  
+        tprofit = 0
         daytime = 0
         potato_customers = 0
         sausage_customers = 0
@@ -395,6 +401,10 @@ class GameMain():
             if daytime >= 7:
                 GameInit.end()
                 return
+
+            #reseting variables
+            profit = 0
+            exp = 0
                 
             #printing the current time of day
             print("Game: "+str((daytime + 3))+":00pm")
@@ -472,6 +482,7 @@ class GameMain():
                 cooked_fish = cooked_fish - fish_customers
                 fish_profit = fish_customers * cooked_fish_cost
                 hour_exp = fish_hour_exp
+                tprofit = tprofit + fish_profit
             
                 if fish_customers == 0:
                     print("Fred: No customers bought any fish.")
@@ -482,6 +493,7 @@ class GameMain():
                 cooked_potato = cooked_potato - potato_customers
                 potato_profit = potato_customers * cooked_potato_cost
                 hour_exp = hour_exp + potato_hour_exp
+                tprofit = tprofit + fish_profit + potato_profit
                 
                 if potato_customers == 0:
                     print("Fred: No customers bought any chips.")
@@ -492,6 +504,7 @@ class GameMain():
                 cooked_sausage = cooked_sausage - sausage_customers
                 sausage_profit = sausage_customers * cooked_sausage_cost
                 hour_exp = hour_exp + sausage_hour_exp
+                tprofit = tprofit + fish_profit + potato_profit + sausage_profit
                 
                 if sausage_customers == 0:
                     print("Fred: No customers bought any chips.")
@@ -499,7 +512,6 @@ class GameMain():
                     print("Fred: "+str(sausage_customers)+" customers bought "+str(sausage_customers)+" sausages and we now have "+str(cooked_sausage)+" sausages left!")
 
             #calculating the profits, exp and cash for the day
-            profit = fish_profit + potato_profit + sausage_profit
             cash = cash + profit
             exp = exp + hour_exp
             print("Fred: From this, you've made $"+str(profit)+" and gained "+str(hour_exp)+" EXP.")
@@ -591,13 +603,13 @@ class SaveLoad():
         sausage = int(file.readline().replace("\n", ""))
 
         #cooked fish cost
-        fish = int(file.readline().replace("\n", ""))
+        cooked_fish_cost = float(file.readline().replace("\n", ""))
         
         #cooked potato cost
-        potato = int(file.readline().replace("\n", ""))
+        cooked_potato_cost = float(file.readline().replace("\n", ""))
 
         #cooked sausage cost
-        sausage = int(file.readline().replace("\n", ""))
+        cooked_sausage_cost = int(file.readline().replace("\n", ""))
 
         #day
         day = int(file.readline().replace("\n", ""))
