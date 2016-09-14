@@ -7,7 +7,7 @@ class GameInit():
     @staticmethod
     def variables():
         #general
-        global day, rand_day, cash, level, exp, req_exp, total_customers, total_profit, shop
+        global day, rand_day, cash, level, exp, req_exp, shop
 
         shop = "The Shop"
         day = 1
@@ -16,8 +16,7 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        total_customers = 0
-        total_profit = 0
+        game_version = "v1.2-alpha"
         
         #stock
         global fish, potato, sausage, cooked_fish, cooked_potato, cooked_sausage, fish_sellable, potato_sellable, sausage_sellable
@@ -374,7 +373,7 @@ class GameMain():
     @staticmethod
     def generic_day():
         #global imports
-        global level, cooked_fish, cooked_potato, cooked_fish_cost, cooked_potato_cost, total_customers, total_profit, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable
+        global level, cooked_fish, cooked_potato, cooked_fish_cost, cooked_potato_cost, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable
                 
         #start of day
         GameInit.random_days()
@@ -584,9 +583,16 @@ class SaveLoad():
         print("Game: Loading Game...")
         GameInit.variables()
 
-        global username, day, level, cash, fish, potato, exp, req_exp
+        global username, shop, day, level, cash, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version
         
         file = open(save_name+".shs", "r")
+        #game version
+        game_version_load = file.readline().replace("\n","")
+        if not game_version_load == game_version:
+            print("Game: Error, save file is out of date. Save: "+game_version_load+" Current: "+game_version+".")
+            print("Game: Rebooting...")
+            GameInit.startup()
+            break
         #username
         username = file.readline().replace("\n", "")
 
