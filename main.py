@@ -17,7 +17,7 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.3-alpha"
+        game_version = "v1.4-alpha"
         currency = "$"
         
         #stock
@@ -617,10 +617,13 @@ class SaveLoad():
         game_version_load = file.readline().replace("\n","")
         if not game_version_load == game_version:
             print("Game: Error, save file is out of date. Save: "+game_version_load+" Current: "+game_version+".")
-            print("Game: Rebooting...")
-            print("\n\n\n")
-            GameInit.startup()
-            return
+            if game_version_load == "v1.3-alpha":
+                print("Game: However, this version is supported by the update.")
+            else:
+                print("Game: Rebooting...")
+                print("\n\n\n")
+                GameInit.startup()
+                return
         else:
             return
         
