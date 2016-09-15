@@ -7,7 +7,7 @@ class GameInit():
     @staticmethod
     def variables():
         #general
-        global username, day, rand_day, cash, level, exp, req_exp, shop, game_version, currency
+        global username, day, rand_day, cash, level, exp, req_exp, shop, game_version, currency, supported_versions
 
         username = "test_name"
         shop = "The Shop"
@@ -18,6 +18,7 @@ class GameInit():
         exp = 0
         req_exp = 10
         game_version = "v1.4-alpha"
+        supported_versions = ["v1.3-alpha"]
         currency = "£"
         
         #stock
@@ -642,15 +643,15 @@ class SaveLoad():
         print("Game: Loading Game...")
         GameInit.variables()
 
-        global username, shop, day, level, cash, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency
+        global username, shop, day, level, cash, supported_versions, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency
         
         file = open(save_name+".shs", "r")
         #checking the users game version
         game_version_load = file.readline().replace("\n","")
         if not game_version_load == game_version:
-            print("Game: Error, save file is out of date. Save: "+game_version_load+" Current: "+game_version+".")
-            if game_version_load == "v1.3-alpha":
-                print("Game: However, this version is supported by the update.")
+            print("Game: Error, save file is an old version's.\nGame: | Save: "+game_version_load+" | Current: "+game_version+" |")
+            if game_version_load in supported_versions:
+                print("Game: However this version's save is still supported.")
             else:
                 print("Game: Rebooting...")
                 print("\n\n\n")
