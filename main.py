@@ -17,32 +17,43 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.4-alpha"
-        supported_versions = ["v1.3-alpha"]
+        game_version = "v1.5-alpha"
+        supported_versions = ["v1.3-alpha", "v1.4-alpha"]
         currency = "£"
         
         #stock
-        global fish, potato, sausage, cooked_fish, cooked_potato, cooked_sausage, fish_sellable, potato_sellable, sausage_sellable
+        global fish, potato, sausage, fishcake, cooked_fish, cooked_potato, cooked_sausage, cooked_fishcake, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable
         
         fish = 20
         cooked_fish = 0
+        fish_sellable = True
+        
         potato = 0
         cooked_potato = 0
+        potato_sellable = True
+        
         sausage = 0
         cooked_sausage = 0
-        fish_sellable = True
-        potato_sellable = True
         sausage_sellable = True
 
+        fishcake = 0
+        cooked_fishcake = 0
+        fishcake_sellable = True
+
         #prices
-        global fish_cost, cooked_fish_cost, potato_cost, cooked_potato_cost, sausage_cost, cooked_sausage_cost
+        global fish_cost, cooked_fish_cost, potato_cost, cooked_potato_cost, sausage_cost, cooked_sausage_cost, fishcake_cost, cooked_fishcake_cost
         
         fish_cost = 1
-        cooked_fish_cost = 2
+        cooked_fish_cost = 1.5
+        
         potato_cost = 2
-        cooked_potato_cost = 3
+        cooked_potato_cost = 2.5
+        
         sausage_cost = 3
-        cooked_sausage_cost = 4        
+        cooked_sausage_cost = 3.5
+
+        fishcake_cost = 3
+        cooked_fishcake_cost = 3.5 
 
         #exp values
         global fish_exp, potato_exp, sausage_exp
@@ -146,14 +157,13 @@ class GameInit():
             
     @staticmethod
     def end():
-        global cooked_fish, cooked_potato, fish_sellable, potato_sellable, currency
+        global fish_sellable, potato_sellable, currency
         fish_sellable = True
         potato_sellable = True
         print("Fred: Congratulations Boss, you finished the day!")
         print("Fred: After today, you now have "+currency+str(cash)+" overall!")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
-        if (cooked_fish > 0) or (cooked_potato > 0):
-            print("Fred: Sadly, all unsold food had to be thrown away.")
+        print("Fred: Sadly, all unsold food had to be thrown away.")
         daytime = 0
         global day
         day = day + 1
@@ -178,11 +188,11 @@ class GameInit():
 
     @staticmethod
     def buy_stock():
-        global fish, fish_cost, potato, potato_cost, sausage, sausage_cost, cash, level, currency
+        global fish, fish_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency
 
         ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning (You have "+currency+ str(cash)+")? ")
         if ask_stock.lower() in ["yes", "y"]:
-            print("Fred: Your Stocks; Fish Stock: "+str(fish)+", Potato Stock: "+str(potato)+" and Sasuage Stock "+str(sausage)+" ")
+            print("Fred: Fish Stock: "+str(fish)+", Potato Stock: "+str(potato)+", Sasuage Stock "+str(sausage)+" and Fishcake Stock "+str(fishcake)+" ")
             ask_buy = input("Fred: What do you want to buy? ")
             #fish
             if ask_buy.lower() in ["fish", "fishes", "f"]:
@@ -234,6 +244,28 @@ class GameInit():
                     else:
                         cash = cash - (ask_amount * sausage_cost)                
                         sausage = sausage + ask_amount
+                        time.sleep(1.5)
+                        print("Fred: The order has arrived thanks to Congo Prime and the almost instant delivery!")
+                        return
+            else:
+                print("Game: Please enter a valid reply.")
+                GameInit.buy_stock()
+                return
+            
+            #fishcake
+            if ask_buy.lower() in ["fishcake", "fishcakes", "fc"]:
+                if level < 7:
+                    print("Fred: Sorry! You need to be level 7 to unlock this!")
+                    GameInit.buy_stock()
+                elif level >= 7:
+                    ask_amount = int(input("Fred: How many fishcakes would you like to order? (" + currency + str(fishcake_cost) + " a fishcake) "))
+                    if ask_amount > cash:
+                        print("Fred: Sorry, we don't have the money to order that many!")
+                        GameInit.buy_stock()
+                        return
+                    else:
+                        cash = cash - (ask_amount * fishcake_cost)                
+                        fishcake = fishcake + ask_amount
                         time.sleep(1.5)
                         print("Fred: The order has arrived thanks to Congo Prime and the almost instant delivery!")
                         return
@@ -308,20 +340,20 @@ class GameInit():
     def cook_sausage():
         #variables
         global sausage, cooked_sausage, level, sausage_sellable, username, cooked_sausage_cost, currency
-        #potato
+        #sausage
         ask_pots = input("Fred: Would you like to cook sauages today? ")
         if ask_pots.lower() in ["yes", "y"]:
             print("Fred: Sounds great! How many sausages do you want to cook this morning? ")
-            ask_potato = int(input("Fred: You have "+str(sausages)+": "))
-            if ask_potato > potato:
+            ask_sausage = int(input("Fred: You have "+str(sausages)+": "))
+            if ask_sausage > sausage:
                 print("Fred: Boss, you can't cook more than you have!")
                 cook_stock()    
             else:
                 print("Fred: I'll cook the sausages now Boss!")
                 time.sleep(1.5)
-                potato = potato - ask_sausages
+                sausage = sausage - ask_sausages
                 cooked_sausage = ask_sausages
-                print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
+                print("Fred: Al'ight Boss, "+str(cooked_sausage)+" sausages were cooked!")
             
         if ask_pots.lower() in ["no", "n"]:
             sausage_sellable = False
@@ -333,7 +365,37 @@ class GameInit():
             return
         if ask_chg in ["no", "n"]:
             return
+        
+    @staticmethod
+    def cook_fishcake():
+        #variables
+        global fishcake, cooked_fishcake, level, fishcake_sellable, username, cooked_fishcake_cost, currency
+        #fishcake
+        ask_pots = input("Fred: Would you like to cook fishcakes today? ")
+        if ask_pots.lower() in ["yes", "y"]:
+            print("Fred: Sounds great! How many fishcakes do you want to cook this morning? ")
+            ask_fishcake = int(input("Fred: You have "+str(fishcake)+": "))
+            if ask_fishcake > fishcake:
+                print("Fred: Boss, you can't cook more than you have!")
+                cook_stock()    
+            else:
+                print("Fred: I'll cook the fishcakes now Boss!")
+                time.sleep(1.5)
+                fishcake = fishcake - ask_fishcake
+                cooked_fishcake = ask_fishcake
+                print("Fred: Okay Boss, "+str(cooked_fishcake)+" fishcakes were cooked!")
+            
+        if ask_pots.lower() in ["no", "n"]:
+            sausage_sellable = False
+            print("Fred: Sounds like a plan "+username+"!")
 
+        ask_chg = input("Fred: Would you like to change the price today? ")
+        if ask_chg in ["yes", "y"]:
+            cooked_fishcake_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_fishcake_cost)+") "))
+            return
+        if ask_chg in ["no", "n"]:
+            return
+        
     @staticmethod
     def special_days():
         #special days
@@ -371,10 +433,18 @@ class GameInit():
         rand_day = randint(2, 6)
         if (rand_day == day) and (rand1 == False):
             print("-= Day "+str(rand_day)+": The Leak =-")
-            print("Uncle Bob: It rained hard last night and a leak was found in the shop. You were charged $10 to fix it!")
+            print("Uncle Bob: It rained hard last night and a leak was found in the shop. You were charged "+currency+"10 to fix it!")
             cash = cash - 10
             print("Uncle Bob: You now have "+currency+str(cash)+" left!")
             rand1 == True
+            
+        rand_day2 = randint(8, 13)
+        if (rand_day2 == day) and (rand2 == False):
+            print("-= Day "+str(rand_day)+": The Spoils =-")
+            print("Uncle Bob: Somehow the fridge door was left open causing some of the stock to spoil.")
+            fish = fish - rand_day
+            print("Uncle Bob: You now have "+str(rand_day)+" less fish.")
+            rand2 == True
 
     @staticmethod
     def game_over():
@@ -389,7 +459,13 @@ class GameInit():
             fail1 == True
             SaveLoad.save()
             return
-
+        
+        if fish > 0:
+            print("Uncle Bob: You ran out of fish, and the shop had to close. Try to mange your fish stock better in the future.")
+            fail2 == True
+            SaveLoad.save()
+            return
+        
     @staticmethod
     def stock_info():
         #displays details on the current stock options
@@ -412,6 +488,11 @@ class GameInit():
                 print("Book: Sausage\n| Sausage Cost: "+str(sausage_cost)+" | Cooked Sausage Cost: "+str(cooked_sausage_cost)+" | Sausage EXP: "+str(sausage_exp)+" |")
             else:
                 print("Book: Sausage\n| Sausage Cost: ??? | Cooked Sausage Cost: ??? | Sausage EXP: ??? |")
+            if level >= 7:
+                global fishcake_cost, cooked_fishcake_cost, fishcake_exp
+                print("Book: Fishcake\n| Fishcake Cost: "+str(fishcake_cost)+" | Cooked Fishcake Cost: "+str(cooked_fishcake_cost)+" | Fishcake EXP: "+str(fishcake_exp)+" |")
+            else:
+                print("Book: Fishcake\n| Fishcake Cost: ??? | Cooked Fishcake Cost: ??? | Fishcake EXP: ??? |")
             print("")
             time.sleep(5)
         if ask_view.lower() in ["no", "n"]:
@@ -428,18 +509,21 @@ class GameMain():
     @staticmethod
     def generic_day():
         #global imports
-        global level, cooked_fish, cooked_potato, cooked_fish_cost, cooked_potato_cost, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable
+        global cooked_fish, cooked_potato, cooked_fishcake, cooked_fish_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost
+        global level, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable
                 
         #start of day
         GameInit.random_days()
         GameInit.special_days()
+        GameInit.stock_info()
         GameInit.buy_stock()
         GameInit.cook_fish()
         if level >= 3:
             GameInit.cook_potato()
         if level >= 5:
                 GameInit.cook_sausage()
-        GameInit.stock_info()
+        if level >= 7:
+                GameInit.cook_fishcake()
         
         #middle section of day
         print("Fred: Well "+username+", we'd better open up for the day.")
@@ -451,6 +535,7 @@ class GameMain():
         sausage_customers = 0
         potato_profit = 0
         sausage_profit = 0
+        fishcake_profit = 0
 
         while True:
             #checking if the the daytime is past 9pm
@@ -492,7 +577,7 @@ class GameMain():
                 if 6 < cooked_fish_cost < 10:
                     fish_rand_no = level * randint(1, 2)
                 if cooked_fish_cost > 10:
-                    fish_rand_no = 0
+                    potato_rand_no = 0
                     print("Uncle Bob: Those are some expensive chips!")
                     
                 potato_customers = randint(0, potato_rand_no)
@@ -508,11 +593,27 @@ class GameMain():
                 if 8 < cooked_sausage_cost < 11:
                     sausage_rand_no = level * randint(1, 2)
                 if cooked_sausage_cost > 12:
-                    fish_rand_no = 0
+                    sausage_rand_no = 0
                     print("Uncle Bob: Those are some expensive sausages!")
                     
                 sausage_customers = randint(0, sausage_rand_no)
                 sausage_hour_exp = sausage_customers * sausage_exp
+
+            if level >= 7:
+                fishcake_rand_no = level * randint(1, 3)
+                
+                if cooked_fishcake_cost < 3:
+                    fishcake_rand_no = level * randint(1, 6)
+                if 3 <= cooked_fishcake_cost <= 7:
+                    fishcake_rand_no = level * randint(1, 4)
+                if 8 < cooked_fishcake_cost < 11:
+                    fishcake_rand_no = level * randint(1, 2)
+                if cooked_fishcake_cost > 12:
+                    fishcake_rand_no = 0
+                    print("Uncle Bob: Those are some expensive fishcakes!")
+                    
+                fishcake_customers = randint(0, fishcake_rand_no)
+                fishcake_hour_exp = sfishcake_customers * fishcake_exp
                 
             #checking if there is stock left
             if fish_customers > cooked_fish:
@@ -526,11 +627,15 @@ class GameMain():
                 print("Fred: Welp, we're out of chips!")
                 potato_sellable = False
 
-            if (level >= 5) and (sausage_customers > sausage_potato):
+            if (level >= 5) and (sausage_customers > cooked_sausage):
                 print("Fred: Welp, we're out of sausages!")
                 sausage_sellable = False
+
+            if (level >= 7) and (fishcake_customers > cooked_fishcake):
+                print("Fred: Welp, we're out of sausages!")
+                fishcake_sellable = False
                 
-            if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False):
+            if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False):
                 GameInit.end()
 
             #printing the sold fish and chips
@@ -563,9 +668,20 @@ class GameMain():
                 tprofit = tprofit + fish_profit + potato_profit + sausage_profit
                 
                 if sausage_customers == 0:
-                    print("Fred: No customers bought any chips.")
+                    print("Fred: No customers bought any sausages.")
                 if sausage_customers > 0:
                     print("Fred: "+str(sausage_customers)+" customers bought "+str(sausage_customers)+" sausages and we now have "+str(cooked_sausage)+" sausages left!")
+
+            if level >= 7 and fishcake_sellable == True:
+                cooked_fishcake = cooked_fishcake - fishcake_customers
+                fishcake_profit = fishcake_customers * cooked_fishcake_cost
+                hour_exp = hour_exp + fishcake_hour_exp
+                tprofit = tprofit + fish_profit + potato_profit + sausage_profit + fishcake_profit
+                
+                if fishcake_customers == 0:
+                    print("Fred: No customers bought any fishcakes.")
+                if fishcake_customers > 0:
+                    print("Fred: "+str(fishcake_customers)+" customers bought "+str(fishcake_customers)+" sausages and we now have "+str(cooked_fishcake)+" fishcakes left!")
 
             #calculating the profits, exp and cash for the day
             cash = cash + tprofit
@@ -631,8 +747,15 @@ class SaveLoad():
         file.write("\n")
         file.write(str(currency))
         file.write("\n")
+        file.write(str(fishcake))
+        file.write("\n")
+        file.write(str(cooked_fishcake_cost))
+        file.write("\n")
         if fail1 == True:
             file.write("Failed: Out of Cash")
+            file.write("\n")
+        if fail2 == True:
+            file.write("Failed: Out of Fish")
             file.write("\n")
         print("Game: Game Saved!")
 
