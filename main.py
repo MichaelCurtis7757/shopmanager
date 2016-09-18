@@ -63,10 +63,12 @@ class GameInit():
         sausage_exp = 3
 
         #fail/rand states
-        global rand1, fail1
+        global rand1, rand2, fail1, fail2
 
         rand1 = False
+        rand2 = False
         fail1 = False
+        fail2 = False
     
     @staticmethod
     def manager_name():
@@ -713,7 +715,7 @@ class SaveLoad():
     @staticmethod
     def save():
         #handles game saving
-        global fail1, game_version
+        global fail1, fail2, game_version
         save_name = input("Game: What would you like the save file to be called? ")
         print("Game: Saving Game...")
         file = open(save_name+".shs", "w")
@@ -766,13 +768,13 @@ class SaveLoad():
         print("Game: Loading Game...")
         GameInit.variables()
 
-        global username, shop, day, level, cash, supported_versions, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency
+        global username, shop, day, level, cash, supported_versions, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency, fishcake, cooked_fishcake_cost
         
         file = open(save_name+".shs", "r")
         #checking the users game version
         game_version_load = file.readline().replace("\n","")
         if not game_version_load == game_version:
-            print("Game: Error, save file is an old version's.\nGame: | Save: "+game_version_load+" | Current: "+game_version+" |")
+            print("Game: Error, save file is outdated.\nGame: Save: "+game_version_load+", Current: "+game_version+".")
             if game_version_load in supported_versions:
                 print("Game: However this version's save is still supported.")
             else:
@@ -803,7 +805,7 @@ class SaveLoad():
         cooked_potato_cost = float(file.readline().replace("\n", ""))
 
         #cooked sausage cost
-        cooked_sausage_cost = int(file.readline().replace("\n", ""))
+        cooked_sausage_cost = float(file.readline().replace("\n", ""))
 
         #day
         day = int(file.readline().replace("\n", ""))
@@ -822,7 +824,15 @@ class SaveLoad():
         
         #currency
         currency = file.readline().replace("\n", "")
-        
+
+        #fishcake
+        fishcake = 0
+        fishcake = int(file.readline().replace("\n", ""))
+
+        #cooked fishcake cost
+        cooked_fishcake_cost = 3.5
+        cooked_fishcake_cost = float(file.readline().replace("\n", ""))
+
         print("Game: Game Loaded!")
         GameMain.main()
 
