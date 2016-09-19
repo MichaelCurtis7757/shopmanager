@@ -9,9 +9,13 @@ Welcome to ShopManager, a text based shop managing game where you run a fish and
 https://trello.com/b/88zUcJdb/
 
 # Current Release
-v1.3-alpha: 14/09/16
+v1.5.1-alpha: 18/09/16
 
 #Previous Releases
+v1.5-alpha: 18/09/16
+
+v1.4-alpha: 15/09/16
+
 v1.2-alpha: 14/09/16
 
 v1.1-alpha: 11/09/16
