@@ -9,7 +9,7 @@ class GameInit():
         #sets the variables to default values and creates them on startup or reset
         
         #general
-        global username, day, rand_day, cash, level, exp, req_exp, shop, game_version, currency, supported_versions
+        global username, day, rand_day, cash, level, exp, req_exp, shop, game_version, currency, supported_versions, rent, wages
 
         username = "test_name"
         shop = "The Shop"
@@ -22,6 +22,8 @@ class GameInit():
         game_version = "v1.5-alpha"
         supported_versions = ["v1.3-alpha", "v1.4-alpha"]
         currency = "£"
+        rent = 10
+        wages = 10
         
         #stock
         global fish, potato, sausage, fishcake, cooked_fish, cooked_potato, cooked_sausage, cooked_fishcake, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable
@@ -168,20 +170,33 @@ class GameInit():
         else:
             print("Game: Please enter a valid reply.")
             GameInit.startup()
+
+    @staticmethod
+    def day_costs():
+        global cash, rent, wages, currency
+        #manages the rent and taxes for the day
+        rw = rent + wages
+        print("Fred: I'm going to pay the rent and take my wages now boss!")
+        print("Fred: That comes to "+currency+str(rw)+" boss!")
+        if rw > cash:
+            print("Fred: You don't have enough money boss! I'm sorry Boss but we're going to have to close!")
+            GameInit.game_over()
+        else:
+            cash = cash - rw
+            print("Game: You now have "+currency+str(cash)+".")
             
     @staticmethod
-    def end()
+    def end():
         #manages all of the end of day prints
-        global fish_sellable, potato_sellable, currency
-        fish_sellable = True
-        potato_sellable = True
+        global level, cash, exp, req_exp, currency, day
         print("Fred: Congratulations Boss, you finished the day!")
         print("Fred: After today, you now have "+currency+str(cash)+" overall!")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
         print("Fred: Sadly, all unsold food had to be thrown away.")
+        #rusn the rent and wages func.
+        GameInit.day_costs()
         #changes the day and resets the daytime var.
         daytime = 0
-        global day
         day = day + 1
         #ask the user to save the game and runs the save function if yes
         ask_sav = input("Game: Would you like to save your game? ")
@@ -443,11 +458,13 @@ class GameInit():
     @staticmethod
     def special_days():
         #special days
-        global cash, day, shop, currency
+        global cash, day, shop, currency, rent, wages
         #runs the special day code for the first day, the beginning
         if day == 1:
+            rw = rent + wages
             print("-= Day 1: The Beginning =-")
             print("Uncle Bob: Welcome to ShopManager "+username+"! You must run "+shop+" inherited from me, your Uncle Bob!")
+            print("Uncle Bob: Always remember you have to pay "+currency+str(rw)+" a day in wages and rent!")
             time.sleep(1.5)
 
         #runs the special day code for the 7th day, the end of week 1
@@ -499,10 +516,10 @@ class GameInit():
     @staticmethod
     def game_over():
         #manages the game over state
-        global username, fail1
+        global username, fail1, fail2
         #checks for funny usernames
         if username == "Hudson":
-            print("Uncle Bob: It's gamer over man, game over!")
+            print("Uncle Bob: It's game over man, game over!")
         if username == "Rick Harrison":
             print("Uncle Bob: Your Rick Harrison and that's not longer your paw-- fish and chip shop.")
 
@@ -550,7 +567,7 @@ class GameInit():
             time.sleep(5)
         if ask_view.lower() in ["no", "n"]:
             return
-
+            
 class GameMain():
     #handles the main game
     @staticmethod
@@ -761,7 +778,7 @@ class GameMain():
                 GameInit.end()
                 if fail1 == True:
                     GameInit.save()
-                    sys.exit() 
+                    sys.exit
             else:
                 daytime = daytime + 1
             
@@ -896,10 +913,15 @@ class SaveLoad():
     def game_quit():
         ask_quit = input("Game: Are you sure? ")
         if ask_quit in ["yes", "y"]:
-            print("\n \n \n")
-            GameInit.variables()
-            GameInit.startup()
+            sys.exit
         if ask_quit in ["no", "n"]:
-            return
+            ask_quit2 = input("Game: Would you like to restart? ")
+            if ask_quit2 in ["yes", "y"]:
+                print("\n \n \n")
+                GameInit.variables()
+                GameInit.startup()
+                return
+            if ask_quit in ["no", "n"]:
+                return
         
 GameInit.startup()
