@@ -516,7 +516,7 @@ class GameInit():
     @staticmethod
     def game_over():
         #manages the game over state
-        global username, fail1, fail2
+        global username, fail1, fail2, game_version
         #checks for funny usernames
         if username == "Hudson":
             print("Uncle Bob: It's game over man, game over!")
@@ -527,12 +527,14 @@ class GameInit():
         if cash > 0:
             print("Uncle Bob: You ran out of money, and the shop had to close. Try to mange your money better in the future.")
             fail1 == True
+            game_version = "[FAILED]"
             SaveLoad.save()
             return
         
         if fish > 0:
             print("Uncle Bob: You ran out of fish, and the shop had to close. Try to mange your fish stock better in the future.")
             fail2 == True
+            game_version = "[FAILED]"
             SaveLoad.save()
             return
         
@@ -572,7 +574,7 @@ class GameMain():
     #handles the main game
     @staticmethod
     def main():
-        while True:
+        while (fail1 == False) or (fail2 == False):
             print("")
             GameMain.generic_day()
 
@@ -826,12 +828,6 @@ class SaveLoad():
         file.write("\n")
         file.write(str(cooked_fishcake_cost))
         file.write("\n")
-        if fail1 == True:
-            file.write("Failed: Out of Cash")
-            file.write("\n")
-        if fail2 == True:
-            file.write("Failed: Out of Fish")
-            file.write("\n")
         print("Game: Game Saved!")
 
     @staticmethod
@@ -899,11 +895,9 @@ class SaveLoad():
         currency = file.readline().replace("\n", "")
 
         #fishcake
-        fishcake = 0
         fishcake = int(file.readline().replace("\n", ""))
 
         #cooked fishcake cost
-        cooked_fishcake_cost = 3.5
         cooked_fishcake_cost = float(file.readline().replace("\n", ""))
 
         print("Game: Game Loaded!")
@@ -914,6 +908,7 @@ class SaveLoad():
         ask_quit = input("Game: Are you sure? ")
         if ask_quit in ["yes", "y"]:
             sys.exit
+            return
         if ask_quit in ["no", "n"]:
             ask_quit2 = input("Game: Would you like to restart? ")
             if ask_quit2 in ["yes", "y"]:
