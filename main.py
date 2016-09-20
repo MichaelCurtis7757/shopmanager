@@ -1,10 +1,27 @@
 #Shop Manager
-import time, sys
+import time, sys, os.path
 from random import randint
 
 class GameInit():
     #handles inital startup
     @staticmethod
+    def check_dlc():
+        #check for DLC/map packs
+        ask_dlc = input("Game: Would you like to check for DLC(s)? ")
+        if ask_dlc.lower() in ["yes", "y"]:
+            print("Game: Checking for DLC...")
+            #checking for DCL1
+            file_present = os.path.isfile("DLC_PIE.dlc")
+            if file_present == True:
+                file = open("DLC_PIE.dlc", "r")
+                DLC1 = file.readline()
+                print("Game: DLC1 found and loaded.")
+            else:
+                print("Game: Error DLC not found.")
+                      
+        if ask_dlc.lower() in ["no", "n"]:
+            return
+            
     def variables():
         #sets the variables to default values and creates them on startup or reset
         
@@ -73,7 +90,14 @@ class GameInit():
         rand2 = False
         fail1 = False
         fail2 = False
-    
+
+        #DLC1
+        if DLC1 == True:
+            global pie1, pie2, pie3
+            pie1 = 0
+            pie2 = 0
+            pie3 = 0
+
     @staticmethod
     def manager_name():
         #handles the username
@@ -139,12 +163,16 @@ class GameInit():
 
     @staticmethod  
     def startup():
+        #dlc stuff
+        global DLC1
+        DLC1 = False
         #runs all the startup stuff
         pre_init = input("Game: Would you like to start a new game? ")
         pre_init = pre_init.lower()
 
         #runs the variable delcrations
         if pre_init in ["yes", "y"]:
+            GameInit.check_dlc()
             GameInit.variables()
             GameInit.manager_name()
             GameInit.shop_name()
