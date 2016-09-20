@@ -36,8 +36,8 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.6-alpha"
-        supported_versions = ["v1.3-alpha", "v1.4-alpha", "v1.5-alpha"]
+        game_version = "v1.7-alpha"
+        supported_versions = ["v1.3-alpha", "v1.4-alpha", "v1.5-alpha", "v1.6-alpha"]
         currency = "£"
         rent = 10
         wages = 10
