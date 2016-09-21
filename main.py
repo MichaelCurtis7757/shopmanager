@@ -13,9 +13,14 @@ class GameInit():
             #checking for DCL1
             file_present = os.path.isfile("DLC_PIE.dlc")
             if file_present == True:
-                file = open("DLC_PIE.dlc", "r")
-                DLC1 = file.readline()
-                print("Game: Pie DLC found and loaded. (DLC1)")
+                time.sleep(1)
+                ask_dlc1 = input("Game: Would you like to load the Pie DLC? ")
+                if ask_dlc1.lower() in ["yes", "y"]:
+                    file = open("DLC_PIE.dlc", "r")
+                    DLC1 = file.readline()
+                    print("Game: Pie DLC loaded.")
+                else:
+                    print("Game: Pie DLC not loaded.")
             else:
                 print("Game: Error DLC not found.")
                       
@@ -256,7 +261,7 @@ class GameInit():
 
     @staticmethod
     def buy_stock():
-        global dlc1, fish, fish_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency,
+        global dlc1, fish, fish_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency
         if DLC1 == True:
             global pukkapie, pukkapie_cost
         #asks the user if they want to buy stock to sell later on
@@ -659,7 +664,7 @@ class GameInit():
                 print("Book: Fishcake\n| Fishcake Cost: "+str(fishcake_cost)+" | Cooked Fishcake Cost: "+str(cooked_fishcake_cost)+" | Fishcake EXP: "+str(fishcake_exp)+" |")
             else:
                 print("Book: Fishcake\n| Fishcake Cost: ??? | Cooked Fishcake Cost: ??? | Fishcake EXP: ??? |")
-            if level >= 4 and DLC1 = True:
+            if level >= 4 and DLC1 == True:
                 global pukkapie_cost, cooked_pukkapie_cost, pukkapie_exp
                 print("Book: Fishcake\n| Fishcake Cost: "+str(fishcake_cost)+" | Cooked Fishcake Cost: "+str(cooked_fishcake_cost)+" | Fishcake EXP: "+str(fishcake_exp)+" |")
             elif DLC1 == 1:
