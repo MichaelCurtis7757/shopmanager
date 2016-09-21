@@ -23,6 +23,7 @@ class GameInit():
                     print("Game: Pie DLC not loaded.")
             else:
                 print("Game: Error DLC not found.")
+
                       
         if ask_dlc.lower() in ["no", "n"]:
             return
@@ -1047,6 +1048,7 @@ class SaveLoad():
 
             #cooked pukkapie cost
             cooked_pukkapie_cost = float(file.readline().replace("\n", ""))
+            
         print("Game: Game Loaded!")
         GameMain.main()
 
