@@ -6,6 +6,7 @@ class GameInit():
     #handles inital startup
     @staticmethod
     def check_dlc():
+        global yes_list, no_list
         #check for DLC/map packs
         ask_dlc = input("Game: Would you like to check for DLC(s)? ")
         if ask_dlc.lower() in ["yes", "y"]:
@@ -14,29 +15,37 @@ class GameInit():
             file_present = os.path.isfile("DLC_PIE.dlc")
             if file_present == True:
                 time.sleep(1)
-                ask_dlc1 = input("Game: Would you like to load the Pie DLC? ")
-                if ask_dlc1.lower() in ["yes", "y"]:
+                ask_dlc1 = input("Game: Would you like to load the Packa Pie DLC? ")
+                if ask_dlc1.lower() in yes_list:
                     file = open("DLC_PIE.dlc", "r")
                     DLC1 = file.readline()
-                    print("Game: 'Packa Pie' DLC loaded.")
+                    print("Game: Packa Pie DLC loaded.")
+                    time.sleep(1.5)
                 else:
-                    print("Game: 'Packa Pie' DLC not loaded.")
+                    print("Game: Packa Pie DLC not loaded.")
+                    time.sleep(1.5)
+            else:
+                print("Game: Packa Pie DLC not found.")
                     
             #checking for DCL2
-            file_present = os.path.isfile("DLC_CF.dlc")
-            if file_present == True:
+            file_present2 = os.path.isfile("DLC_FISH.dlc")
+            if file_present2 == True:
                 time.sleep(1)
                 ask_dlc2 = input("Game: Would you like to load the More Fish DLC? ")
-                if ask_dlc2.lower() in ["yes", "y"]:
+                if ask_dlc2.lower() in no_list:
                     file = open("DLC_FISH.dlc", "r")
                     DLC2 = file.readline()
-                    print("Game: 'More Fish' DLC loaded.")
+                    print("Game: More Fish DLC loaded.")
+                    time.sleep(1.5)
                 else:
-                    print("Game: 'More Fish' DLC not loaded.")
+                    print("Game: More Fish DLC not loaded.")
+                    time.sleep(1.5)
             else:
-                print("Game: 'More Fish' DLC not found.")
+                print("Game: More Fish DLC not found.")
                       
         if ask_dlc.lower() in ["no", "n"]:
+            return
+        else:
             return
 
     @staticmethod
@@ -126,16 +135,16 @@ class GameInit():
     @staticmethod
     def manager_name():
         #handles the username
-        global username
+        global username, yes_list, no_list
         username = input("Uncle Bob: What is your name, I always forget... ")
         #sets default if the input is blank
         if username == "":
             username = "Michael"
         username_ch = input("Uncle Bob: Just to check, your name is "+username+" right? ")
         #asks the user if the if they are sure about their username
-        if username_ch.lower() in ["yes", "y"]:
+        if username_ch.lower() in yes_list:
             return
-        if username_ch.lower() in ["no", "n"]:
+        if username_ch.lower() in no_list:
             GameInit.manager_name()
             return
         else:
@@ -145,16 +154,16 @@ class GameInit():
     @staticmethod
     def shop_name():
         #handles the shop
-        global shop
+        global shop, yes_list, no_list
         shop = input("Uncle Bob: What would you like the shop to be renamed to? ")
         #sets default if the input is blank
         if shop == "":
             shop = "The Handy Plaice"
         shop_ch = input("Uncle Bob: You want it called "+shop+"? ")
         #asks the user if the if they are sure about the shop name
-        if shop_ch.lower() in ["yes", "y"]:
+        if shop_ch.lower() in yes_list:
             return
-        if shop_ch.lower() in ["no", "n"]:
+        if shop_ch.lower() in no_list:
             GameInit.shop_name()
             return
         else:
@@ -164,7 +173,7 @@ class GameInit():
     @staticmethod
     def currency_name():
         #handles the shop
-        global currency
+        global currency,yes_list, no_list
         currency = input("Uncle Bob: What would like the currency to be? (EG. '£') (Max length 4) ")
         #sets default if the input is blank
         if currency == "":
@@ -176,9 +185,9 @@ class GameInit():
             GameInit.currency_name()
             return
         
-        if currency_ch.lower() in ["yes", "y"]:
+        if currency_ch.lower() in yes_list:
             return
-        if currency_ch.lower() in ["no", "n"]:
+        if currency_ch.lower() in no_list:
             GameInit.currency_name()
             return
         else:
@@ -189,15 +198,17 @@ class GameInit():
     @staticmethod  
     def startup():
         #sets the DLC to false before start up
-        global DLC1, DLC2
+        global DLC1, DLC2, yes_list, no_list
         DLC1 = False
         DLC2 = False
+        yes_list = ["yes", "y", "yes.", "y.", "yeah", "yh", "yeah.", "yh.", "hells yeah boi", "yeaah"]
+        no_list = ["no", "n", "no.", "n.", "nah", "noo", "nah.", "noo.", "hells nah boi", "naah"]
         #runs all the startup stuff
         pre_init = input("Game: Would you like to start a new game? ")
         pre_init = pre_init.lower()
 
         #runs the variable delcrations
-        if pre_init in ["yes", "y"]:
+        if pre_init in yes_list:
             GameInit.check_dlc()
             GameInit.variables()
             GameInit.manager_name()
@@ -206,12 +217,12 @@ class GameInit():
             GameMain.main()
             return
         #asking about loading the game if pre_init input equals no
-        if pre_init in ["no", "n"]:
+        if pre_init in no_list:
             ask_load = input("Game: Would you like to load a previous game? ")
-            if ask_load in ["yes", "y"]:
+            if ask_load in yes_list:
                 SaveLoad.load()
                 return
-            if ask_load in ["no", "n"]:
+            if ask_load in no_list:
                 SaveLoad.game_quit()
                 return
             else:
@@ -243,7 +254,7 @@ class GameInit():
     @staticmethod
     def end():
         #manages all of the end of day prints
-        global level, cash, exp, req_exp, currency, day
+        global level, cash, exp, req_exp, currency, day, yes_list, no_list
         print("Fred: Congratulations Boss, you finished the day!")
         print("Fred: After today, you now have "+currency+str(cash)+" overall!")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
@@ -256,9 +267,9 @@ class GameInit():
         #ask the user to save the game and runs the save function if yes
         ask_sav = input("Game: Would you like to save your game? ")
         ask_sav = ask_sav.lower()
-        if ask_sav in ["yes", "y"]:
+        if ask_sav in yes_list:
             SaveLoad.save()
-        elif ask_sav in ["no", "n"]:
+        elif ask_sav in no_list:
             print("")
         else:
             print("Game: Please enter a valid response!")
@@ -266,22 +277,22 @@ class GameInit():
         #ask the user about quitting the game and runs the quit function is yes    
         ask_qui = input("Game: Would you like to quit your game? ")
         ask_qui = ask_qui.lower()
-        if ask_qui in ["yes", "y"]:
+        if ask_qui in yes_list:
             SaveLoad.game_quit()
             return
-        elif ask_qui in ["no", "n"]:
+        elif ask_qui in no_list:
             return
         else:
             print("Game: Please enter a valid response!")
 
     @staticmethod
     def buy_stock():
-        global dlc1, dlc2, fish, fish_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency
+        global yes_list, no_list, dlc1, dlc2, fish, fish_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency
         if DLC1 == True:
             global pukkapie, pukkapie_cost
         #asks the user if they want to buy stock to sell later on
         ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning (You have "+currency+ str(cash)+")? ")
-        if ask_stock.lower() in ["yes", "y"]:
+        if ask_stock.lower() in yes_list:
             #shows how much stock they have and asks them what they want to buy
             print("Fred: Cod Stock: "+str(fish)+", Potato Stock: "+str(potato)+", Sasuage Stock "+str(sausage)+" and Fishcake Stock "+str(fishcake)+" ")
             dlc_str = ""
@@ -404,7 +415,7 @@ class GameInit():
                 GameInit.buy_stock()
                 return
                 
-        if ask_stock.lower() in ["no", "n"]:
+        if ask_stock.lower() in no_list:
             print("Fred: We can always order more tomorrow if we need.")
             return
 
@@ -414,7 +425,7 @@ class GameInit():
     @staticmethod
     def cook_fish():
         #variables
-        global username, fish, cooked_fish, level, cooked_fish_cost, currency
+        global username, fish, cooked_fish, level, cooked_fish_cost, currency, yes_list, no_list
 
         #asks the user how mucbh fo the stock they want to cook
         print("Fred: Perfect! How many cod would you like to cook this morning? ")
@@ -441,11 +452,11 @@ class GameInit():
     @staticmethod
     def cook_potato():
         #variables
-        global potato, cooked_potato, level, potato_sellable, username, cooked_potato_cost, currency
+        global potato, cooked_potato, level, potato_sellable, username, cooked_potato_cost, currency, yes_list, no_list
         
         #asks the user how mucbh fo the stock they want to cook
         ask_pots = input("Fred: Would you like to cook chips today? ")
-        if ask_pots.lower() in ["yes", "y"]:
+        if ask_pots.lower() in yes_list:
             print("Fred: Sounds great! How many potatoes do you want to cook this morning? ")
             ask_potato = int(input("Fred: By the way, you currently have "+str(potato)+": "))
             #checking they have the stock to cook
@@ -460,26 +471,26 @@ class GameInit():
                 cooked_potato = ask_potato
                 print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
             
-        if ask_pots.lower() in ["no", "n"]:
+        if ask_pots.lower() in no_list:
             potato_sellable = False
             print("Fred: That sounds like a plan boss!")
 
         ask_chg = input("Fred: Would you like to change the price today? ")
         #changes the price to what the user selects and stores it as a float
-        if ask_chg in ["yes", "y"]:
+        if ask_chg in yes_list:
             cooked_potato_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_potato_cost)+") "))
             return
-        if ask_chg in ["no", "n"]:
+        if ask_chg in no_list:
             return
 
     @staticmethod
     def cook_sausage():
         #variables
-        global sausage, cooked_sausage, level, sausage_sellable, username, cooked_sausage_cost, currency
+        global sausage, cooked_sausage, level, sausage_sellable, username, cooked_sausage_cost, currency, yes_list, no_list
 
         #asks the user how mucbh fo the stock they want to cook
         ask_pots = input("Fred: Would you like to cook sauages today? ")
-        if ask_pots.lower() in ["yes", "y"]:
+        if ask_pots.lower() in yes_list:
             print("Fred: Sounds great! How many sausages do you want to cook this morning? ")
             ask_sausage = int(input("Fred: You have "+str(sausages)+": "))
             #checking they have the stock to cook
@@ -494,26 +505,26 @@ class GameInit():
                 cooked_sausage = ask_sausages
                 print("Fred: Al'ight Boss, "+str(cooked_sausage)+" sausages were cooked!")
             
-        if ask_pots.lower() in ["no", "n"]:
+        if ask_pots.lower() in no_list:
             sausage_sellable = False
             print("Fred: Sounds like a plan "+username+"!")
 
         ask_chg = input("Fred: Would you like to change the price today? ")
         #changes the price to what the user selects and stores it as a float
-        if ask_chg in ["yes", "y"]:
+        if ask_chg in yes_list:
             cooked_sausage_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_sausage_cost)+") "))
             return
-        if ask_chg in ["no", "n"]:
+        if ask_chg in no_list:
             return
         
     @staticmethod
     def cook_fishcake():
         #variables
-        global fishcake, cooked_fishcake, level, fishcake_sellable, username, cooked_fishcake_cost, currency
+        global fishcake, cooked_fishcake, level, fishcake_sellable, username, cooked_fishcake_cost, currency, yes_list, no_list
 
         #asks the user how mucbh fo the stock they want to cook
         ask_pots = input("Fred: Would you like to cook fishcakes today? ")
-        if ask_pots.lower() in ["yes", "y"]:
+        if ask_pots.lower() in yes_list:
             print("Fred: Sounds great! How many fishcakes do you want to cook this morning? ")
             ask_fishcake = int(input("Fred: You have "+str(fishcake)+": "))
             #checking they have the stock to cook
@@ -528,26 +539,26 @@ class GameInit():
                 cooked_fishcake = ask_fishcake
                 print("Fred: Okay Boss, "+str(cooked_fishcake)+" fishcakes were cooked!")
             
-        if ask_pots.lower() in ["no", "n"]:
+        if ask_pots.lower() in no_list:
             sausage_sellable = False
             print("Fred: Sounds like a plan "+username+"!")
 
         ask_chg = input("Fred: Would you like to change the price today? ")
         #changes the price to what the user selects and stores it as a float
-        if ask_chg in ["yes", "y"]:
+        if ask_chg in yes_list:
             cooked_fishcake_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_fishcake_cost)+") "))
             return
-        if ask_chg in ["no", "n"]:
+        if ask_chg in no_list:
             return
         
     @staticmethod
     def cook_pukkapie():
         #variables
-        global pukkapie, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, level, username, currency
+        global pukkapie, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, level, username, currency, yes_list, no_list
 
         #asks the user how mucbh fo the stock they want to cook
         ask_pots = input("Fred: Would you like to cook pies today? ")
-        if ask_pots.lower() in ["yes", "y"]:
+        if ask_pots.lower() in yes_list:
             print("Fred: Sounds great! How many pies do you want to cook this morning? ")
             ask_pukkapie = int(input("Fred: You have "+str(pies)+": "))
             #checking they have the stock to cook
@@ -562,16 +573,16 @@ class GameInit():
                 cooked_pukkapie = ask_pukkapie
                 print("Fred: Okay Boss, "+str(cooked_pukkapie)+" pies were cooked!")
             
-        if ask_pots.lower() in ["no", "n"]:
+        if ask_pots.lower() in no_list:
             sausage_sellable = False
             print("Fred: Sounds like a plan "+username+"!")
 
         ask_chg = input("Fred: Would you like to change the price today? ")
         #changes the price to what the user selects and stores it as a float
-        if ask_chg in ["yes", "y"]:
+        if ask_chg in yes_list:
             cooked_fishcake_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_pukkapie_cost)+") "))
             return
-        if ask_chg in ["no", "n"]:
+        if ask_chg in no_list:
             return
         
     @staticmethod
@@ -659,10 +670,10 @@ class GameInit():
         
     @staticmethod
     def stock_info():
-        global DLC1
+        global DLC1, yes_list, no_list
         #displays details on the current stock options
         ask_view = input("Fred: Would you like to view details on the stock? ")
-        if ask_view.lower() in ["yes", "y"]:
+        if ask_view.lower() in yes_list:
             print("Fred: Here's the stock book for you boss!")
             print("")
             #fish
@@ -692,7 +703,7 @@ class GameInit():
                 print("Book: Fishcake\n| Fishcake Cost: ??? | Cooked Fishcake Cost: ??? | Fishcake EXP: ??? |")
             print("")
             time.sleep(5)
-        if ask_view.lower() in ["no", "n"]:
+        if ask_view.lower() in no_list:
             return
             
 class GameMain():
