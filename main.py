@@ -180,8 +180,8 @@ class GameInit():
             currency = "£"
         currency_ch = input("Uncle Bob: You want it to be "+currency+"? ")
         #makes sure the user has a value less than or equal to 4
-        if len(currency_ch) >= 4:
-            print("Game: Please enter a shorter value (Max: 4 characters)")
+        if len(currency) > 4:
+            print("Game: Please enter a shorter currency (Max: 4 characters)")
             GameInit.currency_name()
             return
         
@@ -844,25 +844,34 @@ class GameMain():
                 
             #checking if there is stock left
             if fish_customers > cooked_fish:
-                print("Fred: Welp, we're out of fish!")
+                print("Fred: Welp, we're out of cod!")
                 fish_sellable = False
-                if not level > 3:
+                if level < 3:
                     GameInit.end()
                     return
                 
             if (level >= 3) and (potato_customers > cooked_potato):
                 print("Fred: Welp, we're out of chips!")
                 potato_sellable = False
+                if level < 5 and (fish_sellable == False):
+                    GameInit.end()
+                    return
 
             if (level >= 5) and (sausage_customers > cooked_sausage):
                 print("Fred: Welp, we're out of sausages!")
                 sausage_sellable = False
+                if level < 7 and (fish_sellable == False) and potato_sellable == False:
+                    GameInit.end()
+                    return
                 
             if (level >= 7) and (fishcake_customers > cooked_fishcake):
                 print("Fred: Welp, we're out of sausages!")
                 fishcake_sellable = False
+                if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable = False):
+                    GameInit.end()
+                    return
                 
-            if (level >= 7) and (fishcake_customers > cooked_fishcake) and DLC1 == True:
+            if (level >= 4) and (pukkapie_customers > cooked_pukkapie) and DLC1 == True:
                 print("Fred: Welp, we're out of pies!")
                 pukkapie_sellable = False
                 
@@ -880,7 +889,7 @@ class GameMain():
                 if fish_customers == 0:
                     print("Fred: No customers bought any cod.")
                 if fish_customers > 0:
-                    print("Fred: "+str(fish_customers)+" customers visted and ordered "+str(fish_customers)+" cod and we now have "+str(cooked_fish)+" fish left.")
+                    print("Fred: "+str(fish_customers)+" customers visted and ordered "+str(fish_customers)+" cod and we now have "+str(cooked_fish)+" cod left.")
             
             if level >= 3 and potato_sellable == True:
                 cooked_potato = cooked_potato - potato_customers
