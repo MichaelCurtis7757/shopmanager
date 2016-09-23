@@ -8,9 +8,8 @@ class GameInit():
     def check_dlc():
         global yes_list, no_list
         #check for DLC/map packs
-        ask_dlc = input("Game: Would you like to check for DLC(s)? ")
+        ask_dlc = input("Game: Would you like to play with DLC(S)? ")
         if ask_dlc.lower() in ["yes", "y"]:
-            print("Game: Checking for DLC...")
             #checking for DCL1
             file_present = os.path.isfile("DLC_PIE.dlc")
             if file_present == True:
@@ -25,7 +24,7 @@ class GameInit():
                     print("Game: Packa Pie DLC not loaded.")
                     time.sleep(1.5)
             else:
-                print("Game: Packa Pie DLC not found.")
+                print("Game: Packa Pie DLC not installed!")
                     
             #checking for DCL2
             file_present2 = os.path.isfile("DLC_FISH.dlc")
@@ -41,7 +40,7 @@ class GameInit():
                     print("Game: More Fish DLC not loaded.")
                     time.sleep(1.5)
             else:
-                print("Game: More Fish DLC not found.")
+                print("Game: More Fish DLC not installed!")
                       
         if ask_dlc.lower() in ["no", "n"]:
             return
@@ -122,7 +121,6 @@ class GameInit():
         #DLC1
         if DLC1 == True:
             global pukkapie, cooked_pukkapie, pukkapie_sellable, pukkapie_cost, cooked_pukkapie_cost, pukkapie_exp
-
             #pukka pie
             pukkapie = 0
             cooked_pukkapie = 0
@@ -136,29 +134,35 @@ class GameInit():
     def manager_name():
         #handles the username
         global username, yes_list, no_list
-        username = input("Uncle Bob: What is your name, I always forget... ")
+        print("Narrator: You arrive at your Uncle's shop where a man in his late 60s is outside. You approach him wearily...")
+        username = input("Uncle Bob: Hello... erm... I 've forgotton your name. What is it again please? ")
         #sets default if the input is blank
         if username == "":
             username = "Michael"
-        username_ch = input("Uncle Bob: Just to check, your name is "+username+" right? ")
+        username_ch = input("Uncle Bob: So you're "+username+" right? ")
+        time.sleep(1)
         #asks the user if the if they are sure about their username
         if username_ch.lower() in yes_list:
+            print("Uncle Bob: Ah, yes! My brother's child who's taking the shop from me. I forgot who you were for a minute!")
             return
         if username_ch.lower() in no_list:
             GameInit.manager_name()
             return
         else:
-            print("Game: Please enter a valid reply.")
+            print("Uncle Bob: What's that? I didn't quite catch that.")
             GameInit.manager_name()
 
     @staticmethod
     def shop_name():
         #handles the shop
-        global shop, yes_list, no_list
-        shop = input("Uncle Bob: What would you like the shop to be renamed to? ")
+        global shop, yes_list, no_list, username
+        print("Uncle Bob: You might as well re-name the shop as 'Ye Olde Fish Shoppe' might not be as cool as what you come up with.")
+        shop = input("Uncle Bob: So "+username+", what would you like the shop to be called? ")
         #sets default if the input is blank
         if shop == "":
             shop = "The Handy Plaice"
+        if shop.lower() == "ye olde fish shoppe":
+            print("Uncle Bob: Oh so it is cool? That's nice!")
         shop_ch = input("Uncle Bob: You want it called "+shop+"? ")
         #asks the user if the if they are sure about the shop name
         if shop_ch.lower() in yes_list:
@@ -167,21 +171,21 @@ class GameInit():
             GameInit.shop_name()
             return
         else:
-            print("Game: Please enter a valid reply.")
+            print("Uncle Bob: What's that "+username+"? I didn't quite catch that.")
             GameInit.shop_name()
 
     @staticmethod
     def currency_name():
         #handles the shop
         global currency,yes_list, no_list
-        currency = input("Uncle Bob: What would like the currency to be? (EG. '£') (Max length 4) ")
+        currency = input("Uncle Bob: What currency do you think people use around here? I remember using £'s... ")
         #sets default if the input is blank
         if currency == "":
             currency = "£"
-        currency_ch = input("Uncle Bob: You want it to be "+currency+"? ")
+        currency_ch = input("Uncle Bob: So they use "+currency+" nowadays? ")
         #makes sure the user has a value less than or equal to 4
         if len(currency) > 4:
-            print("Game: Please enter a shorter currency (Max: 4 characters)")
+            print("Game: I think that's a bit too long to be used kiddo. 4 maximum maybe?")
             GameInit.currency_name()
             return
         
@@ -191,26 +195,37 @@ class GameInit():
             GameInit.currency_name()
             return
         else:
-            print("Game: Please enter a valid reply.")
+            print("Uncle Bob: What's that kiddo? I didn't quite hear you.")
             GameInit.currency_name()
             return
 
     @staticmethod  
     def startup():
-        #sets the DLC to false before start up
+        #sets up global varaibles used before GameInit.varibles()
         global DLC1, DLC2, yes_list, no_list
         DLC1 = False
         DLC2 = False
-        yes_list = ["yes", "y", "yes.", "y.", "yeah", "yh", "yeah.", "yh.", "hells yeah boi", "yeaah"]
-        no_list = ["no", "n", "no.", "n.", "nah", "noo", "nah.", "noo.", "hells nah boi", "naah"]
+        yes_list = ["yes", "y", "yes.", "y.", "yeah", "yh", "yeah.", "yh.", "hells yeah boi", "yeaah","yep", "yep."]
+        no_list = ["no", "n", "no.", "n.", "nah", "noo", "nah.", "noo.", "hells nah boi", "naah", "nope", "nope."]
+        x_loop = 1
         #runs all the startup stuff
-        pre_init = input("Game: Would you like to start a new game? ")
+        pre_init = input("Game: Hello, would you like to start a new game? ")
         pre_init = pre_init.lower()
 
         #runs the variable delcrations
         if pre_init in yes_list:
             GameInit.check_dlc()
             GameInit.variables()
+            #launches user-friednly text details
+            while x_loop <= 3:
+                if x_loop == 1:
+                    launching = "Game: Launching."
+                else:
+                    launching = launching + "."
+                print(launching)
+                time.sleep(0.5)
+                x_loop += 1
+            print("")
             GameInit.manager_name()
             GameInit.shop_name()
             GameInit.currency_name()
@@ -867,7 +882,7 @@ class GameMain():
             if (level >= 7) and (fishcake_customers > cooked_fishcake):
                 print("Fred: Welp, we're out of sausages!")
                 fishcake_sellable = False
-                if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable = False):
+                if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False):
                     GameInit.end()
                     return
                 
