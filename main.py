@@ -178,14 +178,14 @@ class GameInit():
     def currency_name():
         #handles the shop
         global currency,yes_list, no_list
-        currency = input("Uncle Bob: What currency do you think people use around here? I remember using £'s... ")
+        currency = input("Uncle Bob: What would like the currency to be? (EG. '£') (Max length 4) ")
         #sets default if the input is blank
         if currency == "":
             currency = "£"
-        currency_ch = input("Uncle Bob: So they use "+currency+" nowadays? ")
+        currency_ch = input("Uncle Bob: You want it to be "+currency+"? ")
         #makes sure the user has a value less than or equal to 4
         if len(currency) > 4:
-            print("Game: I think that's a bit too long to be used kiddo. 4 maximum maybe?")
+            print("Game: Please enter a shorter currency (Max: 4 characters)")
             GameInit.currency_name()
             return
         
@@ -195,7 +195,7 @@ class GameInit():
             GameInit.currency_name()
             return
         else:
-            print("Uncle Bob: What's that kiddo? I didn't quite hear you.")
+            print("Game: Please enter a valid reply.")
             GameInit.currency_name()
             return
 
