@@ -62,8 +62,8 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.7-alpha"
-        supported_versions = ["v1.3-alpha", "v1.4-alpha", "v1.5-alpha", "v1.6-alpha"]
+        game_version = "v1.8-alpha"
+        supported_versions = ["v1.6-alpha", "v1.7-alpha"]
         currency = "£"
         rent = 10
         wages = 10
@@ -1034,7 +1034,8 @@ class SaveLoad():
         print("Game: Loading Game...")
         GameInit.variables()
 
-        global username, shop, day, level, cash, supported_versions, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency, fishcake, cooked_fishcake_cost
+        global username, shop, day, level, cash, supported_versions, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency
+        global fishcake, cooked_fishcake_cost
         
         file = open(save_name+".shs", "r")
         #checking the users game version
@@ -1093,7 +1094,7 @@ class SaveLoad():
 
         #fishcake
         fishcake = int(file.readline().replace("\n", ""))
-
+        
         #cooked fishcake cost
         cooked_fishcake_cost = float(file.readline().replace("\n", ""))
 
