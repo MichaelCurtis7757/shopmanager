@@ -52,7 +52,7 @@ class GameInit():
         #sets the variables to default values and creates them on startup or reset
         
         #general
-        global username, day, rand_day, cash, level, exp, req_exp, shop, game_version, currency, supported_versions, rent, wages
+        global username, day, rand_day, cash, level, exp, req_exp, shop, game_version, currency, supported_versions, rent, wages, day_name
 
         username = "test_name"
         shop = "The Shop"
@@ -62,11 +62,12 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.9-alpha"
-        supported_versions = ["v1.6-alpha", "v1.7-alpha", "v1.8-alpha"]
+        game_version = "v2.0-alpha"
+        supported_versions = []
         currency = "£"
         rent = 10
         wages = 10
+        day_name = 0
         
         #stock
         global fish, potato, sausage, fishcake, cooked_fish, cooked_potato, cooked_sausage, cooked_fishcake, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable
@@ -332,7 +333,7 @@ class GameInit():
         ask_stock = input("Fred: Hey boss, would you like to buy some stock this morning (You have "+currency+ str(cash)+")? ")
         if ask_stock.lower() in yes_list:
             #shows how much stock they have and asks them what they want to buy
-            print("Fred: Cod Stock: "+str(fish)+", Potato Stock: "+str(potato)+", Sasuage Stock "+str(sausage)+" and Fishcake Stock "+str(fishcake)+" ")
+            print("Fred: Cod Stock: "+str(fish)+", Potato Stock: "+str(potato)+", Sasuage Stock: "+str(sausage)+" and Fishcake Stock: "+str(fishcake)+" ")
             dlc_str = ""
             if DLC1 == True:
                 dlc_str = dlc_str + "Pie Stock "+str(pukkapie)+", "
@@ -354,6 +355,7 @@ class GameInit():
                     cash = cash - (ask_amount * fish_cost)                
                     fish = fish + ask_amount
                     time.sleep(1.5)
+                    return
                 
             #asks them how many potatoes they want to buy
             if ask_buy.lower() in ["potato", "potatoes", "p"]:
@@ -373,6 +375,7 @@ class GameInit():
                         cash = cash - (ask_amount * potato_cost)                
                         potato = potato + ask_amount
                         time.sleep(1.5)
+                        return
             else:
                 print("Game: Please enter a valid reply.")
                 GameInit.buy_stock()
@@ -396,6 +399,7 @@ class GameInit():
                         cash = cash - (ask_amount * sausage_cost)                
                         sausage = sausage + ask_amount
                         time.sleep(1.5)
+                        return
             else:
                 print("Game: Please enter a valid reply.")
                 GameInit.buy_stock()
@@ -419,6 +423,7 @@ class GameInit():
                         cash = cash - (ask_amount * fishcake_cost)                
                         fishcake = fishcake + ask_amount
                         time.sleep(1.5)
+                        return
                     
             if ask_buy.lower() in ["pukkapie", "pukka pie", "pie", "pies", "dlc1"]:
                 if DLC1 == True:
@@ -437,6 +442,7 @@ class GameInit():
                             cash = cash - (ask_amount * pukkapie_cost)                
                             pukkapie = pukkapie + ask_amount
                             time.sleep(1.5)
+                            return
                         
             if ask_buy.lower() in ["plaice", "plaices", "p", "fish2"]:
                 if DLC1 == True:
@@ -455,6 +461,7 @@ class GameInit():
                             cash = cash - (ask_amount * plaice_cost)                
                             plaice = plaice + ask_amount
                             time.sleep(1.5)
+                            return
                 else:
                     print("Game: Error, DLC not found.")
 
@@ -475,6 +482,7 @@ class GameInit():
                             cash = cash - (ask_amount * haddock_cost)                
                             haddock = haddock + ask_amount
                             time.sleep(1.5)
+                            return
                 else:
                     print("Game: Error, DLC not found.")
 
@@ -863,7 +871,313 @@ class GameInit():
             time.sleep(5)
         if ask_view.lower() in no_list:
             return
+
+    def manage_customers():
+        global cooked_fish_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, DLC1, DLC2, level, hour_exp, tprofit
+        global fish_customers, potato_customers, sausage_customers, fishcake_customers, fish_hour_exp, potato_hour_exp, sausage_hour_exp, fishcake_hour_exp
+        if DLC1 == True:
+            global pukkapie_customers, pukkapie_hour_exp, cooked_pukkapie_cost
+        if DLC2 == True:
+            global plaice_customers, haddock_customers, cooked_haddock_cost, cooked_plaice_cost, plaice_hour_exp, haddock_hour_exp
             
+        #calculaing the amount of customers and exp for fish
+        fish_rand_no = level * randint(1, 3)
+            
+        if cooked_fish_cost < 1:
+            fish_rand_no = level * randint(1, 6)
+        if 1 <= cooked_potato_cost <= 3:
+            fish_rand_no = level * randint(1, 4)
+        if 4 < cooked_fish_cost < 10:
+            fish_rand_no = level * randint(1, 2)
+        if cooked_fish_cost > 10:
+            fish_rand_no = 0
+            print("Uncle Bob: Those are some expensive cod!")
+                
+        fish_customers = randint(0, fish_rand_no)
+        fish_hour_exp = fish_customers * fish_exp
+
+        #calculaing the amount of customers and exp for potatoes
+        if level >= 3:
+            potato_rand_no = level * randint(1, 3)
+                
+            if cooked_potato_cost < 2:
+                potato_rand_no = level * randint(1, 6)
+            if 2 <= cooked_potato_cost <= 5:
+                potato_rand_no = level * randint(1, 4)
+            if 6 < cooked_fish_cost < 10:
+                fish_rand_no = level * randint(1, 2)
+            if cooked_fish_cost > 10:
+                potato_rand_no = 0
+                print("Uncle Bob: Those are some expensive chips!")
+                    
+            potato_customers = randint(0, potato_rand_no)
+            potato_hour_exp = potato_customers * potato_exp
+
+        #calculaing the amount of customers and exp for sausage
+        if level >= 5:
+            sausage_rand_no = level * randint(1, 3)
+                
+            if cooked_sausage_cost < 3:
+                sausage_rand_no = level * randint(1, 6)
+            if 3 <= cooked_sausage_cost <= 7:
+                sausage_rand_no = level * randint(1, 4)
+            if 8 < cooked_sausage_cost < 11:
+                sausage_rand_no = level * randint(1, 2)
+            if cooked_sausage_cost > 12:
+                sausage_rand_no = 0
+                print("Uncle Bob: Those are some expensive sausages!")
+                    
+            sausage_customers = randint(0, sausage_rand_no)
+            sausage_hour_exp = sausage_customers * sausage_exp
+
+        #calculaing the amount of customers and exp for sausages
+        if level >= 7:
+            fishcake_rand_no = level * randint(1, 3)
+                
+            if cooked_fishcake_cost < 3:
+                fishcake_rand_no = level * randint(1, 6)
+            if 3 <= cooked_fishcake_cost <= 7:
+                fishcake_rand_no = level * randint(1, 4)
+            if 8 < cooked_fishcake_cost < 11:
+                fishcake_rand_no = level * randint(1, 2)
+            if cooked_fishcake_cost > 12:
+                fishcake_rand_no = 0
+                print("Uncle Bob: Those are some expensive fishcakes!")
+                    
+            fishcake_customers = randint(0, fishcake_rand_no)
+            fishcake_hour_exp = fishcake_customers * fishcake_exp
+
+        #calculaing the amount of customers and exp for pie dlc
+        if level >= 4 and DLC1 == True:
+            pukkapie_rand_no = level * randint(1, 3)
+                
+            if cooked_pukkapie_cost < 3:
+                pukkapie_rand_no = level * randint(1, 6)
+            if 3 <= cooked_pukkapie_cost <= 7:
+                pukkapie_rand_no = level * randint(1, 4)
+            if 8 < cooked_pukkapie_cost < 11:
+                pukkapie_rand_no = level * randint(1, 2)
+            if cooked_pukkapie_cost > 12:
+                pukkapie_rand_no = 0
+                print("Uncle Bob: Those are some expensive pies!")
+                    
+            pukkapie_customers = randint(0, pukkapie_rand_no)
+            pukkapie_hour_exp = pukkapie_customers * pukkapie_exp
+
+        #calculaing the amount of customers and exp for plaice - dlc
+        if level >= 6 and DLC2 == True:
+            plaice_rand_no = level * randint(1, 3)
+                
+            if cooked_plaice_cost < 2:
+                plaice_rand_no = level * randint(1, 3)
+            if 2 <= cooked_plaice_cost <= 6:
+                plaice_rand_no = level * randint(1, 2)
+            if 7 < cooked_plaice_cost < 10:
+                plaice_rand_no = level * randint(1, 1)
+            if cooked_plaice_cost > 11:
+                plaice_rand_no = 0
+                print("Uncle Bob: Those are some expensive plaice!")
+                    
+            plaice_customers = randint(0, plaice_rand_no)
+            plaice_hour_exp = plaice_customers * plaice_exp
+
+        #calculaing the amount of customers and exp for plaice - dlc
+        if level >= 8 and DLC2 == True:
+            haddock_rand_no = level * randint(1, 3)
+                
+            if cooked_haddock_cost < 4:
+                haddock_rand_no = level * randint(1, 3)
+            if 2 <= cooked_haddock_cost <= 6:
+                haddock_rand_no = level * randint(1, 2)
+            if 7 < cooked_haddock_cost < 10:
+                haddock_rand_no = level * randint(1, 1)
+            if cooked_haddock_cost > 11:
+                haddock_rand_no = 0
+                print("Uncle Bob: Those are some expensive haddock!")
+                    
+            haddock_customers = randint(0, haddock_rand_no)
+            haddock_hour_exp = haddock_customers * haddock_exp    
+
+    def check_stock():
+        global cooked_fish, cooked_potato, cooked_fishcake, DLC1, DLC2, level, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable
+        global fish_customers, potato_customers, sausage_customers, fishcake_customers, tprofit
+        if DLC1 == True:
+            global pukkapie_customers, pukkapie_hour_exp, cooked_pukkapie, pukkapie_sellable
+        if DLC2 == True:
+            global plaice_customers, haddock_customers, cooked_haddock, haddock_sellable, cooked_plaice, plaice_sellable
+            
+        if fish_customers > cooked_fish:
+            print("Fred: Welp, we're out of cod!")
+            fish_sellable = False
+            if level < 3:
+                GameInit.end()
+                return
+                
+        if (level >= 3) and (potato_customers > cooked_potato):
+            print("Fred: Welp, we're out of chips!")
+            potato_sellable = False
+            if level < 5 and (fish_sellable == False):
+                GameInit.end()
+                return
+
+        if (level >= 5) and (sausage_customers > cooked_sausage):
+            print("Fred: Welp, we're out of sausages!")
+            sausage_sellable = False
+            if level < 7 and (fish_sellable == False) and potato_sellable == False:
+                GameInit.end()
+                return
+                
+        if (level >= 7) and (fishcake_customers > cooked_fishcake):
+            print("Fred: Welp, we're out of sausages!")
+            fishcake_sellable = False
+            if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False):
+                GameInit.end()
+                return
+                
+        if (level >= 4) and (pukkapie_customers > cooked_pukkapie) and DLC1 == True:
+            print("Fred: Welp, we're out of pies!")
+            pukkapie_sellable = False
+
+        if (level >= 6) and (plaice_customers > cooked_plaice) and DLC2 == True:
+            print("Fred: Welp, we're out of plaice!")
+            plaice_sellable = False
+
+        if (level >= 8) and (haddock_customers > cooked_haddock) and DLC2 == True:
+            print("Fred: Welp, we're out of haddock!")
+            haddock_sellable = False
+                
+            #ends the game if the stock is compeltetly gone from all alreas
+            if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False):
+                GameInit.end()
+                
+    def sell_stock():
+        global cooked_fish, cooked_potato, cooked_fishcake, cooked_fish_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, cooked_haddock, haddock_sellable, cooked_haddock_cost, cooked_haddock_cost
+        global DLC1, DLC2,level, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, cooked_haddock, haddock_sellable
+        global fish_customers, potato_customers, sausage_customers, fishcake_customers, hour_exp, tprofit, fish_hour_exp, potato_hour_exp, sausage_hour_exp, fishcake_hour_exp
+
+        if DLC1 == True:
+            global pukkapie_customers, pukkapie_hour_exp
+        if DLC2 == True:
+            global plaice_customers, haddock_customers, plaice_hour_exp, haddock_hour_exp
+            
+        #printing the sold fish and chips
+        if fish_sellable == True:
+            cooked_fish = cooked_fish - fish_customers
+            fish_profit = fish_customers * cooked_fish_cost
+            hour_exp = hour_exp + fish_hour_exp
+            tprofit = tprofit + fish_profit
+            
+            if fish_customers == 0:
+                print("Fred: No customers bought any cod.")
+            if fish_customers > 0:
+                 print("Fred: "+str(fish_customers)+" customers visted and ordered "+str(fish_customers)+" cod and we now have "+str(cooked_fish)+" cod left.")
+            
+        if level >= 3 and potato_sellable == True:
+            cooked_potato = cooked_potato - potato_customers
+            potato_profit = potato_customers * cooked_potato_cost
+            hour_exp = hour_exp + potato_hour_exp
+            tprofit = tprofit + potato_profit
+                
+            if potato_customers == 0:
+                print("Fred: No customers bought any chips.")
+            if potato_customers > 0:
+                print("Fred: "+str(potato_customers)+" customers bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
+
+        if level >= 5 and sausage_sellable == True:
+            cooked_sausage = cooked_sausage - sausage_customers
+            sausage_profit = sausage_customers * cooked_sausage_cost
+            hour_exp = hour_exp + sausage_hour_exp
+            tprofit = tprofit + sausage_profit
+
+            if sausage_customers == 0:
+                print("Fred: No customers bought any sausages.")
+            if sausage_customers > 0:
+                print("Fred: "+str(sausage_customers)+" customers bought "+str(sausage_customers)+" sausages and we now have "+str(cooked_sausage)+" sausages left!")
+
+        if level >= 7 and fishcake_sellable == True:
+            cooked_fishcake = cooked_fishcake - fishcake_customers
+            fishcake_profit = fishcake_customers * cooked_fishcake_cost
+            hour_exp = hour_exp + fishcake_hour_exp
+            tprofit = tprofit + fishcake_profit
+                
+            if fishcake_customers == 0:
+                print("Fred: No customers bought any fishcakes.")
+            if fishcake_customers > 0:
+                print("Fred: "+str(fishcake_customers)+" customers bought "+str(fishcake_customers)+" sausages and we now have "+str(cooked_fishcake)+" fishcakes left!")
+
+        if level >= 4 and pukkapie_sellable == True and DLC1 == True:
+            cooked_pukkapie = cooked_pukkapie - pukkapie_customers
+            pukkapie_profit = pukkapie_customers * cooked_pukkapie_cost
+            hour_exp = hour_exp + pukkapie_hour_exp
+            tprofit = tprofit + pukkapie_profit
+                
+            if pukkapie_customers == 0:
+                print("Fred: No customers bought any pies.")
+            if pukkapie_customers > 0:
+                print("Fred: "+str(pukkapie_customers)+" customers bought "+str(pukkapie_customers)+" pies and we now have "+str(cooked_pukkapie)+" pies left!")
+
+        if level >= 6 and plaice_sellable == True and DLC2 == True:
+            cooked_plaice = cooked_plaice - plaice_customers
+            plaice_profit = plaice_customers * cooked_plaice_cost
+            hour_exp = hour_exp + plaice_hour_exp
+            tprofit = tprofit + plaice_profit
+                
+            if plaice_customers == 0:
+                print("Fred: No customers bought any plaice.")
+            if plaice_customers > 0:
+                print("Fred: "+str(plaice_customers)+" customers bought "+str(plaice_customers)+" plaice and we now have "+str(cooked_plaice)+" plaice left!")
+
+        if level >= 8 and haddock_sellable == True and DLC2 == True:
+            cooked_haddock = cooked_haddock - haddock_customers
+            haddock_profit = haddock_customers * cooked_haddock_cost
+            hour_exp = hour_exp + haddock_hour_exp
+            tprofit = tprofit + haddock_profit
+                
+            if haddock_customers == 0:
+                print("Fred: No customers bought any haddock.")
+            if haddock_customers > 0:
+                print("Fred: "+str(haddock_customers)+" customers bought "+str(haddock_customers)+" haddock and we now have "+str(haddock_plaice)+" haddock left!")
+
+    def calc_exp():
+        global exp, cash, level, req_exp, currency
+        cash = cash + tprofit
+        exp = exp + hour_exp
+        print("Fred: From this, you've made "+currency+str(tprofit)+" and gained "+str(hour_exp)+" EXP.")
+
+        #checking if the user meets the requirements for a level up
+        if exp >= req_exp:
+            level = level + 1
+            exp = exp - req_exp
+            req_exp = req_exp * 2
+            print("Uncle Bob: Congratulations! You levelled up to "+str(level)+"!")
+            print("Uncle Bob: With this, your reputation has increased.")
+
+    def day_time():
+        global day_name
+        print("Game: "+str((daytime + 3))+":00pm")
+        time.sleep(2)
+        if day_name == 0:
+            print("Game: Monday...")
+            day_name += 1
+        if day_name == 1:
+            print("Game: Tuesday...")
+            day_name += 1
+        if day_name == 2:
+            print("Game: Wednesday...")
+            day_name += 1
+        if day_name == 3:
+            print("Game: Thursday...")
+            day_name += 1
+        if day_name == 4:
+            print("Game: Friday...")
+            day_name += 1
+        if day_name == 5:
+            print("Game: Saturday...")
+            day_name += 1
+        if day_name == 6:
+            print("Game: Sunday...")
+            day_name = 0
+        
 class GameMain():
     #handles the main game
     @staticmethod
@@ -877,7 +1191,7 @@ class GameMain():
         #global imports
         global cooked_fish, cooked_potato, cooked_fishcake, cooked_fish_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, cooked_haddock, haddock_sellable, cooked_haddock_cost, cooked_haddock_cost
         global DLC1, DLC2,level, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, cooked_haddock, haddock_sellable
-                
+        global hour_exp, tprofit
         #start of day
         GameInit.random_days()
         GameInit.special_days()
@@ -920,263 +1234,20 @@ class GameMain():
             hour_exp = 0
                 
             #printing the current time of day
-            print("Game: "+str((daytime + 3))+":00pm")
-            time.sleep(2)
+            GameInit.day_time()
 
-            #calculaing the amount of customers and exp for fish
-            fish_rand_no = level * randint(1, 3)
-            
-            if cooked_fish_cost < 1:
-                fish_rand_no = level * randint(1, 6)
-            if 1 <= cooked_potato_cost <= 3:
-                fish_rand_no = level * randint(1, 4)
-            if 4 < cooked_fish_cost < 10:
-                fish_rand_no = level * randint(1, 2)
-            if cooked_fish_cost > 10:
-                fish_rand_no = 0
-                print("Uncle Bob: Those are some expensive cod!")
-                
-            fish_customers = randint(0, fish_rand_no)
-            fish_hour_exp = fish_customers * fish_exp
-
-            #calculaing the amount of customers and exp for potatoes
-            if level >= 3:
-                potato_rand_no = level * randint(1, 3)
-                
-                if cooked_potato_cost < 2:
-                    potato_rand_no = level * randint(1, 6)
-                if 2 <= cooked_potato_cost <= 5:
-                    potato_rand_no = level * randint(1, 4)
-                if 6 < cooked_fish_cost < 10:
-                    fish_rand_no = level * randint(1, 2)
-                if cooked_fish_cost > 10:
-                    potato_rand_no = 0
-                    print("Uncle Bob: Those are some expensive chips!")
-                    
-                potato_customers = randint(0, potato_rand_no)
-                potato_hour_exp = potato_customers * potato_exp
-
-            #calculaing the amount of customers and exp for sausage
-            if level >= 5:
-                sausage_rand_no = level * randint(1, 3)
-                
-                if cooked_sausage_cost < 3:
-                    sausage_rand_no = level * randint(1, 6)
-                if 3 <= cooked_sausage_cost <= 7:
-                    sausage_rand_no = level * randint(1, 4)
-                if 8 < cooked_sausage_cost < 11:
-                    sausage_rand_no = level * randint(1, 2)
-                if cooked_sausage_cost > 12:
-                    sausage_rand_no = 0
-                    print("Uncle Bob: Those are some expensive sausages!")
-                    
-                sausage_customers = randint(0, sausage_rand_no)
-                sausage_hour_exp = sausage_customers * sausage_exp
-
-            #calculaing the amount of customers and exp for sausages
-            if level >= 7:
-                fishcake_rand_no = level * randint(1, 3)
-                
-                if cooked_fishcake_cost < 3:
-                    fishcake_rand_no = level * randint(1, 6)
-                if 3 <= cooked_fishcake_cost <= 7:
-                    fishcake_rand_no = level * randint(1, 4)
-                if 8 < cooked_fishcake_cost < 11:
-                    fishcake_rand_no = level * randint(1, 2)
-                if cooked_fishcake_cost > 12:
-                    fishcake_rand_no = 0
-                    print("Uncle Bob: Those are some expensive fishcakes!")
-                    
-                fishcake_customers = randint(0, fishcake_rand_no)
-                fishcake_hour_exp = fishcake_customers * fishcake_exp
-
-            #calculaing the amount of customers and exp for pie dlc
-            if level >= 4 and DLC1 == True:
-                pukkapie_rand_no = level * randint(1, 3)
-                
-                if cooked_pukkapie_cost < 3:
-                    pukkapie_rand_no = level * randint(1, 6)
-                if 3 <= cooked_pukkapie_cost <= 7:
-                    pukkapie_rand_no = level * randint(1, 4)
-                if 8 < cooked_pukkapie_cost < 11:
-                    pukkapie_rand_no = level * randint(1, 2)
-                if cooked_pukkapie_cost > 12:
-                    pukkapie_rand_no = 0
-                    print("Uncle Bob: Those are some expensive pies!")
-                    
-                pukkapie_customers = randint(0, pukkapie_rand_no)
-                pukkapie_hour_exp = pukkapie_customers * pukkapie_exp
-
-            #calculaing the amount of customers and exp for plaice - dlc
-            if level >= 6 and DLC2 == True:
-                plaice_rand_no = level * randint(1, 3)
-                
-                if cooked_plaice_cost < 2:
-                    plaice_rand_no = level * randint(1, 3)
-                if 2 <= cooked_plaice_cost <= 6:
-                    plaice_rand_no = level * randint(1, 2)
-                if 7 < cooked_plaice_cost < 10:
-                    plaice_rand_no = level * randint(1, 1)
-                if cooked_plaice_cost > 11:
-                    plaice_rand_no = 0
-                    print("Uncle Bob: Those are some expensive plaice!")
-                    
-                plaice_customers = randint(0, plaice_rand_no)
-                plaice_hour_exp = plaice_customers * plaice_exp
-
-             #calculaing the amount of customers and exp for plaice - dlc
-            if level >= 8 and DLC2 == True:
-                haddock_rand_no = level * randint(1, 3)
-                
-                if cooked_haddock_cost < 4:
-                    haddock_rand_no = level * randint(1, 3)
-                if 2 <= cooked_haddock_cost <= 6:
-                    haddock_rand_no = level * randint(1, 2)
-                if 7 < cooked_haddock_cost < 10:
-                    haddock_rand_no = level * randint(1, 1)
-                if cooked_haddock_cost > 11:
-                    haddock_rand_no = 0
-                    print("Uncle Bob: Those are some expensive haddock!")
-                    
-                haddock_customers = randint(0, haddock_rand_no)
-                haddock_hour_exp = haddock_customers * haddock_exp
-                                               
+            #calculate customers and exp
+            GameInit.manage_customers()
+                   
             #checking if there is stock left
-            if fish_customers > cooked_fish:
-                print("Fred: Welp, we're out of cod!")
-                fish_sellable = False
-                if level < 3:
-                    GameInit.end()
-                    return
-                
-            if (level >= 3) and (potato_customers > cooked_potato):
-                print("Fred: Welp, we're out of chips!")
-                potato_sellable = False
-                if level < 5 and (fish_sellable == False):
-                    GameInit.end()
-                    return
+            GameInit.check_stock()
 
-            if (level >= 5) and (sausage_customers > cooked_sausage):
-                print("Fred: Welp, we're out of sausages!")
-                sausage_sellable = False
-                if level < 7 and (fish_sellable == False) and potato_sellable == False:
-                    GameInit.end()
-                    return
-                
-            if (level >= 7) and (fishcake_customers > cooked_fishcake):
-                print("Fred: Welp, we're out of sausages!")
-                fishcake_sellable = False
-                if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False):
-                    GameInit.end()
-                    return
-                
-            if (level >= 4) and (pukkapie_customers > cooked_pukkapie) and DLC1 == True:
-                print("Fred: Welp, we're out of pies!")
-                pukkapie_sellable = False
-
-            if (level >= 6) and (plaice_customers > cooked_plaice) and DLC2 == True:
-                print("Fred: Welp, we're out of plaice!")
-                plaice_sellable = False
-
-            if (level >= 8) and (haddock_customers > cooked_haddock) and DLC2 == True:
-                print("Fred: Welp, we're out of haddock!")
-                haddock_sellable = False
-                
-            #ends the game if the stock is compeltetly gone from all alreas
-            if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False):
-                GameInit.end()
-
-            #printing the sold fish and chips
-            if fish_sellable == True:
-                cooked_fish = cooked_fish - fish_customers
-                fish_profit = fish_customers * cooked_fish_cost
-                hour_exp = hour_exp + fish_hour_exp
-                tprofit = tprofit + fish_profit
+            #sell the stock
+            GameInit.sell_stock()
             
-                if fish_customers == 0:
-                    print("Fred: No customers bought any cod.")
-                if fish_customers > 0:
-                    print("Fred: "+str(fish_customers)+" customers visted and ordered "+str(fish_customers)+" cod and we now have "+str(cooked_fish)+" cod left.")
-            
-            if level >= 3 and potato_sellable == True:
-                cooked_potato = cooked_potato - potato_customers
-                potato_profit = potato_customers * cooked_potato_cost
-                hour_exp = hour_exp + potato_hour_exp
-                tprofit = tprofit + potato_profit
-                
-                if potato_customers == 0:
-                    print("Fred: No customers bought any chips.")
-                if potato_customers > 0:
-                    print("Fred: "+str(potato_customers)+" customers bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
-
-            if level >= 5 and sausage_sellable == True:
-                cooked_sausage = cooked_sausage - sausage_customers
-                sausage_profit = sausage_customers * cooked_sausage_cost
-                hour_exp = hour_exp + sausage_hour_exp
-                tprofit = tprofit + sausage_profit
-                
-                if sausage_customers == 0:
-                    print("Fred: No customers bought any sausages.")
-                if sausage_customers > 0:
-                    print("Fred: "+str(sausage_customers)+" customers bought "+str(sausage_customers)+" sausages and we now have "+str(cooked_sausage)+" sausages left!")
-
-            if level >= 7 and fishcake_sellable == True:
-                cooked_fishcake = cooked_fishcake - fishcake_customers
-                fishcake_profit = fishcake_customers * cooked_fishcake_cost
-                hour_exp = hour_exp + fishcake_hour_exp
-                tprofit = tprofit + fishcake_profit
-                
-                if fishcake_customers == 0:
-                    print("Fred: No customers bought any fishcakes.")
-                if fishcake_customers > 0:
-                    print("Fred: "+str(fishcake_customers)+" customers bought "+str(fishcake_customers)+" sausages and we now have "+str(cooked_fishcake)+" fishcakes left!")
-
-            if level >= 4 and pukkapie_sellable == True and DLC1 == True:
-                cooked_pukkapie = cooked_pukkapie - pukkapie_customers
-                pukkapie_profit = pukkapie_customers * cooked_pukkapie_cost
-                hour_exp = hour_exp + pukkapie_hour_exp
-                tprofit = tprofit + pukkapie_profit
-                
-                if pukkapie_customers == 0:
-                    print("Fred: No customers bought any pies.")
-                if pukkapie_customers > 0:
-                    print("Fred: "+str(pukkapie_customers)+" customers bought "+str(pukkapie_customers)+" pies and we now have "+str(cooked_pukkapie)+" pies left!")
-
-            if level >= 6 and plaice_sellable == True and DLC2 == True:
-                cooked_plaice = cooked_plaice - plaice_customers
-                plaice_profit = plaice_customers * cooked_plaice_cost
-                hour_exp = hour_exp + plaice_hour_exp
-                tprofit = tprofit + plaice_profit
-                
-                if plaice_customers == 0:
-                    print("Fred: No customers bought any plaice.")
-                if plaice_customers > 0:
-                    print("Fred: "+str(plaice_customers)+" customers bought "+str(plaice_customers)+" plaice and we now have "+str(cooked_plaice)+" plaice left!")
-
-            if level >= 8 and haddock_sellable == True and DLC2 == True:
-                cooked_haddock = cooked_haddock - haddock_customers
-                haddock_profit = haddock_customers * cooked_haddock_cost
-                hour_exp = hour_exp + haddock_hour_exp
-                tprofit = tprofit + haddock_profit
-                
-                if haddock_customers == 0:
-                    print("Fred: No customers bought any haddock.")
-                if haddock_customers > 0:
-                    print("Fred: "+str(haddock_customers)+" customers bought "+str(haddock_customers)+" haddock and we now have "+str(haddock_plaice)+" haddock left!")
-
             #calculating the profits, exp and cash for the day
-            cash = cash + tprofit
-            exp = exp + hour_exp
-            print("Fred: From this, you've made "+currency+str(tprofit)+" and gained "+str(hour_exp)+" EXP.")
-
-            #checking if the user meets the requirements for a level up
-            if exp >= req_exp:
-                level = level + 1
-                exp = exp - req_exp
-                req_exp = req_exp * 2
-                print("Uncle Bob: Congratulations! You levelled up to "+str(level)+"!")
-                print("Uncle Bob: With this, your reputation has increased.")
-
+            GameInit.calc_exp()
+            
             #checking for the end of the day using var 'daytime'
             if daytime >= 7:
                 if (fish_sellable == False) and (potato_sellable == False):
