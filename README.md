@@ -2,9 +2,11 @@
 Welcome to ShopManager, a text based shop managing game where you run a fish and chip shop. You can buy stock, change the price, go bankrupt and get free DLC.
 
 # Current Release
-v1.9-alpha: 26/09/16
+v2.0-alpha: 28/09/16
 
 # Previous Releases
+v1.9-alpha: 26/09/16
+
 v1.8-alpha: 25/09/16
 
 v1.7-alpha: 20/09/16
