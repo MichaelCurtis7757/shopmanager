@@ -62,7 +62,7 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v2.0-alpha"
+        game_version = "v1.0-beta"
         supported_versions = []
         currency = "£"
         rent = 10
@@ -768,6 +768,27 @@ class GameInit():
         elif day not in [1, 7, 14, rand_day]:
             print("-= Day "+str(day)+" =-")
             time.sleep(1.5)
+            if day_name == 0:
+                print("-= Monday =-")
+                day_name += 1
+            if day_name == 1:
+                print("-= Tuesday =-")
+                day_name += 1
+            if day_name == 2:
+                print("-= Wednesday =-")
+                day_name += 1
+            if day_name == 3:
+                print("-= Thursday =-")
+                day_name += 1
+            if day_name == 4:
+                print("-= Friday =-")
+                day_name += 1
+            if day_name == 5:
+                print("-= Saturday =-")
+                day_name += 1
+            if day_name == 6:
+                print("-= Sunday =-")
+                day_name = 0
         else:
             return
 
@@ -852,7 +873,7 @@ class GameInit():
             if level >= 4 and DLC1 == True:
                 global pukkapie_cost, cooked_pukkapie_cost, pukkapie_exp
                 print("Book: Pies\n| Pie Cost: "+str(fishcake_cost)+" | Cooked Pie Cost: "+str(cooked_fishcake_cost)+" | Pie EXP: "+str(fishcake_exp)+" |")
-            elif DLC1 == True:
+            if DLC1 == True:
                 print("Book: Pie\n| Pie Cost: ??? | Cooked Pie Cost: ??? | Pie EXP: ??? |")
             #plaice
             if level >= 6 and DLC2 == True:
@@ -1156,27 +1177,6 @@ class GameInit():
         global day_name
         print("Game: "+str((daytime + 3))+":00pm")
         time.sleep(2)
-        if day_name == 0:
-            print("Game: Monday...")
-            day_name += 1
-        if day_name == 1:
-            print("Game: Tuesday...")
-            day_name += 1
-        if day_name == 2:
-            print("Game: Wednesday...")
-            day_name += 1
-        if day_name == 3:
-            print("Game: Thursday...")
-            day_name += 1
-        if day_name == 4:
-            print("Game: Friday...")
-            day_name += 1
-        if day_name == 5:
-            print("Game: Saturday...")
-            day_name += 1
-        if day_name == 6:
-            print("Game: Sunday...")
-            day_name = 0
         
 class GameMain():
     #handles the main game
