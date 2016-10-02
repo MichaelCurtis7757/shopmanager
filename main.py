@@ -58,12 +58,12 @@ class GameInit():
         shop = "The Shop"
         day = 1
         rand_day = 0
-        cash = 30
+        cash = 25.0
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.0-beta"
-        supported_versions = []
+        game_version = "v1.1-beta"
+        supported_versions = ["v1.0-beta"]
         currency = "£"
         rent = 10
         wages = 10
@@ -1268,57 +1268,57 @@ class SaveLoad():
         global fail1, fail2, game_version, DLC1
         save_name = input("Game: What would you like the save file to be called? ")
         print("Game: Saving Game...")
-        file = open(save_name+".shs", "w")
-        #saves all the variables for the next load
-        file.write(game_version)
-        file.write("\n")
-        file.write(username)
-        file.write("\n")
-        file.write(shop)
-        file.write("\n")
-        file.write(str(fish))
-        file.write("\n")
-        file.write(str(potato))
-        file.write("\n")
-        file.write(str(sausage))
-        file.write("\n")
-        file.write(str(cooked_fish_cost))
-        file.write("\n")
-        file.write(str(cooked_potato_cost))
-        file.write("\n")
-        file.write(str(cooked_sausage_cost))
-        file.write("\n")
-        file.write(str(day))
-        file.write("\n")
-        file.write(str(level))
-        file.write("\n")
-        file.write(str(cash))
-        file.write("\n")
-        file.write(str(exp))
-        file.write("\n")
-        file.write(str(req_exp))
-        file.write("\n")
-        file.write(str(currency))
-        file.write("\n")
-        file.write(str(fishcake))
-        file.write("\n")
-        file.write(str(cooked_fishcake_cost))
-        file.write("\n")
-        if DLC1 == True:
-            file.write(str(pukkapie))
+        with fileinput.FileInput(file_name+".shs", inplace=True, backup='.bak') as file:
+            #saves all the variables for the next load
+            file.write(game_version)
             file.write("\n")
-            file.write(str(cooked_pukkapie_cost))
+            file.write(username)
             file.write("\n")
-        if DLC2 == True:
-            file.write(str(plaice))
+            file.write(shop)
             file.write("\n")
-            file.write(str(cooked_plaice_cost))
-            file1.write("\n")
-            file.write(str(haddock))
+            file.write(str(fish))
             file.write("\n")
-            file.write(str(cooked_haddock_cost))
-            file1.write("\n")
-        print("Game: Game Saved!")
+            file.write(str(potato))
+            file.write("\n")
+            file.write(str(sausage))
+            file.write("\n")
+            file.write(str(cooked_fish_cost))
+            file.write("\n")
+            file.write(str(cooked_potato_cost))
+            file.write("\n")
+            file.write(str(cooked_sausage_cost))
+            file.write("\n")
+            file.write(str(day))
+            file.write("\n")
+            file.write(str(level))
+            file.write("\n")
+            file.write(str(cash))
+            file.write("\n")
+            file.write(str(exp))
+            file.write("\n")
+            file.write(str(req_exp))
+            file.write("\n")
+            file.write(str(currency))
+            file.write("\n")
+            file.write(str(fishcake))
+            file.write("\n")
+            file.write(str(cooked_fishcake_cost))
+            file.write("\n")
+            if DLC1 == True:
+                file.write(str(pukkapie))
+                file.write("\n")
+                file.write(str(cooked_pukkapie_cost))
+                file.write("\n")
+            if DLC2 == True:
+                file.write(str(plaice))
+                file.write("\n")
+                file.write(str(cooked_plaice_cost))
+                file1.write("\n")
+                file.write(str(haddock))
+                file.write("\n")
+                file.write(str(cooked_haddock_cost))
+                file1.write("\n")
+            print("Game: Game Saved!")
 
     @staticmethod
     def load():
@@ -1330,93 +1330,93 @@ class SaveLoad():
         global username, shop, day, level, cash, supported_versions, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency
         global fishcake, cooked_fishcake_cost
         
-        file = open(save_name+".shs", "r")
-        #checking the users game version
-        game_version_load = file.readline().replace("\n","")
-        if not game_version_load == game_version:
-            print("Game: Error, save file is outdated.\nGame: Save: "+game_version_load+", Current: "+game_version+".")
-            if game_version_load in supported_versions:
-                print("Game: However this version's save is still supported.")
-            else:
-                print("Game: Rebooting...")
-                print("\n\n\n")
-                GameInit.startup()
-                return
+        with fileinput.FileInput(file_name+".shs", inplace=True, backup='.bak') as file:
+            #checking the users game version
+            game_version_load = file.readline().replace("\n","")
+            if not game_version_load == game_version:
+                print("Game: Error, save file is outdated.\nGame: Save: "+game_version_load+", Current: "+game_version+".")
+                if game_version_load in supported_versions:
+                    print("Game: However this version's save is still supported.")
+                else:
+                    print("Game: Rebooting...")
+                    print("\n\n\n")
+                    GameInit.startup()
+                    return
         
-        #username
-        username = file.readline().replace("\n", "")
+            #username
+            username = file.readline().replace("\n", "")
 
-        #shop
-        shop = file.readline().replace("\n", "")
+            #shop
+            shop = file.readline().replace("\n", "")
         
-        #fish
-        fish = int(file.readline().replace("\n", ""))
+            #fish
+            fish = int(file.readline().replace("\n", ""))
         
-        #potato
-        potato = int(file.readline().replace("\n", ""))
+            #potato
+            potato = int(file.readline().replace("\n", ""))
 
-        #sausage
-        sausage = int(file.readline().replace("\n", ""))
+            #sausage
+            sausage = int(file.readline().replace("\n", ""))
 
-        #cooked fish cost
-        cooked_fish_cost = float(file.readline().replace("\n", ""))
+            #cooked fish cost
+            cooked_fish_cost = float(file.readline().replace("\n", ""))
         
-        #cooked potato cost
-        cooked_potato_cost = float(file.readline().replace("\n", ""))
+            #cooked potato cost
+            cooked_potato_cost = float(file.readline().replace("\n", ""))
 
-        #cooked sausage cost
-        cooked_sausage_cost = float(file.readline().replace("\n", ""))
+            #cooked sausage cost
+            cooked_sausage_cost = float(file.readline().replace("\n", ""))
 
-        #day
-        day = int(file.readline().replace("\n", ""))
+            #day
+            day = int(file.readline().replace("\n", ""))
 
-        #level
-        level = int(file.readline().replace("\n", ""))
+            #level
+            level = int(file.readline().replace("\n", ""))
 
-        #cash
-        cash = float(file.readline().replace("\n", ""))
+            #cash
+            cash = float(file.readline().replace("\n", ""))
 
-        #exp
-        exp = int(file.readline().replace("\n", ""))
+            #exp
+            exp = int(file.readline().replace("\n", ""))
 
-        #req_exp
-        req_exp = int(file.readline().replace("\n", ""))
+            #req_exp
+            req_exp = int(file.readline().replace("\n", ""))
         
-        #currency
-        currency = file.readline().replace("\n", "")
+            #currency
+            currency = file.readline().replace("\n", "")
 
-        #fishcake
-        fishcake = int(file.readline().replace("\n", ""))
+            #fishcake
+            fishcake = int(file.readline().replace("\n", ""))
         
-        #cooked fishcake cost
-        cooked_fishcake_cost = float(file.readline().replace("\n", ""))
+            #cooked fishcake cost
+            cooked_fishcake_cost = float(file.readline().replace("\n", ""))
 
-        if DLC1 == True:
-            #pukkapie
-            pukkapie = int(file.readline().replace("\n", ""))
+            if DLC1 == True:
+                #pukkapie
+                pukkapie = int(file.readline().replace("\n", ""))
 
-            #cooked pukkapie cost
-            cooked_pukkapie_cost = float(file.readline().replace("\n", ""))
+                #cooked pukkapie cost
+                cooked_pukkapie_cost = float(file.readline().replace("\n", ""))
 
-        if DLC2 == True:
-            #plaice
-            plaice = int(file.readline().replace("\n", ""))
+            if DLC2 == True:
+                #plaice
+                plaice = int(file.readline().replace("\n", ""))
 
-            #cooked plaice cost
-            cooked_plaice_cost = float(file.readline().replace("\n", ""))
+                #cooked plaice cost
+                cooked_plaice_cost = float(file.readline().replace("\n", ""))
+    
+                #haddock
+                haddock = int(file.readline().replace("\n", ""))
 
-            #haddock
-            haddock = int(file.readline().replace("\n", ""))
-
-            #cooked haddock cost
-            cooked_haddock_cost = float(file.readline().replace("\n", ""))
+                #cooked haddock cost
+                cooked_haddock_cost = float(file.readline().replace("\n", ""))
                 
-        print("Game: Game Loaded!")
-        GameMain.main()
+            print("Game: Game Loaded!")
+            GameMain.main()
 
     @staticmethod
     def game_quit():
-        ask_quit = input("Game: Are you sure? ")
+        ask_quit = input("Game: Are you sure about this? ")
         if ask_quit in ["yes", "y"]:
             sys.exit
             return
