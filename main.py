@@ -16,10 +16,10 @@ class GameInit():
                 time.sleep(1)
                 ask_dlc1 = input("Game: Would you like to load the Packa Pie DLC? ")
                 if ask_dlc1.lower() in yes_list:
-                    file = open("DLC_PIE.dlc", "r")
-                    DLC1 = file.readline()
-                    print("Game: Packa Pie DLC loaded.")
-                    time.sleep(1)
+                    with fileinput.FileInput("DLC_PIE.dlc", inplace=True, backup='.bak') as file:
+                        DLC1 = file.readline()
+                        print("Game: Packa Pie DLC loaded.")
+                        time.sleep(1)
                 else:
                     print("Game: Packa Pie DLC not loaded.")
                     time.sleep(1)
@@ -32,10 +32,10 @@ class GameInit():
                 time.sleep(1)
                 ask_dlc2 = input("Game: Would you like to load the More Fish DLC? ")
                 if ask_dlc2.lower() in yes_list:
-                    file = open("DLC_FISH.dlc", "r")
-                    DLC2 = file.readline()
-                    print("Game: More Fish DLC loaded.")
-                    time.sleep(1)
+                    with fileinput.FileInput("DLC_FISH.dlc", inplace=True, backup='.bak') as file:
+                        DLC2 = file.readline()
+                        print("Game: More Fish DLC loaded.")
+                        time.sleep(1)
                 else:
                     print("Game: More Fish DLC not loaded.")
                     time.sleep(1)
@@ -58,7 +58,7 @@ class GameInit():
         shop = "The Shop"
         day = 1
         rand_day = 0
-        cash = 25.0
+        cash = 25
         level = 1
         exp = 0
         req_exp = 10
