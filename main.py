@@ -1,5 +1,5 @@
 #Shop Manager
-import time, sys, os.path
+import time, sys, os.path, fileinput
 from random import randint
 
 class GameInit():
