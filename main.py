@@ -54,8 +54,8 @@ class GameInit():
         #general
         global username, day, rand_day, cash, level, exp, req_exp, shop, game_version, currency, supported_versions, rent, wages, day_name
 
-        username = "test_name"
-        shop = "The Shop"
+        username = "Alex"
+        shop = "That Cod Shop"
         day = 1
         rand_day = 0
         cash = 25
@@ -181,7 +181,7 @@ class GameInit():
         shop = input("Uncle Bob: So "+username+", what would you like the shop to be called? ")
         #sets default if the input is blank
         if shop == "":
-            shop = "The Handy Plaice"
+            shop = "That Cod Shop"
         if shop.lower() == "ye olde fish shoppe":
             print("Uncle Bob: Oh so it is cool? That's nice!")
         shop_ch = input("Uncle Bob: You want it called "+shop+"? ")
@@ -266,7 +266,7 @@ class GameInit():
                 print("Game: Please enter a valid reply.")
                 GameInit.startup()
         #skips the startup questions if the user is a tester
-        if pre_init.lower() == "bug":
+        if pre_init.lower() in ["default", "bug"]:
             GameInit.variables()
             GameMain.main()
         else:
