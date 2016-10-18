@@ -159,12 +159,12 @@ class GameInit():
         username = input("Uncle Bob: Hello... erm... I 've forgotton your name. What is it again please? ")
         #sets default if the input is blank
         if username == "":
-            username = "Michael"
+            username = "Bobina"
         username_ch = input("Uncle Bob: So you're "+username+" right? ")
         time.sleep(1)
         #asks the user if the if they are sure about their username
         if username_ch.lower() in yes_list:
-            print("Uncle Bob: Ah, yes! My brother's child who's taking the shop from me. I forgot who you were for a minute!")
+            print("Uncle Bob: Ah, yes! My brother's kid who's taking the shop from me. I forgot who you were for a minute!")
             return
         if username_ch.lower() in no_list:
             GameInit.manager_name()
@@ -183,7 +183,7 @@ class GameInit():
         if shop == "":
             shop = "That Cod Shop"
         if shop.lower() == "ye olde fish shoppe":
-            print("Uncle Bob: Oh so it is cool? That's nice!")
+            print("Uncle Bob: Oh so it is cool? That's sick, as you youngsters say!")
         shop_ch = input("Uncle Bob: You want it called "+shop+"? ")
         #asks the user if the if they are sure about the shop name
         if shop_ch.lower() in yes_list:
