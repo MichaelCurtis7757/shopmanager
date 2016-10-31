@@ -62,8 +62,8 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.1-beta"
-        supported_versions = ["v1.0-beta", "v1.1-beta"]
+        game_version = "v1.2-beta"
+        supported_versions = ["v1.2-beta"]
         currency = "£"
         rent = 10
         wages = 10
@@ -257,10 +257,10 @@ class GameInit():
         if pre_init in no_list:
             ask_load = input("Game: Would you like to load a previous game? ")
             if ask_load in yes_list:
-                SaveLoad.load()
+                DataManage.load()
                 return
             if ask_load in no_list:
-                SaveLoad.game_quit()
+                DataManage.game_quit()
                 return
             else:
                 print("Game: Please enter a valid reply.")
@@ -279,7 +279,7 @@ class GameInit():
         #manages the rent and taxes for the day
         rw = rent + wages
         print("Fred: We should pay the rent and the wages for today.")
-        print("Fred: That comes to "+currency+str(rw)+" "+username"!")
+        print("Fred: That comes to "+currency+str(rw)+" "+username+"!")
         time.sleep(1.5)
         if rw > cash:
             print("Fred: You don't have enough money boss! I'm sorry but we're going to have to close down!")
@@ -303,7 +303,7 @@ class GameInit():
         ask_sav = input("Game: Would you like to save your game? ")
         ask_sav = ask_sav.lower()
         if ask_sav in yes_list:
-            SaveLoad.save()
+            DataManage.save()
         elif ask_sav in no_list:
             print("")
         else:
@@ -313,7 +313,7 @@ class GameInit():
         ask_qui = input("Game: Would you like to quit your game? ")
         ask_qui = ask_qui.lower()
         if ask_qui in yes_list:
-            SaveLoad.game_quit()
+            DataManage.game_quit()
             return
         elif ask_qui in no_list:
             return
@@ -737,7 +737,7 @@ class GameInit():
     @staticmethod
     def special_days():
         #special days
-        global cash, day, shop, currency, rent, wages
+        global cash, day, shop, currency, rent, wages, day_name
         #runs the special day code for the first day, the beginning
         if day == 1:
             rw = rent + wages
@@ -833,14 +833,12 @@ class GameInit():
             print("Uncle Bob: You ran out of money, and the shop had to close. Try to mange your money better in the future.")
             fail1 == True
             game_version = "[FAILED]"
-            SaveLoad.save()
             return
         
         if fish > 0:
             print("Uncle Bob: You ran out of cod, and the shop had to close. Try to mange your cod better in the future.")
             fail2 == True
             game_version = "[FAILED]"
-            SaveLoad.save()
             return
         
     @staticmethod
@@ -1177,7 +1175,7 @@ class GameInit():
             print("Uncle Bob: With this, your reputation has increased.")
 
     def day_time():
-        global day_name
+        global daytime
         print("Game: "+str((daytime + 3))+":00pm")
         time.sleep(2)
         
@@ -1194,7 +1192,7 @@ class GameMain():
         #global imports
         global cooked_fish, cooked_potato, cooked_fishcake, cooked_fish_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, cooked_haddock, haddock_sellable, cooked_haddock_cost, cooked_haddock_cost
         global DLC1, DLC2,level, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, cooked_haddock, haddock_sellable
-        global hour_exp, tprofit
+        global hour_exp, tprofit, daytime
         #start of day
         GameInit.random_days()
         GameInit.special_days()
@@ -1259,11 +1257,13 @@ class GameMain():
                 GameInit.end()
                 if fail1 == True:
                     GameInit.save()
-                    sys.exit
+                    sys.exit()
+                if fail2 == True:
+                    sys.exit()
             else:
                 daytime = daytime + 1
             
-class SaveLoad():
+class DataManage():
     #handles the save/load functions
     @staticmethod
     def save():
@@ -1271,7 +1271,7 @@ class SaveLoad():
         global fail1, fail2, game_version, DLC1
         save_name = input("Game: What would you like the save file to be called? ")
         print("Game: Saving Game...")
-        with fileinput.FileInput(file_name+".shs", inplace=True, backup='.bak') as file:
+        with open(save_name+".shs", "w") as file:
             #saves all the variables for the next load
             file.write(game_version)
             file.write("\n")
@@ -1333,7 +1333,7 @@ class SaveLoad():
         global username, shop, day, level, cash, supported_versions, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency
         global fishcake, cooked_fishcake_cost
         
-        with fileinput.FileInput(file_name+".shs", inplace=True, backup='.bak') as file:
+        with open(save_name+".shs", "r+") as file:
             #checking the users game version
             game_version_load = file.readline().replace("\n","")
             if not game_version_load == game_version:
@@ -1421,7 +1421,7 @@ class SaveLoad():
     def game_quit():
         ask_quit = input("Game: Are you sure about this? ")
         if ask_quit in ["yes", "y"]:
-            sys.exit
+            sys.exit()
             return
         if ask_quit in ["no", "n"]:
             ask_quit2 = input("Game: Would you like to restart? ")
