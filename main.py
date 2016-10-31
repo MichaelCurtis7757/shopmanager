@@ -199,14 +199,14 @@ class GameInit():
     def currency_name():
         #handles the shop
         global currency,yes_list, no_list
-        currency = input("Uncle Bob: What would like the currency to be? (EG. '£') (Max length 4) ")
+        currency = input("Uncle Bob: Whats the currency around here again, I'm sure it was only 4 letters long... ")
         #sets default if the input is blank
         if currency == "":
             currency = "£"
-        currency_ch = input("Uncle Bob: You want it to be "+currency+"? ")
+        currency_ch = input("Uncle Bob: Ah so its "+currency+"? ")
         #makes sure the user has a value less than or equal to 4
         if len(currency) > 4:
-            print("Game: Please enter a shorter currency (Max: 4 characters)")
+            print("Uncle Bob: That seems to be a bit too long.")
             GameInit.currency_name()
             return
         
@@ -216,7 +216,7 @@ class GameInit():
             GameInit.currency_name()
             return
         else:
-            print("Game: Please enter a valid reply.")
+            print("Unclwe Bob: What was that kiddo? Say that again.")
             GameInit.currency_name()
             return
 
@@ -278,24 +278,22 @@ class GameInit():
         global cash, rent, wages, currency
         #manages the rent and taxes for the day
         rw = rent + wages
-        print("Fred: I'm going to pay the rent and take my wages now boss!")
-        print("Fred: That comes to "+currency+str(rw)+" boss!")
+        print("Fred: We should pay the rent and the wages for today.")
+        print("Fred: That comes to "+currency+str(rw)+" "+username"!")
         time.sleep(1.5)
         if rw > cash:
-            print("Fred: You don't have enough money boss! I'm sorry but we're going to have to close!")
+            print("Fred: You don't have enough money boss! I'm sorry but we're going to have to close down!")
             GameInit.game_over()
         else:
             cash = cash - rw
-            print("Game: You now have "+currency+str(cash)+".")
+            print("Fred: You now have "+currency+str(cash)+" left.")
             
     @staticmethod
     def end():
         #manages all of the end of day prints
         global level, cash, exp, req_exp, currency, day, yes_list, no_list
-        print("Fred: Congratulations Boss, you finished the day!")
-        print("Fred: After today, you now have "+currency+str(cash)+" overall!")
+        print("Fred: Congratulations Boss, you finished the day with "+currency+str(cash)+" overall!")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
-        print("Fred: Sadly, all unsold food had to be thrown away.")
         #rusn the rent and wages func.
         GameInit.day_costs()
         #changes the day and resets the daytime var.
@@ -750,17 +748,19 @@ class GameInit():
 
         #runs the special day code for the 7th day, the end of week 1
         if day == 7:
+            bonus = level * 10
             print("-= Day 7: The First Week =-")
-            print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra "+currency+"50 to get you on your way!")
-            cash = cash + 50
+            print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra "+currency+bonus+" to get you on your way!")
+            cash += bonus
             print("Game: You now have "+currency+str(cash)+"!")
             time.sleep(1.5)
 
         #runs the special day code for the 14th day, the end of week 2
         if day == 14:
+            bonus = level * 20
             print("-= Day 14: The Second Week =-")
-            print("Uncle Bob: Congratulations "+username+", you made it through a second week. Impressive! Here's an extra $100 to get you on your way!")
-            cash = cash + 100
+            print("Uncle Bob: Congratulations "+username+", you made it through a second week. Impressive! Here's an extra "+currency+bonus+" to get you on your way!")
+            cash += bonus
             print("Game: You now have "+currency+str(cash)+"!")
             time.sleep(1.5)
 
@@ -800,9 +800,10 @@ class GameInit():
         #creates a random day number and runs the code if it is equal to the day and runs the leak event
         rand_day = randint(2, 6)
         if (rand_day == day) and (rand1 == False):
+            lesscash = level * 5
             print("-= Day "+str(rand_day)+": The Leak =-")
             print("Uncle Bob: It rained hard last night and a leak was found in the shop. You were charged "+currency+"10 to fix it!")
-            cash = cash - 10
+            cash -= lesscash
             print("Uncle Bob: You now have "+currency+str(cash)+" left!")
             rand1 == True
 
@@ -820,10 +821,12 @@ class GameInit():
         #manages the game over state
         global username, fail1, fail2, game_version
         #checks for funny usernames
-        if username == "Hudson":
+        if username.lower() == "hudson":
             print("Uncle Bob: It's game over man, game over!")
-        if username == "Rick Harrison":
+        if username.lower() == "rick harrison":
             print("Uncle Bob: Your Rick Harrison and that's not longer your paw-- fish and chip shop.")
+        if username.lower() == "rick astley":
+            print("Uncle Bob: Never gunna fry you up, never batter you down.")
 
         #checks if the variable(s) are below the threshold
         if cash > 0:
@@ -834,7 +837,7 @@ class GameInit():
             return
         
         if fish > 0:
-            print("Uncle Bob: You ran out of cod, and the shop had to close. Try to mange your cod stock better in the future.")
+            print("Uncle Bob: You ran out of cod, and the shop had to close. Try to mange your cod better in the future.")
             fail2 == True
             game_version = "[FAILED]"
             SaveLoad.save()
