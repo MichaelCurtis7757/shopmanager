@@ -894,6 +894,7 @@ class GameInit():
         if ask_view.lower() in no_list:
             return
 
+    @staticmethod
     def manage_customers():
         global cooked_fish_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, DLC1, DLC2, level, hour_exp, tprofit
         global fish_customers, potato_customers, sausage_customers, fishcake_customers, fish_hour_exp, potato_hour_exp, sausage_hour_exp, fishcake_hour_exp
@@ -1020,6 +1021,7 @@ class GameInit():
             haddock_customers = randint(0, haddock_rand_no)
             haddock_hour_exp = haddock_customers * haddock_exp    
 
+    @staticmethod
     def check_stock():
         global cooked_fish, cooked_potato, cooked_fishcake, DLC1, DLC2, level, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable
         global fish_customers, potato_customers, sausage_customers, fishcake_customers, tprofit
@@ -1072,6 +1074,7 @@ class GameInit():
             if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False):
                 GameInit.end()
                 
+    @staticmethod
     def sell_stock():
         global cooked_fish, cooked_potato, cooked_fishcake, cooked_fish_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, cooked_haddock, haddock_sellable, cooked_haddock_cost, cooked_haddock_cost
         global DLC1, DLC2,level, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, cooked_haddock, haddock_sellable
@@ -1160,6 +1163,7 @@ class GameInit():
             if haddock_customers > 0:
                 print("Fred: "+str(haddock_customers)+" customers bought "+str(haddock_customers)+" haddock and we now have "+str(haddock_plaice)+" haddock left!")
 
+    @staticmethod
     def calc_exp():
         global exp, cash, level, req_exp, currency
         cash = cash + tprofit
@@ -1174,6 +1178,7 @@ class GameInit():
             print("Uncle Bob: Congratulations! You levelled up to "+str(level)+"!")
             print("Uncle Bob: With this, your reputation has increased.")
 
+    @staticmethod
     def day_time():
         global daytime
         print("Game: "+str((daytime + 3))+":00pm")
