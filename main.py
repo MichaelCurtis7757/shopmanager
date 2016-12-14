@@ -1215,8 +1215,16 @@ class GameMain():
             GameInit.cook_haddock()
             
         #middle section of day
-        print("Fred: Lets open up for the day "+username+"!")
-                  
+        choice = randint(0, 3)
+        if choice == 0:
+            print("Fred: Lets open up for the day "+username+"!")
+        if choice == 1:
+            print("Fred: Lets get ready to open up to the world "+username+".")
+        if choice == 2:
+            print("Fred: Time to get ready for work "+username+".")
+        if choice == 3:
+            print("Fred: Time to get the shop ready to open up "+username+"!")
+            
         tprofit = 0
         daytime = 0
         texp = 0
