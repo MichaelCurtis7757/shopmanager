@@ -45,8 +45,8 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.3-beta"
-        supported_versions = ["v1.2-beta", "v1.3-beta"]
+        game_version = "v1.4-beta"
+        supported_versions = ["v1.2-beta", "v1.3-beta", "v1.4-beta"]
         currency = "£"
         rent = 10
         wages = 10
@@ -225,7 +225,7 @@ class GameInit():
             for x in range(3):
                 launching = launching + "."
                 print(launching)
-                time.sleep(0.5)
+                time.sleep(0.3)
             print("")
             
             GameInit.manager_name()
@@ -320,45 +320,16 @@ class GameInit():
                 dlc_str = dlc_str + "Plaice Stock: "+str(plaice)+" and Haddock Stock: "+str(haddock)+" "
             print(dlc_str)
             ask_buy = input("Fred: What do you want to buy? ")
-
+            
             #asks them how many fish they want to buy
             if ask_buy.lower() in ["cod", "cods", "c"]:
-                ask_amount = int(input("Fred: How much Cod would you like to order? ("+currency + str(fish_cost) + " a cod) "))
-                #checks if the cash is there to buy the stock
-                if ask_amount > cash:
-                    print("Fred: Sorry, we don't have the money to order that much!")
-                    GameInit.buy_stock()
-                    return
-                else:
-                    #adds the stock to the global var. and subtarcts the cost
-                    cash = cash - (ask_amount * fish_cost)                
-                    fish = fish + ask_amount
-                    time.sleep(1.5)
-                    return
+                item = "cod"
+                item_cost = fish_cost
                 
             #asks them how many potatoes they want to buy
             if ask_buy.lower() in ["potato", "potatoes", "p"]:
-                #checks if the user is a high enough level to buy the stock to sell
-                if level < 3:
-                    print("Fred: Sorry! You need to be level 3 to unlock this!")
-                    GameInit.buy_stock()
-                elif level >= 3:
-                    ask_amount = int(input("Fred: How many potatoes would you like to order? ("+currency + str(potato_cost) + " a potato) "))
-                    #checks if the cash is there to buy the stock
-                    if ask_amount > cash:
-                        print("Fred: Sorry, we don't have the money to order that many!")
-                        buy_stock()
-                        return
-                    else:
-                        #adds the stock to the global var. and subtarcts the cost
-                        cash = cash - (ask_amount * potato_cost)                
-                        potato = potato + ask_amount
-                        time.sleep(1.5)
-                        return
-            else:
-                print("Game: Please enter a valid reply.")
-                GameInit.buy_stock()
-                return
+                item = "potato"
+                item_cost = potato_cost
                 
             #asks them how many sausage they want to buy
             if ask_buy.lower() in ["sausage", "sausages", "s"]:
@@ -367,22 +338,8 @@ class GameInit():
                     print("Fred: Sorry! You need to be level 5 to unlock this!")
                     GameInit.buy_stock()
                 elif level >= 5:
-                    ask_amount = int(input("Fred: How many sausages would you like to order? (" + currency + str(sausage_cost) + " a sausage) "))
-                    #checks if the cash is there to buy the stock
-                    if ask_amount > cash:
-                        print("Fred: Sorry, we don't have the money to order that much!")
-                        GameInit.buy_stock()
-                        return
-                    else:
-                        #adds the stock to the global var. and subtarcts the cost
-                        cash = cash - (ask_amount * sausage_cost)                
-                        sausage = sausage + ask_amount
-                        time.sleep(1.5)
-                        return
-            else:
-                print("Game: Please enter a valid reply.")
-                GameInit.buy_stock()
-                return
+                    item = "sausage"
+                    item_cost = sausage_cost
             
             #asks them how many fishcake they want to buy
             if ask_buy.lower() in ["fishcake", "fishcakes", "fc"]:
@@ -391,18 +348,8 @@ class GameInit():
                     print("Fred: Sorry! You need to be level 7 to unlock this!")
                     GameInit.buy_stock()
                 elif level >= 7:
-                    ask_amount = int(input("Fred: How many fishcakes would you like to order? (" + currency + str(fishcake_cost) + " a fishcake) "))
-                    #checks if the cash is there to buy the stock
-                    if ask_amount > cash:
-                        print("Fred: Sorry, we don't have the money to order that many!")
-                        GameInit.buy_stock()
-                        return
-                    else:
-                        #adds the stock to the global var. and subtarcts the cost
-                        cash = cash - (ask_amount * fishcake_cost)                
-                        fishcake = fishcake + ask_amount
-                        time.sleep(1.5)
-                        return
+                    item = "fishcake"
+                    item_cost = fishcake_cost
                     
             if ask_buy.lower() in ["pukkapie", "pukka pie", "pie", "pies", "dlc1"]:
                 if DLC1 == True:
@@ -410,60 +357,47 @@ class GameInit():
                         print("Fred: Sorry! You need to be level 4 to unlock this!")
                         GameInit.buy_stock()
                     elif level >= 4:
-                        ask_amount = int(input("Fred: How many pies would you like to order? (" + currency + str(pukkapie_cost) + " a pie) "))
-                        #checks if the cash is there to buy the stock
-                        if ask_amount > cash:
-                            print("Fred: Sorry, we don't have the money to order that many!")
-                            GameInit.buy_stock()
-                            return
-                        else:
-                            #adds the stock to the global var. and subtarcts the cost
-                            cash = cash - (ask_amount * pukkapie_cost)                
-                            pukkapie = pukkapie + ask_amount
-                            time.sleep(1.5)
-                            return
+                        item = "pukkapie"
+                        item_cost = pukkapie_cost
+                else:
+                    print("Game: Error, DLC not found.")
                         
             if ask_buy.lower() in ["plaice", "plaices", "p", "fish2"]:
-                if DLC1 == True:
+                if DLC2 == True:
                     if level < 6:
                         print("Fred: Sorry! You need to be level 6 to unlock this!")
                         GameInit.buy_stock()
                     elif level >= 6:
-                        ask_amount = int(input("Fred: How much plaice would you like to order? (" + currency + str(plaice_cost) + " a plaice) "))
-                        #checks if the cash is there to buy the stock
-                        if ask_amount > cash:
-                            print("Fred: Sorry, we don't have the money to order that many!")
-                            GameInit.buy_stock()
-                            return
-                        else:
-                            #adds the stock to the global var. and subtarcts the cost
-                            cash = cash - (ask_amount * plaice_cost)                
-                            plaice = plaice + ask_amount
-                            time.sleep(1.5)
-                            return
+                        item = "plaice"
+                        item_cost = plaice_cost
                 else:
                     print("Game: Error, DLC not found.")
 
             if ask_buy.lower() in ["haddock", "haddocks", "h", "fish3"]:
-                if DLC1 == True:
+                if DLC2 == True:
                     if level < 8:
                         print("Fred: Sorry! You need to be level 8 to unlock this!")
                         GameInit.buy_stock()
                     elif level >= 8:
-                        ask_amount = int(input("Fred: How much haddock would you like to order? (" + currency + str(haddock_cost) + " a haddock) "))
-                        #checks if the cash is there to buy the stock
-                        if ask_amount > cash:
-                            print("Fred: Sorry, we don't have the money to order that many!")
-                            GameInit.buy_stock()
-                            return
-                        else:
-                            #adds the stock to the global var. and subtarcts the cost
-                            cash = cash - (ask_amount * haddock_cost)                
-                            haddock = haddock + ask_amount
-                            time.sleep(1.5)
-                            return
+                        item = "haddock"
+                        item_cost = haddock_cost
                 else:
                     print("Game: Error, DLC not found.")
+
+            def run_restock_function(item, item_cost):
+                ask_amount = int(input("Fred: How much "+str(item).capitalize()+" would you like to order? ("+currency + str(item_cost) + " a " + str(item) + ") "))
+                if ask_amount > cash:
+                    print("Fred: Sorry, we don't have the money to order that much!")
+                    GameInit.buy_stock()
+                    return
+                else:
+                    #adds the stock to the global var. and subtracts the cost
+                    cash = cash - (ask_amount * item_cost)                
+                    item = item + ask_amount
+                    time.sleep(1.5)
+                    return
+
+            run_restock_function(item, item_cost)
 
             ask_reorder = input("Fred: Would you like to place another order? ")
             if ask_reorder in yes_list:
