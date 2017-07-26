@@ -10,37 +10,34 @@ class GameInit():
         #check for DLC/map packs
         ask_dlc = input("Game: Would you like to play with DLC loaded? ")
         if ask_dlc.lower() in ["yes", "y"]:
-            #checking for DCL1
-            file_present = os.path.isfile("DLC_PIE.dlc")
+            file_present = os.path.isfile("dlc/DLC_PIE.dlc")
+            file_present2 = os.path.isfile("dlc/DLC_FISH.dlc")
+            #loads DLC 1 if file is present
             if file_present == True:
-                time.sleep(1)
                 ask_dlc1 = input("Game: Would you like to load the Packa Pie DLC? ")
                 if ask_dlc1.lower() in yes_list:
-                    with fileinput.FileInput("DLC_PIE.dlc", inplace=True, backup='.bak') as file:
+                    with fileinput.FileInput("dlc/DLC_PIE.dlc", inplace=True, backup='.bak') as file:
                         DLC1 = file.readline()
                         print("Game: Packa Pie DLC loaded.")
                         time.sleep(1)
                 else:
                     print("Game: Packa Pie DLC not loaded.")
                     time.sleep(1)
-            else:
-                print("Game: Packa Pie DLC not installed!")
                     
-            #checking for DCL2
-            file_present2 = os.path.isfile("DLC_FISH.dlc")
+            #loads DLC 2 if file is present
             if file_present2 == True:
-                time.sleep(1)
                 ask_dlc2 = input("Game: Would you like to load the More Fish DLC? ")
                 if ask_dlc2.lower() in yes_list:
-                    with fileinput.FileInput("DLC_FISH.dlc", inplace=True, backup='.bak') as file:
+                    with fileinput.FileInput("dlc/DLC_FISH.dlc", inplace=True, backup='.bak') as file:
                         DLC2 = file.readline()
                         print("Game: More Fish DLC loaded.")
                         time.sleep(1)
                 else:
                     print("Game: More Fish DLC not loaded.")
                     time.sleep(1)
-            else:
-                print("Game: More Fish DLC not installed!")
+                
+            elif file_present == False and file_present2 == False:
+                print("Game: No DLC installed!")
                       
         if ask_dlc.lower() in ["no", "n"]:
             return
@@ -155,7 +152,7 @@ class GameInit():
     def manager_name():
         #handles the username
         global username, yes_list, no_list
-        username = input("Uncle Bob: Hello, I 've forgotton your name. What was it again? ")
+        username = input("Uncle Bob: Hello, I've forgotton your name. What was it again? ")
         #sets default if the input is blank
         if username == "":
             username = "John"
