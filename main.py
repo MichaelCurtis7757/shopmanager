@@ -12,32 +12,18 @@ class GameInit():
         if ask_dlc.lower() in ["yes", "y"]:
             file_present = os.path.isfile("dlc/DLC_PIE.dlc")
             file_present2 = os.path.isfile("dlc/DLC_FISH.dlc")
-            #loads DLC 1 if file is present
+            
             if file_present == True:
-                ask_dlc1 = input("Game: Would you like to load the Packa Pie DLC? ")
-                if ask_dlc1.lower() in yes_list:
-                    with fileinput.FileInput("dlc/DLC_PIE.dlc", inplace=True, backup='.bak') as file:
-                        DLC1 = file.readline()
-                        print("Game: Packa Pie DLC loaded.")
-                        time.sleep(1)
-                else:
-                    print("Game: Packa Pie DLC not loaded.")
-                    time.sleep(1)
-                    
-            #loads DLC 2 if file is present
+                with fileinput.FileInput("dlc/DLC_PIE.dlc", inplace=True, backup='.bak') as file:
+                    DLC1 = file.readline()
+                print("Game: Packa Pie DLC loaded.")
+                time.sleep(0.5)
+
             if file_present2 == True:
-                ask_dlc2 = input("Game: Would you like to load the More Fish DLC? ")
-                if ask_dlc2.lower() in yes_list:
-                    with fileinput.FileInput("dlc/DLC_FISH.dlc", inplace=True, backup='.bak') as file:
-                        DLC2 = file.readline()
-                        print("Game: More Fish DLC loaded.")
-                        time.sleep(1)
-                else:
-                    print("Game: More Fish DLC not loaded.")
-                    time.sleep(1)
-                
-            elif file_present == False and file_present2 == False:
-                print("Game: No DLC installed!")
+                with fileinput.FileInput("dlc/DLC_FISH.dlc", inplace=True, backup='.bak') as file:
+                    DLC2 = file.readline()
+                print("Game: More Fish DLC loaded.")
+                time.sleep(0.5)
                       
         if ask_dlc.lower() in ["no", "n"]:
             return
