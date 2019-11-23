@@ -190,7 +190,7 @@ class GameInit():
         currency_ch = input("Uncle Bob: Ah so it's "+currency+"? ")
         #makes sure the user has a value less than or equal to 4
         if len(currency) > 4:
-            print("Uncle Bob: That seems to be a bit too long from memory?")
+            print("Uncle Bob: That seems to be a bit too long from memory!")
             GameInit.currency_name()
             return
         if currency_ch.lower() in yes_list:
@@ -216,6 +216,11 @@ class GameInit():
         pre_init = input("Game: Hello, would you like to start a new game? ")
         pre_init = pre_init.lower()
 
+        #skips the startup questions if the user is a tester
+        if pre_init.lower() in ["default", "bug"]:
+            GameInit.variables()
+            GameMain.main()
+            
         #runs the variable delcrations
         if pre_init in yes_list:
             GameInit.check_dlc()
@@ -246,10 +251,6 @@ class GameInit():
             else:
                 print("Game: Please enter a valid reply.")
                 GameInit.startup()
-        #skips the startup questions if the user is a tester
-        if pre_init.lower() in ["default", "bug"]:
-            GameInit.variables()
-            GameMain.main()
         else:
             print("Game: Please enter a valid reply.")
             GameInit.startup()
@@ -327,7 +328,7 @@ class GameInit():
                 item_cost = fish_cost
                 
             #asks them how many potatoes they want to buy
-            if ask_buy.lower() in ["potato", "potatoes", "p"]:
+            if ask_buy.lower() in ["potato", "potatoes", "potatos", "p"]:
                 item = "potato"
                 item_cost = potato_cost
                 
@@ -383,6 +384,10 @@ class GameInit():
                         item_cost = haddock_cost
                 else:
                     print("Game: Error, DLC not found.")
+                    
+            else:
+                print("Fred: I'm not quite sure we sell that!")
+                GameInit.buy_stock()
 
             def run_restock_function(item, item_cost):
                 ask_amount = int(input("Fred: How much "+str(item).capitalize()+" would you like to order? ("+currency + str(item_cost) + " a " + str(item) + ") "))
@@ -425,7 +430,7 @@ class GameInit():
 
         #asks the user how mucbh fo the stock they want to cook
         print("Fred: Perfect! How many cod would you like to cook this morning? ")
-        ask_fish = int(input("Fred: Lastly "+username+", you only have "+str(fish)+": "))
+        ask_fish = int(input("Fred: Just remember you only have "+str(fish)+": "))
         #checking they have the stock to cook
         if ask_fish > fish:
             print("Fred: Boss, you can't cook more than you have!")
@@ -818,7 +823,7 @@ class GameInit():
         if DLC2 == True:
             global plaice_customers, haddock_customers, cooked_haddock_cost, cooked_plaice_cost, plaice_hour_exp, haddock_hour_exp
             
-        #calculaing the amount of customers and exp for fish
+        #calculating the amount of customers and exp for fish
         fish_rand_no = level * randint(1, 3)
             
         if cooked_fish_cost < 1:
@@ -834,7 +839,7 @@ class GameInit():
         fish_customers = randint(0, fish_rand_no)
         fish_hour_exp = fish_customers * fish_exp
 
-        #calculaing the amount of customers and exp for potatoes
+        #calculating the amount of customers and exp for potatoes
         if level >= 3:
             potato_rand_no = level * randint(1, 3)
                 
@@ -851,7 +856,7 @@ class GameInit():
             potato_customers = randint(0, potato_rand_no)
             potato_hour_exp = potato_customers * potato_exp
 
-        #calculaing the amount of customers and exp for sausage
+        #calculating the amount of customers and exp for sausage
         if level >= 5:
             sausage_rand_no = level * randint(1, 3)
                 
@@ -868,7 +873,7 @@ class GameInit():
             sausage_customers = randint(0, sausage_rand_no)
             sausage_hour_exp = sausage_customers * sausage_exp
 
-        #calculaing the amount of customers and exp for sausages
+        #calculating the amount of customers and exp for sausages
         if level >= 7:
             fishcake_rand_no = level * randint(1, 3)
                 
@@ -885,7 +890,7 @@ class GameInit():
             fishcake_customers = randint(0, fishcake_rand_no)
             fishcake_hour_exp = fishcake_customers * fishcake_exp
 
-        #calculaing the amount of customers and exp for pie dlc
+        #calculating the amount of customers and exp for pie dlc
         if level >= 4 and DLC1 == True:
             pukkapie_rand_no = level * randint(1, 3)
                 
@@ -902,7 +907,7 @@ class GameInit():
             pukkapie_customers = randint(0, pukkapie_rand_no)
             pukkapie_hour_exp = pukkapie_customers * pukkapie_exp
 
-        #calculaing the amount of customers and exp for plaice - dlc
+        #calculating the amount of customers and exp for plaice - dlc
         if level >= 6 and DLC2 == True:
             plaice_rand_no = level * randint(1, 3)
                 
@@ -919,7 +924,7 @@ class GameInit():
             plaice_customers = randint(0, plaice_rand_no)
             plaice_hour_exp = plaice_customers * plaice_exp
 
-        #calculaing the amount of customers and exp for plaice - dlc
+        #calculating the amount of customers and exp for plaice - dlc
         if level >= 8 and DLC2 == True:
             haddock_rand_no = level * randint(1, 3)
                 
@@ -967,7 +972,7 @@ class GameInit():
                 return
                 
         if (level >= 7) and (fishcake_customers > cooked_fishcake):
-            print("Fred: Welp, we're out of sausages!")
+            print("Fred: Welp, we're out of fishcakes!")
             fishcake_sellable = False
             if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False):
                 GameInit.end()
@@ -985,7 +990,7 @@ class GameInit():
             print("Fred: Welp, we're out of haddock!")
             haddock_sellable = False
                 
-            #ends the game if the stock is compeltetly gone from all alreas
+            #ends the game if the stock is completely gone from all areas
             if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False):
                 GameInit.end()
                 
