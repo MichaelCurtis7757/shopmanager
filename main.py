@@ -428,18 +428,21 @@ class GameInit():
         #variables
         global username, fish, cooked_fish, level, cooked_fish_cost, currency, yes_list, no_list
 
-        #asks the user how mucbh fo the stock they want to cook
-        print("Fred: Perfect! How many cod would you like to cook this morning? ")
-        ask_fish = int(input("Fred: Just remember you only have "+str(fish)+": "))
+        #asks the user how much fo the stock they want to cook
+        print("Fred: How many cod would you like to cook this morning? ")
+        ask_fish = input("Fred: Just remember you only have "+str(fish)+": ")
         #checking they have the stock to cook
-        if ask_fish > fish:
+        if (type(ask_fish) is int) == False:
+            print("Fred: That doesn't seem like a proper amount!")
+            GameInit.cook_fish()
+        if int(ask_fish) > fish:
             print("Fred: Boss, you can't cook more than you have!")
             GameInit.cook_fish()
         else:
             print("Fred: I'll cook the cod now Boss!")    
             time.sleep(1.5)
             #subtracts the fish and adds them to the cooked stock
-            fish = fish - ask_fish
+            fish = fish - int(ask_fish)
             cooked_fish = ask_fish
             print("Fred: Al'ight Boss, "+str(cooked_fish)+" cod were cooked!")
         
