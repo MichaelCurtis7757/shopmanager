@@ -39,7 +39,7 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.5-beta"
+        game_version = "v1.4-beta"
         supported_versions = [""]
         currency = "£"
         rent = 10
