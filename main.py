@@ -15,6 +15,7 @@ class GameInit():
             
             if file_present == True:
                 with fileinput.FileInput("dlc/DLC_PIE.dlc", inplace=True, backup='.bak') as file:
+                    global DLC1
                     DLC1 = file.readline()
                 print("Game: Packa Pie DLC loaded.")
                 time.sleep(0.5)
@@ -273,7 +274,7 @@ class GameInit():
     @staticmethod
     def end():
         #manages all of the end of day prints
-        global level, cash, exp, req_exp, currency, day, yes_list, no_list
+        global level, cash, exp, req_exp, currency, day, yes_list, no_list, daytime
         print("Fred: Congratulations Boss, you finished the day with "+currency+str(cash)+" overall!")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
         #rusn the rent and wages func.
@@ -290,6 +291,7 @@ class GameInit():
             print("")
         else:
             print("Game: Please enter a valid response!")
+            GameInit.end()
 
         #ask the user about quitting the game and runs the quit function is yes    
         ask_qui = input("Game: Would you like to quit your game? ")
@@ -422,241 +424,37 @@ class GameInit():
 
         else:
             return
-            
+        
     @staticmethod
-    def cook_fish():
+    def cook_all(food_name, food_num, food_cost):
         #variables
-        global username, fish, cooked_fish, level, cooked_fish_cost, currency, yes_list, no_list
+        global username, currency, level, yes_list, no_list, cooked_fish_cost
+        #amount to cook
+        print("Fred: How many "+food_name.lower()+" would you like to cook today? ")
+        try:
+            ask_cook = int(input("Fred: Just remember you only have "+str(food_num)+": "))
+        except:
+            print("Fred: You know thats not a number, right?")
+            GameInit.cook_all()
 
-        #asks the user how much fo the stock they want to cook
-        print("Fred: How many cod would you like to cook this morning? ")
-        ask_fish = input("Fred: Just remember you only have "+str(fish)+": ")
-        #checking they have the stock to cook
-        if (type(ask_fish) is int) == False:
-            print("Fred: That doesn't seem like a proper amount!")
-            GameInit.cook_fish()
-        if int(ask_fish) > fish:
+        #stock check for cooking
+        if int(ask_cook) > food_num:
             print("Fred: Boss, you can't cook more than you have!")
-            GameInit.cook_fish()
+            GameInit.cook_all()
         else:
-            print("Fred: I'll cook the cod now Boss!")    
+            print("Fred: I'll cook the "+food_name.lower()+" now Boss!")
             time.sleep(1.5)
             #subtracts the fish and adds them to the cooked stock
-            fish = fish - int(ask_fish)
-            cooked_fish = ask_fish
-            print("Fred: Al'ight Boss, "+str(cooked_fish)+" cod were cooked!")
-        
-        ask_chg = input("Fred: Would you like to change the price today? ")
-        if ask_chg in ["yes", "y"]:
-            cooked_fish_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_fish_cost)+") "))
-            return
-        if ask_chg in ["no", "n"]:
-            return
+            food_num = food_num - int(ask_cook)
+            print("Fred: Okay Boss, the "+str(food_name)+" were cooked!")
 
-    @staticmethod
-    def cook_potato():
-        #variables
-        global potato, cooked_potato, level, potato_sellable, username, cooked_potato_cost, currency, yes_list, no_list
-        
-        #asks the user how mucbh fo the stock they want to cook
-        ask_pots = input("Fred: Would you like to cook chips today? ")
-        if ask_pots.lower() in yes_list:
-            print("Fred: Sounds great! How many potatoes do you want to cook this morning? ")
-            ask_potato = int(input("Fred: By the way, you currently have "+str(potato)+": "))
-            #checking they have the stock to cook
-            if ask_potato > potato:
-                print("Fred: Boss, you can't cook more than you have!")
-                GameInit.cook_potato()    
-            else:
-                print("Fred: I'll cook the potatoes now Boss!")
-                time.sleep(1.5)
-                #subtracts the fish and adds them to the cooked stock
-                potato = potato - ask_potato
-                cooked_potato = ask_potato
-                print("Fred: Al'ight Boss, "+str(cooked_potato)+" portions of chips were cooked!")
-            
-        if ask_pots.lower() in no_list:
-            potato_sellable = False
-            print("Fred: That sounds like a plan boss!")
+        ask_change = input("Fred: Would you like to change the price today? ")
+        if ask_change in ["yes", "y"]:
+            food_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(food_cost)+") "))
+            return ask_cook, food_cost
+        if ask_change in ["no", "n"]:
+            return ask_cook, food_cost
 
-        ask_chg = input("Fred: Would you like to change the price today? ")
-        #changes the price to what the user selects and stores it as a float
-        if ask_chg in yes_list:
-            cooked_potato_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_potato_cost)+") "))
-            return
-        if ask_chg in no_list:
-            return
-
-    @staticmethod
-    def cook_sausage():
-        #variables
-        global sausage, cooked_sausage, level, sausage_sellable, username, cooked_sausage_cost, currency, yes_list, no_list
-
-        #asks the user how mucbh fo the stock they want to cook
-        ask_pots = input("Fred: Would you like to cook sauages today? ")
-        if ask_pots.lower() in yes_list:
-            print("Fred: Sounds great! How many sausages do you want to cook this morning? ")
-            ask_sausage = int(input("Fred: You have "+str(sausages)+": "))
-            #checking they have the stock to cook
-            if ask_sausage > sausage:
-                print("Fred: Boss, you can't cook more than you have!")
-                GameInit.cook_sausage()    
-            else:
-                print("Fred: I'll cook the sausages now Boss!")
-                time.sleep(1.5)
-                #subtracts the fish and adds them to the cooked stock
-                sausage = sausage - ask_sausages
-                cooked_sausage = ask_sausages
-                print("Fred: Al'ight Boss, "+str(cooked_sausage)+" sausages were cooked!")
-            
-        if ask_pots.lower() in no_list:
-            sausage_sellable = False
-            print("Fred: Sounds like a plan "+username+"!")
-
-        ask_chg = input("Fred: Would you like to change the price today? ")
-        #changes the price to what the user selects and stores it as a float
-        if ask_chg in yes_list:
-            cooked_sausage_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_sausage_cost)+") "))
-            return
-        if ask_chg in no_list:
-            return
-        
-    @staticmethod
-    def cook_fishcake():
-        #variables
-        global fishcake, cooked_fishcake, level, fishcake_sellable, username, cooked_fishcake_cost, currency, yes_list, no_list
-
-        #asks the user how mucbh fo the stock they want to cook
-        ask_pots = input("Fred: Would you like to cook fishcakes today? ")
-        if ask_pots.lower() in yes_list:
-            print("Fred: Sounds great! How many fishcakes do you want to cook this morning? ")
-            ask_fishcake = int(input("Fred: You have "+str(fishcake)+": "))
-            #checking they have the stock to cook
-            if ask_fishcake > fishcake:
-                print("Fred: Boss, you can't cook more than you have!")
-                GameInit.cook_fishcake()    
-            else:
-                print("Fred: I'll cook the fishcakes now Boss!")
-                time.sleep(1.5)
-                #subtracts the fish and adds them to the cooked stock
-                fishcake = fishcake - ask_fishcake
-                cooked_fishcake = ask_fishcake
-                print("Fred: Okay Boss, "+str(cooked_fishcake)+" fishcakes were cooked!")
-            
-        if ask_pots.lower() in no_list:
-            sausage_sellable = False
-            print("Fred: Sounds like a plan "+username+"!")
-
-        ask_chg = input("Fred: Would you like to change the price today? ")
-        #changes the price to what the user selects and stores it as a float
-        if ask_chg in yes_list:
-            cooked_fishcake_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_fishcake_cost)+") "))
-            return
-        if ask_chg in no_list:
-            return
-        
-    @staticmethod
-    def cook_pukkapie():
-        #variables
-        global pukkapie, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, level, username, currency, yes_list, no_list
-
-        #asks the user how mucbh fo the stock they want to cook
-        ask_pots = input("Fred: Would you like to cook pies today? ")
-        if ask_pots.lower() in yes_list:
-            print("Fred: Sounds great! How many pies do you want to cook this morning? ")
-            ask_pukkapie = int(input("Fred: You have "+str(pies)+": "))
-            #checking they have the stock to cook
-            if ask_pukkapie > pukkapie:
-                print("Fred: Boss, you can't cook more than you have!")
-                GameInit.cook_pukkapie()    
-            else:
-                print("Fred: I'll cook the pies now Boss!")
-                time.sleep(1.5)
-                #subtracts the fish and adds them to the cooked stock
-                pukkapie = pukkapie - ask_pukkapie
-                cooked_pukkapie = ask_pukkapie
-                print("Fred: Okay Boss, "+str(cooked_pukkapie)+" pies were cooked!")
-            
-        if ask_pots.lower() in no_list:
-            sausage_sellable = False
-            print("Fred: Sounds like a plan "+username+"!")
-
-        ask_chg = input("Fred: Would you like to change the price today? ")
-        #changes the price to what the user selects and stores it as a float
-        if ask_chg in yes_list:
-            cooked_fishcake_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_pukkapie_cost)+") "))
-            return
-        if ask_chg in no_list:
-            return
-        
-    @staticmethod
-    def cook_plaice():
-        #variables
-        global plaice, cooked_plaice, plaice_sellable, cooked_plaice_cost, level, username, currency, yes_list, no_list
-
-        #asks the user how mucbh fo the stock they want to cook
-        ask_pots = input("Fred: Would you like to cook plaice today? ")
-        if ask_pots.lower() in yes_list:
-            print("Fred: Sounds great! How much plaice do you want to cook this morning? ")
-            ask_plaice = int(input("Fred: You have "+str(plaice)+": "))
-            #checking they have the stock to cook
-            if ask_plaice > plaice:
-                print("Fred: Boss, you can't cook more than you have!")
-                GameInit.cook_plaice()    
-            else:
-                print("Fred: I'll cook the plaice now Boss!")
-                time.sleep(1.5)
-                #subtracts the fish and adds them to the cooked stock
-                plaice = plaice - ask_plaice
-                cooked_plaice = ask_plaice
-                print("Fred: Okay Boss, "+str(cooked_plaice)+" plaice were cooked!")
-            
-        if ask_pots.lower() in no_list:
-            sausage_sellable = False
-            print("Fred: Sounds like a plan "+username+"!")
-
-        ask_chg = input("Fred: Would you like to change the price today? ")
-        #changes the price to what the user selects and stores it as a float
-        if ask_chg in yes_list:
-            cooked_plaice_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_plaice_cost)+") "))
-            return
-        if ask_chg in no_list:
-            return
-        
-    @staticmethod
-    def cook_haddock():
-        #variables
-        global haddock, cooked_haddock, haddock_sellable, cooked_haddock_cost, level, username, currency, yes_list, no_list
-
-        #asks the user how mucbh fo the stock they want to cook
-        ask_pots = input("Fred: Would you like to cook haddock today? ")
-        if ask_pots.lower() in yes_list:
-            print("Fred: Sounds great! How much haddock do you want to cook this morning? ")
-            ask_plaice = int(input("Fred: You have "+str(haddock)+": "))
-            #checking they have the stock to cook
-            if ask_plaice > plaice:
-                print("Fred: Boss, you can't cook more than you have!")
-                GameInit.cook_plaice()    
-            else:
-                print("Fred: I'll cook the haddock now Boss!")
-                time.sleep(1.5)
-                #subtracts the fish and adds them to the cooked stock
-                plaice = plaice - ask_plaice
-                cooked_plaice = ask_plaice
-                print("Fred: Okay Boss, "+str(cooked_haddock)+" haddock were cooked!")
-            
-        if ask_pots.lower() in no_list:
-            sausage_sellable = False
-            print("Fred: Sounds like a plan "+username+"!")
-
-        ask_chg = input("Fred: Would you like to change the price today? ")
-        #changes the price to what the user selects and stores it as a float
-        if ask_chg in yes_list:
-            cooked_plaice_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(cooked_haddock_cost)+") "))
-            return
-        if ask_chg in no_list:
-            return
-              
     @staticmethod
     def special_days():
         #special days
@@ -691,27 +489,6 @@ class GameInit():
         elif day not in [1, 7, 14, rand_day]:
             print("-= Day "+str(day)+" =-")
             time.sleep(1.5)
-            if day_name == 0:
-                print("-= Monday =-")
-                day_name += 1
-            if day_name == 1:
-                print("-= Tuesday =-")
-                day_name += 1
-            if day_name == 2:
-                print("-= Wednesday =-")
-                day_name += 1
-            if day_name == 3:
-                print("-= Thursday =-")
-                day_name += 1
-            if day_name == 4:
-                print("-= Friday =-")
-                day_name += 1
-            if day_name == 5:
-                print("-= Saturday =-")
-                day_name += 1
-            if day_name == 6:
-                print("-= Sunday =-")
-                day_name = 0
         else:
             return
 
@@ -725,7 +502,7 @@ class GameInit():
         if (rand_day == day) and (rand1 == False):
             lesscash = level * 5
             print("-= Day "+str(rand_day)+": The Leak =-")
-            print("Uncle Bob: It rained hard last night and a leak was found in the shop. You were charged "+currency+"10 to fix it!")
+            print("Uncle Bob: It rained hard last night and a leak was found in the shop. You were charged "+currency+str(lesscash)+" to fix it!")
             cash -= lesscash
             print("Uncle Bob: You now have "+currency+str(cash)+" left!")
             rand1 == True
@@ -747,7 +524,7 @@ class GameInit():
         if username.lower() == "hudson":
             print("Uncle Bob: It's game over man, game over!")
         if username.lower() == "rick harrison":
-            print("Uncle Bob: Your Rick Harrison and that's not longer your paw-- fish and chip shop.")
+            print("Uncle Bob: Your Rick Harrison and that's no longer your paw-- fish and chip shop.")
         if username.lower() == "rick astley":
             print("Uncle Bob: Never gunna fry you up, never batter you down.")
 
@@ -831,7 +608,7 @@ class GameInit():
             
         if cooked_fish_cost < 1:
             fish_rand_no = level * randint(1, 6)
-        if 1 <= cooked_potato_cost <= 3:
+        if 1 <= cooked_fish_cost <= 3:
             fish_rand_no = level * randint(1, 4)
         if 4 < cooked_fish_cost < 10:
             fish_rand_no = level * randint(1, 2)
@@ -850,9 +627,9 @@ class GameInit():
                 potato_rand_no = level * randint(1, 6)
             if 2 <= cooked_potato_cost <= 5:
                 potato_rand_no = level * randint(1, 4)
-            if 6 < cooked_fish_cost < 10:
-                fish_rand_no = level * randint(1, 2)
-            if cooked_fish_cost > 10:
+            if 6 < cooked_potato_cost < 10:
+                potato_rand_no = level * randint(1, 2)
+            if cooked_potato_cost > 10:
                 potato_rand_no = 0
                 print("Uncle Bob: Those are some expensive chips!")
                     
@@ -957,28 +734,24 @@ class GameInit():
             print("Fred: Welp, we're out of cod!")
             fish_sellable = False
             if level < 3:
-                GameInit.end()
                 return
                 
         if (level >= 3) and (potato_customers > cooked_potato):
             print("Fred: Welp, we're out of chips!")
             potato_sellable = False
             if level < 5 and (fish_sellable == False):
-                GameInit.end()
                 return
 
         if (level >= 5) and (sausage_customers > cooked_sausage):
             print("Fred: Welp, we're out of sausages!")
             sausage_sellable = False
             if level < 7 and (fish_sellable == False) and potato_sellable == False:
-                GameInit.end()
                 return
                 
         if (level >= 7) and (fishcake_customers > cooked_fishcake):
             print("Fred: Welp, we're out of fishcakes!")
             fishcake_sellable = False
             if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False):
-                GameInit.end()
                 return
                 
         if (level >= 4) and (pukkapie_customers > cooked_pukkapie) and DLC1 == True:
@@ -992,10 +765,6 @@ class GameInit():
         if (level >= 8) and (haddock_customers > cooked_haddock) and DLC2 == True:
             print("Fred: Welp, we're out of haddock!")
             haddock_sellable = False
-                
-            #ends the game if the stock is completely gone from all areas
-            if (fish_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False):
-                GameInit.end()
                 
     @staticmethod
     def sell_stock():
@@ -1111,33 +880,41 @@ class GameMain():
     @staticmethod
     def main():
         while (fail1 == False) or (fail2 == False):
-            print("")
+            print(".")
             GameMain.generic_day()
 
     @staticmethod
     def generic_day():
         #global imports
         global cooked_fish, cooked_potato, cooked_fishcake, cooked_fish_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, cooked_haddock, haddock_sellable, cooked_haddock_cost, cooked_haddock_cost
-        global DLC1, DLC2,level, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, cooked_haddock, haddock_sellable
+        global DLC1, DLC2, level, cash, exp, req_exp, fish_sellable, potato_sellable, sausage_sellable, fishcake_sellable, cooked_pukkapie, pukkapie_sellable, cooked_pukkapie_cost, cooked_haddock, haddock_sellable
         global hour_exp, tprofit, daytime
+        global fish, potato, sausage, fishcake
+        ' insert dlc food imports '
         #start of day
         GameInit.random_days()
         GameInit.special_days()
         GameInit.stock_info()
         GameInit.buy_stock()
-        GameInit.cook_fish()
+        cooked_fish, cooked_fish_cost = GameInit.cook_all("Cod", fish, cooked_fish_cost)
+        
         if level >= 3:
-            GameInit.cook_potato()
+            cooked_potato, cooked_potato_cost = GameInit.cook_potato("Chips", potato, cooked_potato_cost)
         if level >= 5:
-            GameInit.cook_sausage()
+            cooked_sausage, cooked_sausage_cost = GameInit.cook_sausage("Sausage", sausage, cooked_sausage_cost)
         if level >= 7:
-            GameInit.cook_fishcake()
+            cooked_fishcake, cooked_fishcake_cost = GameInit.cook_fishcake("Fishcake", fishcake, cooked_fishcake_cost)
+            
         if level >= 4 and DLC1 == True:
+            global pukkapie
             GameInit.cook_pukkapie()
         if level >= 6 and DLC2 == True:
+            global plaice
             GameInit.cook_plaice()            
         if level >= 8 and DLC2 == True:
+            global haddock
             GameInit.cook_haddock()
+        
             
         #middle section of day
         choice = randint(0, 3)
@@ -1155,17 +932,17 @@ class GameMain():
         texp = 0
         potato_customers = 0
         sausage_customers = 0
+        fishcake_customers = 0
         potato_profit = 0
         sausage_profit = 0
         fishcake_profit = 0
 
-        while True:
-            #checking if the the daytime is past 9pm
-            if daytime >= 7:
-                GameInit.end()
-                return
-
-            #reseting variables
+        for daytime in range(0,6):
+            #checking for the end of the day
+            if fish_sellable == False:
+                break
+                
+            #resetting variables
             tprofit = 0
             hour_exp = 0
                 
@@ -1184,19 +961,11 @@ class GameMain():
             #calculating the profits, exp and cash for the day
             GameInit.calc_exp()
             
-            #checking for the end of the day using var 'daytime'
-            if daytime >= 7:
-                if (fish_sellable == False) and (potato_sellable == False):
-                    return
-                GameInit.game_over()
-                GameInit.end()
-                if fail1 == True:
-                    GameInit.save()
-                    sys.exit()
-                if fail2 == True:
-                    sys.exit()
-            else:
-                daytime = daytime + 1
+            #adds another hour
+            daytime +=1
+                
+        GameInit.end()
+        
             
 class DataManage():
     #handles the save/load functions
