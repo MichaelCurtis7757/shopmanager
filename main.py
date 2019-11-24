@@ -1,6 +1,6 @@
 #Shop Manager
 import time, sys, os.path, fileinput
-from random import randint
+from random import randint, choice
 
 class GameInit():
     #handles inital startup
@@ -95,70 +95,77 @@ class GameInit():
         rand2 = False
         fail1 = False
         fail2 = False
+        
+    @staticmethod
+    def character_gen():
+        global owner, assist
+        
+        owner = choice(["Bob: ", "Steve: "])
+        assist = choice(["Fred: ", "Emily: "])
 
     @staticmethod
     def manager_name():
         #handles the username
-        global username, yes_list, no_list
-        username = input("Uncle Bob: Hello, I've forgotton your name. What was it again? ")
+        global username, yes_list, no_list, owner
+        username = input(owner+"Hello, I've forgotton your name. What was it again? ")
         #sets default if the input is blank
         if username == "":
             username = "Michael"
-        username_ch = input("Uncle Bob: So you're "+username+" right? ")
+        username_ch = input(owner+"So you're "+username+" right? ")
         time.sleep(1)
         #asks the user if the if they are sure about their username
         if username_ch.lower() in yes_list:
-            print("Uncle Bob: Ah, yes! My brother's kid who's taking the shop from me. I forgot who you were for a minute!")
+            print(owner+"Ah, yes! My brother's kid who's taking the shop from me. I forgot who you were for a minute!")
             return
         if username_ch.lower() in no_list:
             GameInit.manager_name()
             return
         else:
-            print("Uncle Bob: What's that? I didn't quite catch that.")
+            print(owner+"What's that? I didn't quite catch that.")
             GameInit.manager_name()
 
     @staticmethod
     def shop_name():
         #handles the shop
-        global shop, yes_list, no_list, username
+        global shop, yes_list, no_list, username, owner
         time.sleep(1)
-        print("Uncle Bob: You might as well re-name the shop as 'Fish n' Chips' might not be as good as what you come up with.")
+        print(owner+"You might as well re-name the shop as 'Fish n' Chips' might not be as good as what you come up with.")
         time.sleep(1)
-        shop = input("Uncle Bob: So "+username+", what would you like the shop to be called? ")
+        shop = input(owner+"So "+username+", what would you like the shop to be called? ")
         #sets default if the input is blank
         if shop == "":
             shop = "Fish n' Chips"
-        shop_ch = input("Uncle Bob: You want it called "+shop+"? ")
+        shop_ch = input(owner+"You want it called "+shop+"? ")
         #asks the user if the if they are sure about the shop name
         if shop_ch.lower() in yes_list:
             if shop.lower() == "fish n' chips":
-                print("Uncle Bob: So it was a good name...")
+                print(owner+"So you did like it, good!")
             return
         if shop_ch.lower() in no_list:
             GameInit.shop_name()
             return
         else:
-            print("Uncle Bob: What's that "+username+"? I didn't quite catch that.")
+            print(owner+"What's that "+username+"? I didn't quite catch that.")
             GameInit.shop_name()
 
     @staticmethod
     def currency_name():
         #handles the shop
-        global currency, yes_list, no_list
+        global currency, yes_list, no_list, owner
         
-        print("Uncle Bob: Now we will move onto currency!")
-        print("Uncle Bob: \n1. GBP/£ \n2. USD/$ \n3. EUR/€")
+        print(owner+"Now we will move onto currency!")
+        print(owner+"\n1. GBP/£ \n2. USD/$ \n3. EUR/€")
         ask_curr = input("Uncle Bob: Which currency would you like to use? ")
         if ask_curr in ["1"]:
-            print("Uncle Bob: Ah the GBP! Good choice!")
+            print(owner+"Ah the GBP! Good choice!")
             currency = "£"
             return
         elif ask_curr in ["2"]:
-            print("Uncle Bob: Ah the USD! Good choice!")
+            print(owner+"Ah the USD! Good choice!")
             currency = "$"
             return
         elif ask_curr in ["3"]:
-            print("Uncle Bob: Ah the EUR! Good choice!")
+            print(owner+"Ah the EUR! Good choice!")
             currency = "€"
             return
         #else:
@@ -177,6 +184,7 @@ class GameInit():
 
         #skips the startup questions if the user is a tester
         if pre_init.lower() in ["default", "bug"]:
+            GameInit.character_gen()
             GameInit.variables()
             GameMain.main()
             
@@ -192,6 +200,7 @@ class GameInit():
                 time.sleep(0.3)
             print("")
             
+            GameInit.character_gen()
             GameInit.manager_name()
             GameInit.shop_name()
             GameInit.currency_name()
@@ -216,23 +225,23 @@ class GameInit():
 
     @staticmethod
     def day_costs():
-        global cash, rent, wages, currency
+        global cash, rent, wages, currency, assist
         #manages the rent and taxes for the day
         rent_and_wages = rent + wages
-        print("Fred: You should pay the rent and the wages for today.")
-        print("Fred: That comes to "+currency+str(rent_and_wages)+" "+username+"!")
+        print(assist+"You should pay the rent and the wages for today.")
+        print(assist+"That comes to "+currency+str(rent_and_wages)+" "+username+"!")
         time.sleep(1.5)
         if rent_and_wages > cash:
-            print("Fred: You don't have enough money boss! I'm sorry but we're going to have to close down!")
+            print(assist+"You don't have enough money boss! I'm sorry but we're going to have to close down!")
             GameInit.game_over()
         else:
             cash = cash - rent_and_wages
-            print("Fred: You now have "+currency+str(cash)+" left.")
+            print(assist+"You now have "+currency+str(cash)+" left.")
             
     @staticmethod
     def end():
         #manages all of the end of day prints
-        global level, cash, exp, req_exp, currency, day, yes_list, no_list, daytime
+        global level, cash, exp, req_exp, currency, day, yes_list, no_list, daytime, assist
         print("Fred: Congratulations Boss, you finished the day with "+currency+str(cash)+" overall!")
         print("Fred: You are level "+str(level)+" and have "+str(exp)+"/"+str(req_exp)+" EXP for the next level.")
         #rusn the rent and wages func.
@@ -264,13 +273,13 @@ class GameInit():
 
     @staticmethod
     def buy_stock():
-        global yes_list, no_list, cod, cod_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency, cash
+        global yes_list, no_list, cod, cod_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency, cash, assist
         #asks the user if they want to buy stock to sell later on
-        ask_stock = input("Fred: Would you like to buy some stock this morning (You have "+currency+ str(cash)+")? ")
+        ask_stock = input(assist+"Would you like to buy some stock this morning (You have "+currency+ str(cash)+")? ")
         if ask_stock.lower() in yes_list:
             #shows how much stock they have and asks them what they want to buy
-            print("Fred: Cod Stock: "+str(cod)+", Potato Stock: "+str(potato)+", Sasuage Stock: "+str(sausage)+" and Fishcake Stock: "+str(fishcake)+" ")
-            ask_buy = input("Fred: What do you want to buy? ")
+            print(assist+"Cod Stock: "+str(cod)+", Potato Stock: "+str(potato)+", Sasuage Stock: "+str(sausage)+" and Fishcake Stock: "+str(fishcake)+" ")
+            ask_buy = input(assist+"What do you want to buy? ")
             
             #asks them how many fish they want to buy
             if ask_buy.lower() in ["cod", "cods", "c"]:
@@ -281,7 +290,7 @@ class GameInit():
             #asks them how many potatoes they want to buy
             if ask_buy.lower() in ["potato", "potatoes", "potatos", "p"]:
                 if level < 3:
-                    print("Fred: Sorry! You need to be level 5 to unlock this!")
+                    print(assist+"Sorry! You need to be level 5 to unlock this!")
                     GameInit.buy_stock()
                 elif level >= 3:
                     item = potato
@@ -292,7 +301,7 @@ class GameInit():
             if ask_buy.lower() in ["sausage", "sausages", "s"]:
                 #checks if the user is a high enough level to buy the stock to sell
                 if level < 5:
-                    print("Fred: Sorry! You need to be level 5 to unlock this!")
+                    print(assist+"Sorry! You need to be level 5 to unlock this!")
                     GameInit.buy_stock()
                 elif level >= 5:
                     item = sausage
@@ -303,7 +312,7 @@ class GameInit():
             if ask_buy.lower() in ["fishcake", "fishcakes", "fc"]:
                 #checks if the user is a high enough level to buy the stock to sell
                 if level < 7:
-                    print("Fred: Sorry! You need to be level 7 to unlock this!")
+                    print(assist+"Sorry! You need to be level 7 to unlock this!")
                     GameInit.buy_stock()
                 elif level >= 7:
                     item = fishcake
@@ -317,9 +326,9 @@ class GameInit():
             def run_restock_function(item, item_name, item_cost):
                 global cash
                 
-                ask_amount = int(input("Fred: How much "+str(item_name).capitalize()+" would you like to order? ("+currency + str(item_cost) + " a " + str(item_name) + ") "))
+                ask_amount = int(input(assist+"How much "+str(item_name).capitalize()+" would you like to order? ("+currency + str(item_cost) + " a " + str(item_name) + ") "))
                 if ask_amount > cash:
-                    print("Fred: Sorry, we don't have the money to order that much!")
+                    print(assist+"Sorry, we don't have the money to order that much!")
                     GameInit.buy_stock()
                     return
                 else:
@@ -339,18 +348,18 @@ class GameInit():
             elif item_name == "fishcake":
                 fishcake = item
 
-            ask_reorder = input("Fred: Would you like to place another order? ")
+            ask_reorder = input(assist+"Would you like to place another order? ")
             if ask_reorder in yes_list:
                 GameInit.buy_stock()
             if ask_reorder in no_list:
-                print("Fred: The order has arrived thanks to almost instant delivery!")
+                print(assist+"The order has arrived thanks to almost instant delivery!")
             else:
                 print("Game: Please enter a valid reply.")
                 GameInit.buy_stock()
                 return
             
         if ask_stock.lower() in no_list:
-            print("Fred: We can always order more tomorrow if we need.")
+            print(assist+"We can always order more tomorrow if we need.")
             return
 
         else:
@@ -359,29 +368,29 @@ class GameInit():
     @staticmethod
     def cook_all(food_name, food_num, food_cost):
         #variables
-        global username, currency, level, yes_list, no_list, cooked_cod_cost
+        global username, currency, level, yes_list, no_list, cooked_cod_cost, assist
         #amount to cook
-        print("Fred: How many "+food_name.lower()+" would you like to cook today? ")
+        print(assist+"How many "+food_name.lower()+" would you like to cook today? ")
         try:
-            ask_cook = int(input("Fred: Just remember you only have "+str(food_num)+": "))
+            ask_cook = int(input(assist+"Just remember you only have "+str(food_num)+": "))
         except:
-            print("Fred: You know thats not a number, right?")
+            print(assist+"You know thats not a number, right?")
             GameInit.cook_all()
 
         #stock check for cooking
         if int(ask_cook) > food_num:
-            print("Fred: Boss, you can't cook more than you have!")
+            print(assist+"Boss, you can't cook more than you have!")
             GameInit.cook_all()
         else:
-            print("Fred: I'll cook the "+food_name.lower()+" now Boss!")
+            print(assist+"I'll cook the "+food_name.lower()+" now Boss!")
             time.sleep(1.5)
             #subtracts the food and adds them to the cooked stock
             food_num = food_num - int(ask_cook)
-            print("Fred: Okay Boss, the "+str(food_name)+" were cooked!")
+            print(assist+"Okay Boss, the "+str(food_name)+" were cooked!")
 
-        ask_change = input("Fred: Would you like to change the price today? ")
+        ask_change = input(assist+"Would you like to change the price today? ")
         if ask_change in ["yes", "y"]:
-            food_cost = float(input("Fred: What would you like it to be? (Current: "+currency+str(food_cost)+") "))
+            food_cost = float(input(assist+"What would you like it to be? (Current: "+currency+str(food_cost)+") "))
             return ask_cook, food_cost
         if ask_change in ["no", "n"]:
             return ask_cook, food_cost
@@ -389,20 +398,20 @@ class GameInit():
     @staticmethod
     def special_days():
         #special days
-        global cash, day, shop, currency, rent, wages, day_name
+        global cash, day, shop, currency, rent, wages, day_name, owner
         #runs the special day code for the first day, the beginning
         if day == 1:
             rw = rent + wages
             print("-= Day 1: The Beginning =-")
-            print("Uncle Bob: Welcome to ShopManager "+username+"! You must run "+shop+" inherited from me, your Uncle Bob!")
-            print("Uncle Bob: Always remember you have to pay "+currency+str(rw)+" a day in wages and rent!")
+            print(owner+"Welcome to ShopManager "+username+"! You must run "+shop+" inherited from me, your Uncle Bob!")
+            print(owner+"Always remember you have to pay "+currency+str(rw)+" a day in wages and rent!")
             time.sleep(1.5)
 
         #runs the special day code for the 7th day, the end of week 1
         if day == 7:
             bonus = level * 10
             print("-= Day 7: The First Week =-")
-            print("Uncle Bob: Congratulations "+username+", you made it through the week. Here's an extra "+currency+bonus+" to get you on your way!")
+            print(owner+"Congratulations "+username+", you made it through the week. Here's an extra "+currency+bonus+" to get you on your way!")
             cash += bonus
             print("Game: You now have "+currency+str(cash)+"!")
             time.sleep(1.5)
@@ -411,7 +420,7 @@ class GameInit():
         if day == 14:
             bonus = level * 20
             print("-= Day 14: The Second Week =-")
-            print("Uncle Bob: Congratulations "+username+", you made it through a second week. Impressive! Here's an extra "+currency+bonus+" to get you on your way!")
+            print(owner+"Congratulations "+username+", you made it through a second week. Impressive! Here's an extra "+currency+bonus+" to get you on your way!")
             cash += bonus
             print("Game: You now have "+currency+str(cash)+"!")
             time.sleep(1.5)
@@ -426,16 +435,16 @@ class GameInit():
     @staticmethod
     def random_days():
         #picks a random day and runs a special feature
-        global day, rand_day, rand1, cash
+        global day, rand_day, rand1, cash, owner
 
         #creates a random day number and runs the code if it is equal to the day and runs the leak event
         rand_day = randint(2, 6)
         if (rand_day == day) and (rand1 == False):
             lesscash = level * 5
             print("-= Day "+str(rand_day)+": The Leak =-")
-            print("Uncle Bob: It rained hard last night and a leak was found in the shop. You were charged "+currency+str(lesscash)+" to fix it!")
+            print(owner+"It rained hard last night and a leak was found in the shop. You were charged "+currency+str(lesscash)+" to fix it!")
             cash -= lesscash
-            print("Uncle Bob: You now have "+currency+str(cash)+" left!")
+            print(owner+"You now have "+currency+str(cash)+" left!")
             rand1 == True
 
         #creates a random day number and runs the code if it is equal to the day and runs the stock spoiling event
@@ -450,35 +459,35 @@ class GameInit():
     @staticmethod
     def game_over():
         #manages the game over state
-        global username, fail1, fail2, game_version
+        global username, fail1, fail2, game_version, owner
         #checks for funny usernames
         if username.lower() == "hudson":
-            print("Uncle Bob: It's game over man, game over!")
+            print(owner+"It's game over man, game over!")
         if username.lower() == "rick harrison":
-            print("Uncle Bob: Your Rick Harrison and that's no longer your paw-- fish and chip shop.")
+            print(owner+"Your Rick Harrison and that's no longer your paw-- fish and chip shop.")
         if username.lower() == "rick astley":
-            print("Uncle Bob: Never gunna fry you up, never batter you down.")
+            print(owner+"Never gunna fry you up, never batter you down.")
 
         #checks if the variable(s) are below the threshold
         if cash > 0:
-            print("Uncle Bob: You ran out of money, and the shop had to close. Try to mange your money better in the future.")
+            print(owner+"You ran out of money, and the shop had to close. Try to mange your money better in the future.")
             fail1 == True
             game_version = "[FAILED]"
             return
         
         if cod > 0:
-            print("Uncle Bob: You ran out of cod, and the shop had to close. Try to mange your cod better in the future.")
+            print(owner+"You ran out of cod, and the shop had to close. Try to mange your cod better in the future.")
             fail2 == True
             game_version = "[FAILED]"
             return
         
     @staticmethod
     def stock_info():
-        global yes_list, no_list
+        global yes_list, no_list, assist
         #displays details on the current stock options
-        ask_view = input("Fred: Would you like to view details on the stock? ")
+        ask_view = input(assist+"Would you like to view details on the stock? ")
         if ask_view.lower() in yes_list:
-            print("Fred: Here's the stock book for you boss!")
+            print(assist+"Here's the stock book for you boss!")
             print("")
             #fish
             global cod_cost, cooked_cod_cost, cod_exp
@@ -509,7 +518,7 @@ class GameInit():
 
     @staticmethod
     def manage_customers():
-        global cooked_cod_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, level, hour_exp, tprofit
+        global cooked_cod_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, level, hour_exp, tprofit, owner
         global cod_customers, potato_customers, sausage_customers, fishcake_customers, cod_hour_exp, potato_hour_exp, sausage_hour_exp, fishcake_hour_exp
             
         #generates a random number using player level
@@ -527,7 +536,7 @@ class GameInit():
         #checks if the price is unreasonable
         if cooked_cod_cost > 10:
             cod_rand_no = 0
-            print("Uncle Bob: Those are some expensive cod, I'm not sure how many we will sell!")
+            print(owner+"Those are some expensive cod, I'm not sure how many we will sell!")
                 
         cod_customers = randint(0, cod_rand_no)
         cod_hour_exp = cod_customers * cod_exp
@@ -544,7 +553,7 @@ class GameInit():
                 potato_rand_no = level * randint(1, 2)
             if cooked_potato_cost > 10:
                 potato_rand_no = 0
-                print("Uncle Bob: Those are some expensive chips!")
+                print(owner+"Those are some expensive chips!")
                     
             potato_customers = randint(0, potato_rand_no)
             potato_hour_exp = potato_customers * potato_exp
@@ -561,7 +570,7 @@ class GameInit():
                 sausage_rand_no = level * randint(1, 2)
             if cooked_sausage_cost > 12:
                 sausage_rand_no = 0
-                print("Uncle Bob: Those are some expensive sausages!")
+                print(owner+"Those are some expensive sausages!")
                     
             sausage_customers = randint(0, sausage_rand_no)
             sausage_hour_exp = sausage_customers * sausage_exp
@@ -578,7 +587,7 @@ class GameInit():
                 fishcake_rand_no = level * randint(1, 2)
             if cooked_fishcake_cost > 12:
                 fishcake_rand_no = 0
-                print("Uncle Bob: Those are some expensive fishcakes!")
+                print(owner+"Those are some expensive fishcakes!")
                     
             fishcake_customers = randint(0, fishcake_rand_no)
             fishcake_hour_exp = fishcake_customers * fishcake_exp
@@ -586,28 +595,28 @@ class GameInit():
     @staticmethod
     def check_stock():
         global cooked_cod, cooked_potato, cooked_fishcake, level, cod_sellable, potato_sellable, sausage_sellable, fishcake_sellable
-        global cod_customers, potato_customers, sausage_customers, fishcake_customers, tprofit
+        global cod_customers, potato_customers, sausage_customers, fishcake_customers, tprofit, assist
             
         if cod_customers > cooked_cod:
-            print("Fred: Welp, we're out of cod!")
+            print(assist+"Welp, we're out of cod!")
             cod_sellable = False
             if level < 3:
                 return
                 
         if (level >= 3) and (potato_customers > cooked_potato):
-            print("Fred: Welp, we're out of chips!")
+            print(assist+"Welp, we're out of chips!")
             potato_sellable = False
             if level < 5 and (cod_sellable == False):
                 return
 
         if (level >= 5) and (sausage_customers > cooked_sausage):
-            print("Fred: Welp, we're out of sausages!")
+            print(assist+"Welp, we're out of sausages!")
             sausage_sellable = False
             if level < 7 and (cod_sellable == False) and potato_sellable == False:
                 return
                 
         if (level >= 7) and (fishcake_customers > cooked_fishcake):
-            print("Fred: Welp, we're out of fishcakes!")
+            print(assist+"Welp, we're out of fishcakes!")
             fishcake_sellable = False
             if (cod_sellable == False) and (potato_sellable == False) and (sausage_sellable == False):
                 return
@@ -615,7 +624,7 @@ class GameInit():
     @staticmethod
     def sell_stock():
         global cooked_cod, cooked_potato, cooked_fishcake, cooked_cod_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost
-        global level, cash, exp, req_exp, cod_sellable, potato_sellable, sausage_sellable, fishcake_sellable
+        global level, cash, exp, req_exp, cod_sellable, potato_sellable, sausage_sellable, fishcake_sellable, assist
         global cod_customers, potato_customers, sausage_customers, fishcake_customers, hour_exp, tprofit, cod_hour_exp, potato_hour_exp, sausage_hour_exp, fishcake_hour_exp
             
         #printing the sold fish and chips
@@ -626,9 +635,9 @@ class GameInit():
             tprofit = tprofit + cod_profit
             
             if cod_customers == 0:
-                print("Fred: No customers bought any cod.")
+                print(assist+"No customers bought any cod.")
             if cod_customers > 0:
-                 print("Fred: "+str(cod_customers)+" customers visted and ordered "+str(cod_customers)+" cod and we now have "+str(cooked_cod)+" cod left.")
+                 print(assist+str(cod_customers)+" customers visted and ordered "+str(cod_customers)+" cod and we now have "+str(cooked_cod)+" cod left.")
             
         if level >= 3 and potato_sellable == True:
             cooked_potato = cooked_potato - potato_customers
@@ -637,9 +646,9 @@ class GameInit():
             tprofit = tprofit + potato_profit
                 
             if potato_customers == 0:
-                print("Fred: No customers bought any chips.")
+                print(assist+"No customers bought any chips.")
             if potato_customers > 0:
-                print("Fred: "+str(potato_customers)+" customers bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
+                print(assist+str(potato_customers)+" customers bought "+str(potato_customers)+" portions of chips and we now have "+str(cooked_potato)+" portions left!")
 
         if level >= 5 and sausage_sellable == True:
             cooked_sausage = cooked_sausage - sausage_customers
@@ -648,9 +657,9 @@ class GameInit():
             tprofit = tprofit + sausage_profit
 
             if sausage_customers == 0:
-                print("Fred: No customers bought any sausages.")
+                print(assist+"No customers bought any sausages.")
             if sausage_customers > 0:
-                print("Fred: "+str(sausage_customers)+" customers bought "+str(sausage_customers)+" sausages and we now have "+str(cooked_sausage)+" sausages left!")
+                print(assist+str(sausage_customers)+" customers bought "+str(sausage_customers)+" sausages and we now have "+str(cooked_sausage)+" sausages left!")
 
         if level >= 7 and fishcake_sellable == True:
             cooked_fishcake = cooked_fishcake - fishcake_customers
@@ -659,23 +668,23 @@ class GameInit():
             tprofit = tprofit + fishcake_profit
                 
             if fishcake_customers == 0:
-                print("Fred: No customers bought any fishcakes.")
+                print(assist+"No customers bought any fishcakes.")
             if fishcake_customers > 0:
-                print("Fred: "+str(fishcake_customers)+" customers bought "+str(fishcake_customers)+" sausages and we now have "+str(cooked_fishcake)+" fishcakes left!")
+                print(assist+str(fishcake_customers)+" customers bought "+str(fishcake_customers)+" sausages and we now have "+str(cooked_fishcake)+" fishcakes left!")
                 
     @staticmethod
     def calc_exp():
-        global exp, cash, level, req_exp, currency
+        global exp, cash, level, req_exp, currency, assist, owner
         cash = cash + tprofit
         exp = exp + hour_exp
-        print("Fred: From this, you've made "+currency+str(tprofit)+" and gained "+str(hour_exp)+" EXP.")
+        print(assist+"From this, you've made "+currency+str(tprofit)+" and gained "+str(hour_exp)+" EXP.")
 
         #checking if the user meets the requirements for a level up
         if exp >= req_exp:
             level = level + 1
             exp = exp - req_exp
             req_exp = req_exp * 2
-            print("Uncle Bob: Congratulations! You levelled up to "+str(level)+" and gain more reputation!")
+            print(owner+"Congratulations! You levelled up to "+str(level)+" and gain more reputation!")
 
     @staticmethod
     def day_time():
@@ -696,12 +705,12 @@ class GameMain():
         #global imports
         global cooked_cod, cooked_potato, cooked_fishcake, cooked_cod_cost, cooked_potato_cost, cooked_sausage_cost, cooked_fishcake_cost, cooked_haddock, haddock_sellable, cooked_haddock_cost, cooked_haddock_cost
         global level, cash, exp, req_exp, cod_sellable, potato_sellable, sausage_sellable, fishcake_sellable
-        global cod, potato, sausage, fishcake, hour_exp, tprofit, daytime, username
+        global cod, potato, sausage, fishcake, hour_exp, tprofit, daytime, username, assist
         
         #start of day
         GameInit.random_days()
         GameInit.special_days()
-        print("Fred: Good morning "+username+"!")
+        print(assist+"Good morning "+username+"!")
         GameInit.stock_info()
         GameInit.buy_stock()
         cooked_cod, cooked_cod_cost = GameInit.cook_all("Cod", cod, cooked_cod_cost)
@@ -716,13 +725,13 @@ class GameMain():
         #middle section of day
         choice = randint(0, 3)
         if choice == 0:
-            print("Fred: Lets open up for the day "+username+"!")
+            print(assist+"Lets open up for the day "+username+"!")
         if choice == 1:
-            print("Fred: Lets get ready to open up to the world "+username+".")
+            print(assist+"Lets get ready to open up to the world "+username+".")
         if choice == 2:
-            print("Fred: Time to get ready for work "+username+".")
+            print(assist+"Time to get ready for work "+username+".")
         if choice == 3:
-            print("Fred: Time to get the shop ready to open up "+username+"!")
+            print(assist+"Time to get the shop ready to open up "+username+"!")
             
         tprofit = 0
         daytime = 0
@@ -738,7 +747,7 @@ class GameMain():
 
         for daytime in range(0,6):
             #checking for the end of the day
-            if fish_sellable == False:
+            if cod_sellable == False:
                 break
                 
             #resetting variables
@@ -782,13 +791,13 @@ class DataManage():
             file.write("\n")
             file.write(shop)
             file.write("\n")
-            file.write(str(fish))
+            file.write(str(cod))
             file.write("\n")
             file.write(str(potato))
             file.write("\n")
             file.write(str(sausage))
             file.write("\n")
-            file.write(str(cooked_fish_cost))
+            file.write(str(cooked_cod_cost))
             file.write("\n")
             file.write(str(cooked_potato_cost))
             file.write("\n")
@@ -819,7 +828,7 @@ class DataManage():
         print("Game: Loading Game...")
         GameInit.variables()
 
-        global username, shop, day, level, cash, supported_versions, fish, potato, sausage, cooked_fish,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency
+        global username, shop, day, level, cash, supported_versions, cod, potato, sausage, cooked_cod,cost, cooked_potato_cost, cooked_sausage_cost, exp, req_exp, game_version, currency
         global fishcake, cooked_fishcake_cost
         
         with open(save_name+".shs", "r+") as file:
@@ -842,7 +851,7 @@ class DataManage():
             shop = file.readline().replace("\n", "")
         
             #fish
-            fish = int(file.readline().replace("\n", ""))
+            cod = int(file.readline().replace("\n", ""))
         
             #potato
             potato = int(file.readline().replace("\n", ""))
@@ -851,7 +860,7 @@ class DataManage():
             sausage = int(file.readline().replace("\n", ""))
 
             #cooked fish cost
-            cooked_fish_cost = float(file.readline().replace("\n", ""))
+            cooked_cod_cost = float(file.readline().replace("\n", ""))
         
             #cooked potato cost
             cooked_potato_cost = float(file.readline().replace("\n", ""))
