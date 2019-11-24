@@ -89,19 +89,21 @@ class GameInit():
         fishcake_exp = 3
 
         #fail/rand states
-        global rand1, rand2, fail1, fail2
+        global rand1, rand2, fail1, fail2, metstock
 
         rand1 = False
         rand2 = False
         fail1 = False
         fail2 = False
+        metstock = False
         
     @staticmethod
     def character_gen():
-        global owner, assist
+        global owner, assist, broker
         
         owner = choice(["Bob: ", "Steve: "])
         assist = choice(["Fred: ", "Emily: "])
+        broker = choice(["Jeff: ", "Phillip: "])
 
     @staticmethod
     def manager_name():
@@ -174,6 +176,7 @@ class GameInit():
 
     @staticmethod  
     def startup():
+        global yes_list, no_list
         #sets up global varaibles used before GameInit.varibles()
         yes_list = ["yes", "y", "yes.", "y.", "yeah", "yh", "yeah.", "yh.", "hells yeah boi", "yeaah","yep", "yep."]
         no_list = ["no", "n", "no.", "n.", "nah", "noo", "nah.", "noo.", "hells nah boi", "naah", "nope", "nope."]
@@ -273,19 +276,32 @@ class GameInit():
 
     @staticmethod
     def buy_stock():
-        global yes_list, no_list, cod, cod_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency, cash, assist
+        global yes_list, no_list, cod, cod_cost, potato, potato_cost, sausage, sausage_cost, fishcake, fishcake_cost, cash, level, currency, cash, assist, metstock, broker
         #asks the user if they want to buy stock to sell later on
         ask_stock = input(assist+"Would you like to buy some stock this morning (You have "+currency+ str(cash)+")? ")
         if ask_stock.lower() in yes_list:
+            if metstock == False:
+                print(broker+"Hey, I'm the stock guy, each day I'll show you how much I've got in stock and if I've got anything new for you!")
+                metstock = True
+                
+            #generates brokers stock
+            broker_cod = level * randint(10, 20)
+            broker_potato = level * randint(7, 17)
+            broker_sausage = level * randint(5, 15)
+            broker_fishcake = level * randint(3, 12)
+            
             #shows how much stock they have and asks them what they want to buy
-            print(assist+"Cod Stock: "+str(cod)+", Potato Stock: "+str(potato)+", Sasuage Stock: "+str(sausage)+" and Fishcake Stock: "+str(fishcake)+" ")
-            ask_buy = input(assist+"What do you want to buy? ")
+            #TODO: only show stock thats unlocked per level
+            print(assist+"We have: Cod Stock: "+str(cod)+", Potato Stock: "+str(potato)+", Sasuage Stock: "+str(sausage)+" and Fishcake Stock: "+str(fishcake)+" ")
+            print(broker+"I have: Cod Stock: "+str(broker_cod)+", Potato Stock: "+str(broker_potato)+", Sasuage Stock: "+str(broker_sausage)+" and Fishcake Stock: "+str(broker_fishcake)+" ")
+            ask_buy = input(broker+"What do you want to buy? ")
             
             #asks them how many fish they want to buy
             if ask_buy.lower() in ["cod", "cods", "c"]:
                 item = cod
                 item_name = "cod"
                 item_cost = cod_cost
+                item_amount = broker_cod
                 
             #asks them how many potatoes they want to buy
             if ask_buy.lower() in ["potato", "potatoes", "potatos", "p"]:
@@ -296,6 +312,7 @@ class GameInit():
                     item = potato
                     item_name = "potato"
                     item_cost = potato_cost
+                item_amount = broker_potato
                 
             #asks them how many sausage they want to buy
             if ask_buy.lower() in ["sausage", "sausages", "s"]:
@@ -307,6 +324,7 @@ class GameInit():
                     item = sausage
                     item_name = "sausage"
                     item_cost = sausage_cost
+                    item_amount = broker_sausage
             
             #asks them how many fishcake they want to buy
             if ask_buy.lower() in ["fishcake", "fishcakes", "fc"]:
@@ -318,17 +336,19 @@ class GameInit():
                     item = fishcake
                     item_name = "fishcake"
                     item_cost = fishcake_cost
+                    item_amount = broker_fishcake
                     
             #else:
             #    print("Fred: I'm not quite sure we sell that!")
             #    GameInit.buy_stock()
-
-            def run_restock_function(item, item_name, item_cost):
-                global cash
+            print(item, item_name, item_cost, item_amount)
+            
+            def run_restock_function(item, item_name, item_cost, item_amount):
+                global cash, broker
                 
-                ask_amount = int(input(assist+"How much "+str(item_name).capitalize()+" would you like to order? ("+currency + str(item_cost) + " a " + str(item_name) + ") "))
-                if ask_amount > cash:
-                    print(assist+"Sorry, we don't have the money to order that much!")
+                ask_amount = int(input(broker+"How much "+str(item_name).capitalize()+" would you like to order? ("+currency + str(item_cost) + " a " + str(item_name) + ") "))
+                if (ask_amount > cash) or (ask_amount > item_amount):
+                    print(broker+"Sorry, you can't order that much!")
                     GameInit.buy_stock()
                     return
                 else:
@@ -338,7 +358,8 @@ class GameInit():
                     time.sleep(1.5)
                     return item, item_name
 
-            item, item_name = run_restock_function(item, item_cost)
+            item, item_name = run_restock_function(item, item_name, item_cost, item_amount)
+            
             if item_name == "cod":
                 cod = item
             elif item_name == "potato":
@@ -352,7 +373,7 @@ class GameInit():
             if ask_reorder in yes_list:
                 GameInit.buy_stock()
             if ask_reorder in no_list:
-                print(assist+"The order has arrived thanks to almost instant delivery!")
+                print(assist+"I've put our order into the stock room for you!")
             else:
                 print("Game: Please enter a valid reply.")
                 GameInit.buy_stock()
@@ -745,33 +766,34 @@ class GameMain():
         sausage_profit = 0
         fishcake_profit = 0
 
-        for daytime in range(0,6):
-            #checking for the end of the day
-            if cod_sellable == False:
-                break
+        for daytime in range(0,7):
                 
+            #breaks if nothing is left in stock
+            if (cod_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False) :
+                break
+            
             #resetting variables
             tprofit = 0
             hour_exp = 0
-                
+                    
             #printing the current time of day
             GameInit.day_time()
 
             #calculate customers and exp
             GameInit.manage_customers()
-                   
+                       
             #checking if there is stock left
             GameInit.check_stock()
 
             #sell the stock
             GameInit.sell_stock()
-            
+                
             #calculating the profits, exp and cash for the day
             GameInit.calc_exp()
-            
+                
             #adds another hour
             daytime +=1
-                
+            
         GameInit.end()
         
             
