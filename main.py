@@ -291,9 +291,20 @@ class GameInit():
             broker_fishcake = level * randint(3, 12)
             
             #shows how much stock they have and asks them what they want to buy
-            #TODO: only show stock thats unlocked per level
-            print(assist+"We have: Cod Stock: "+str(cod)+", Potato Stock: "+str(potato)+", Sasuage Stock: "+str(sausage)+" and Fishcake Stock: "+str(fishcake)+" ")
-            print(broker+"I have: Cod Stock: "+str(broker_cod)+", Potato Stock: "+str(broker_potato)+", Sasuage Stock: "+str(broker_sausage)+" and Fishcake Stock: "+str(broker_fishcake)+" ")
+            assist_string = assist+"We have: Cod Stock: "+str(cod)
+            broker_string = broker+"I have: Cod Stock: "+str(cod)
+            if level >= 3:
+                assist_string += ", Potato Stock: "+str(potato)
+                broker_string += ", Potato Stock: "+str(broker_potato)
+                if level >= 5:
+                    assist_string += ", Sausage Stock: "+str(sausage)
+                    broker_string += ", Sausage Stock: "+str(broker_sausage)
+                    if level >= 7:
+                        assist_string += ", Fishcake Stock: "+str(fishcake)
+                        broker_string += ", Fishcake Stock: "+str(broker_fishcake)
+            
+            print(assist_string+".")
+            print(broker_string+".")
             ask_buy = input(broker+"What do you want to buy? ")
             
             #asks them how many fish they want to buy
@@ -769,7 +780,7 @@ class GameMain():
         for daytime in range(0,7):
                 
             #breaks if nothing is left in stock
-            if (cod_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False) :
+            if (cod_sellable == False) and (potato_sellable == False) and (sausage_sellable == False) and (fishcake_sellable == False):
                 break
             
             #resetting variables
