@@ -39,8 +39,8 @@ class GameInit():
         level = 1
         exp = 0
         req_exp = 10
-        game_version = "v1.4-beta"
-        supported_versions = [""]
+        game_version = "v1.5-beta"
+        supported_versions = ["v1.5-beta"]
         currency = "£"
         rent = 10
         wages = 10
@@ -519,32 +519,20 @@ class GameInit():
         #displays details on the current stock options
         ask_view = input(assist+"Would you like to view details on the stock? ")
         if ask_view.lower() in yes_list:
+            
+            cod_list = ["Cod", str(cod_cost), str(cooked_cod_cost), str(cod_exp)]
+            potato_list = ["Potato", str(potato_cost), str(cooked_potato_cost), str(potato_exp)]
+            sausage_list = ["Sausage", str(sausage_cost), str(cooked_sausage_cost), str(sausage_exp)]
+            fishcake_list = ["Fishcake", str(fishcake_cost), str(cooked_fishcake_cost), str(fishcake_exp)]
+            stock_list = [cod_list, potato_list, sausage_list, fishcake_list]
+            
             print(assist+"Here's the stock book for you boss!")
-            print("")
-            #fish
-            global cod_cost, cooked_cod_cost, cod_exp
-            print("Book: Cod\n| Cod Cost: "+str(cod_cost)+" | Cooked Cod Cost: "+str(cooked_cod_cost)+" | Cod EXP: "+str(cod_exp)+" |")
-            #potatoes
-            if level >= 3:
-                global potato_cost, cooked_potato_cost, potato_exp
-                print("Book: Potatoes\n| Potato Cost: "+str(potato_cost)+" | Cooked Potato Cost: "+str(cooked_potato_cost)+" | Potato EXP: "+str(potato_exp)+" |")
-            else:
-                print("Book: Potatoes\n| Potato Cost: ??? | Cooked Potato Cost: ??? | Potato EXP: ??? |")
-            #sausage
-            if level >= 5:
-                global sausage_cost, cooked_sausage_cost, sausage_exp
-                print("Book: Sausage\n| Sausage Cost: "+str(sausage_cost)+" | Cooked Sausage Cost: "+str(cooked_sausage_cost)+" | Sausage EXP: "+str(sausage_exp)+" |")
-            else:
-                print("Book: Sausage\n| Sausage Cost: ??? | Cooked Sausage Cost: ??? | Sausage EXP: ??? |")
-            #fishcake
-            if level >= 7:
-                global fishcake_cost, cooked_fishcake_cost, fishcake_exp
-                print("Book: Fishcake\n| Fishcake Cost: "+str(fishcake_cost)+" | Cooked Fishcake Cost: "+str(cooked_fishcake_cost)+" | Fishcake EXP: "+str(fishcake_exp)+" |")
-            else:
-                print("Book: Fishcake\n| Fishcake Cost: ??? | Cooked Fishcake Cost: ??? | Fishcake EXP: ??? |")
-            print("")
-
-            time.sleep(5)
+            
+            print("| Item      | Cost | Cooked Cost | EXP |")
+            for item in stock_list:
+                print("|",item[0]," "*(8-len(item[0])),"|",item[1]," "*(3-len(item[1])),"|",item[2]," "*(10-len(item[2])),"|",item[3]," "*(2-len(item[3])),"|")
+            time.sleep(3)
+        
         if ask_view.lower() in no_list:
             return
 
