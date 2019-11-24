@@ -3,3 +3,6 @@ Welcome to ShopManager, a text based shop managing game where you run your own f
 
 ## Current Release
 v1.3-beta: 14/12/16
+
+## Trello ToDo List
+https://trello.com/b/B3zyXmOZ/shopmanager
